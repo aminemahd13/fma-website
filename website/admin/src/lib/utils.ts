@@ -45,9 +45,21 @@ export const objIsEmpty = (obj: any) => Object.keys(obj).length === 0 && obj.con
  TOKEN
  */
 
-export const getToken = () => {
-  return localStorage.getItem('access_token');
-}
+export const getToken = (): string | null => {
+  try {
+    if (typeof window === 'undefined') {
+      console.log('getToken called from server-side');
+      return null;
+    }
+
+    const token = window.localStorage.getItem('access_token');
+    console.log('Token status:', token ? 'Token found' : 'No token found');
+    return token;
+  } catch (error) {
+    console.error('Error getting token:', error);
+    return null;
+  }
+};
 
 export const getUserDataFromToken = (token: string | undefined) => {
   try {

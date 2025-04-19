@@ -56,6 +56,10 @@ export default function HomeLayout({
                 <SettingsIcon className="h-4 w-4" />
                 Settings
               </NavItem>
+              <NavItem href="/home/faq" className="h-12">
+                <UsersIcon className="h-4 w-4" />
+                FAQ Management
+              </NavItem>
             </nav>
           </div>
         </div>
