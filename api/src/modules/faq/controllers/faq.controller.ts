@@ -4,6 +4,7 @@ import { CreateFaqDto } from '../dto/create-faq.dto';
 import { UpdateFaqDto } from '../dto/update-faq.dto';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
+import { Public } from 'src/decorators/public.decorator';
 import { ADMIN_ROLE } from 'src/constants';
 import { Faq } from '../entities/faq.entity';
 
@@ -19,6 +20,7 @@ export class FaqController {
   }
 
   @Get()
+  @Public()
   findAllActive(): Promise<Faq[]> {
     return this.faqService.findAllActive();
   }
@@ -31,6 +33,7 @@ export class FaqController {
   }
 
   @Get(':id')
+  @Public()
   findOne(@Param('id') id: string): Promise<Faq> {
     return this.faqService.findOne(+id);
   }
@@ -48,4 +51,4 @@ export class FaqController {
   remove(@Param('id') id: string): Promise<void> {
     return this.faqService.remove(+id);
   }
-} 
+}
