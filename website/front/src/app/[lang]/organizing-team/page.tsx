@@ -1,14 +1,12 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { Linkedin } from '@/components/shared/icons';
-import {
-  organizingCommittee,
-  staff,
-  webDevelopment,
-  um6p,
-  brandDesign,
-} from './data';
 import Link from 'next/link';
 import { shuffle } from '@/lib/utils';
 import Brush from '@/components/shared/icons/brush';
+import { fetchTeamMembersByCategory, TeamMember } from '@/lib/api/team-members';
+import { TeamMemberCategory } from '@/types/team-member';
 
 const Card = ({
   key,
@@ -32,6 +30,7 @@ const Card = ({
         <img
           src={imageSrc}
           style={{height: '180px', width: 'auto'}}
+          alt={name}
         />
       </div>
 
@@ -45,7 +44,45 @@ const Card = ({
 }
 
 export default function OrganizingTeamPage() {
-  const shuffledOrganizingCommitte = shuffle(organizingCommittee)
+  const [organizingCommittee, setOrganizingCommittee] = useState<TeamMember[]>([]);
+  const [staff, setStaff] = useState<TeamMember[]>([]);
+  const [webDevelopment, setWebDevelopment] = useState<TeamMember[]>([]);
+  const [brandDesign, setBrandDesign] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      setLoading(true);
+      try {
+        // Fetch team members for each category
+        const committeeMembers = await fetchTeamMembersByCategory('organizingCommittee' as TeamMemberCategory);
+        const staffMembers = await fetchTeamMembersByCategory('staff' as TeamMemberCategory);
+        const webDevMembers = await fetchTeamMembersByCategory('webDevelopment' as TeamMemberCategory);
+        const designMembers = await fetchTeamMembersByCategory('brandDesign' as TeamMemberCategory);
+        
+        setOrganizingCommittee(committeeMembers);
+        setStaff(staffMembers);
+        setWebDevelopment(webDevMembers);
+        setBrandDesign(designMembers);
+      } catch (error) {
+        console.error('Error fetching team members:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTeamMembers();
+  }, []);
+
+  const shuffledOrganizingCommittee = shuffle(organizingCommittee);
+
+  if (loading) {
+    return (
+      <div className="w-full max-w-sm md:max-w-[85rem] px-5 xl:px-0 mt-10 text-center">
+        <p>Loading team members...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-sm md:max-w-[85rem] px-5 xl:px-0 mt-10">
@@ -69,13 +106,17 @@ export default function OrganizingTeamPage() {
           className="flex justify-around flex-wrap gap-6 shadow-md p-8 rounded-lg animate-fade-up opacity-0"
           style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
         >
-          {shuffledOrganizingCommitte.map(person =>
-            <Card
-              key={person.name.toLowerCase().replace(' ', '_')}
-              name={person.name}
-              imageSrc={person.imageSrc} 
-              linkedinSrc={person.linkedinSrc}
-            />
+          {shuffledOrganizingCommittee.length > 0 ? (
+            shuffledOrganizingCommittee.map(person => (
+              <Card
+                key={`${person.id}_${person.name.toLowerCase().replace(' ', '_')}`}
+                name={person.name}
+                imageSrc={person.imageSrc} 
+                linkedinSrc={person.linkedinSrc}
+              />
+            ))
+          ) : (
+            <p className="text-center w-full">No organizing committee members found.</p>
           )}
         </div>
 
@@ -93,13 +134,17 @@ export default function OrganizingTeamPage() {
               className="flex justify-around flex-wrap gap-6 shadow-md p-8 rounded-lg animate-fade-up opacity-0 mr-6"
               style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
             >
-              {staff.map(person =>
-                <Card
-                  key={person.name.toLowerCase().replace(' ', '_')}
-                  name={person.name}
-                  imageSrc={person.imageSrc} 
-                  linkedinSrc={person.linkedinSrc}
-                />
+              {staff.length > 0 ? (
+                staff.map(person => (
+                  <Card
+                    key={`${person.id}_${person.name.toLowerCase().replace(' ', '_')}`}
+                    name={person.name}
+                    imageSrc={person.imageSrc} 
+                    linkedinSrc={person.linkedinSrc}
+                  />
+                ))
+              ) : (
+                <p className="text-center w-full">No staff members found.</p>
               )}
             </div>
           </div>
@@ -117,15 +162,18 @@ export default function OrganizingTeamPage() {
               className="flex justify-around flex-wrap gap-6 shadow-md  p-8 rounded-lg animate-fade-up opacity-0 ml-6"
               style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
             >
-              {webDevelopment.map(person =>
-                <Card
-                  key={person.name.toLowerCase().replace(' ', '_')}
-                  name={person.name}
-                  imageSrc={person.imageSrc} 
-                  linkedinSrc={person.linkedinSrc}
-                />
+              {webDevelopment.length > 0 ? (
+                webDevelopment.map(person => (
+                  <Card
+                    key={`${person.id}_${person.name.toLowerCase().replace(' ', '_')}`}
+                    name={person.name}
+                    imageSrc={person.imageSrc} 
+                    linkedinSrc={person.linkedinSrc}
+                  />
+                ))
+              ) : (
+                <p className="text-center w-full">No web development members found.</p>
               )}
-              
             </div>
           </div>
 
@@ -142,14 +190,18 @@ export default function OrganizingTeamPage() {
               className="flex justify-around flex-wrap gap-6 shadow-md p-8 rounded-lg animate-fade-up opacity-0 mx-6"
               style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
             >
-              {brandDesign.map(person =>
-                <Card
-                  key={person.name.toLowerCase().replace(' ', '_')}
-                  name={person.name}
-                  imageSrc={person.imageSrc} 
-                  linkedinSrc={person.linkedinSrc}
-                  portfolioSrc={person.portfolioSrc}
-                />
+              {brandDesign.length > 0 ? (
+                brandDesign.map(person => (
+                  <Card
+                    key={`${person.id}_${person.name.toLowerCase().replace(' ', '_')}`}
+                    name={person.name}
+                    imageSrc={person.imageSrc} 
+                    linkedinSrc={person.linkedinSrc}
+                    portfolioSrc={person.portfolioSrc}
+                  />
+                ))
+              ) : (
+                <p className="text-center w-full">No branding & design members found.</p>
               )}
             </div>
           </div>

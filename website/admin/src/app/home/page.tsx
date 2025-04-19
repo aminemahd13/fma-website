@@ -22,6 +22,18 @@ const links = [
       "Manage user pofiles",
     link: "/home/users",
   },
+  {
+    title: "FAQ",
+    description:
+      "Manage FAQ entries",
+    link: "/faq",
+  },
+  {
+    title: "Team Members",
+    description:
+      "Manage organizing team members",
+    link: "/team-members",
+  },
 ];
 
 export default function Home() {

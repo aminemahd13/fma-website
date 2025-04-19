@@ -23,6 +23,7 @@ import { ExcelModule } from './modules/excel/excel.module';
 import { TeamModule } from './modules/team/team.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { FaqModule } from './modules/faq/faq.module';
+import { TeamMembersModule } from './modules/team-members/team-members.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { FaqModule } from './modules/faq/faq.module';
     TeamModule,
     SettingsModule,
     FaqModule,
+    TeamMembersModule,
   ],
   controllers: [AppController],
   providers: [
