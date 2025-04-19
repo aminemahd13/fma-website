@@ -21,12 +21,30 @@ import { MeteorCard } from './meteor-card';
 import useMediaQuery from '@/lib/hooks/use-media-query';
 import Link from 'next/link';
 import { Separator } from '@radix-ui/react-separator';
+import { getApplicationsOpenStatus } from '@/api/SettingsApi';
 
 const CtaButton = () => {
   const router = useRouter();
   const { AuthModal, setShowAuthModal } = useAuthModal();
   const {isMobile} = useMediaQuery()
   const userData = useRecoilValue(userState);
+  const [isApplicationsOpen, setIsApplicationsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkApplicationStatus = async () => {
+      try {
+        const response = await getApplicationsOpenStatus() as any;
+        if (response?.statusCode === 200) {
+          setIsApplicationsOpen(response.isOpen);
+        }
+      } catch (error) {
+        console.error("Failed to check application status", error);
+        setIsApplicationsOpen(false);
+      }
+    };
+    
+    checkApplicationStatus();
+  }, []);
 
   const onSubmitApplication = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -51,14 +69,14 @@ const CtaButton = () => {
       <AuthModal />
 
       <MeteorCard className="w-full flex flex-col space-y-4 items-center bg-transparent border-gray-400 py-4">
-        <Link href='results' target='_self'>
+        <Link href={isApplicationsOpen ? '/application' : '/results'} target='_self'>
           <div className='flex flex-col space-y-4 justify-center sm:flex-row sm:items-center sm:space-y-0 '>
             <button 
               className="p-[3px] relative"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-sky-600 to-[#2C2C62] rounded-lg" />
               <div className="px-8 py-2 bg-white rounded-[6px] relative group transition duration-200 text-black hover:bg-transparent hover:text-white">
-                Voir les résultats
+                {isApplicationsOpen ? 'Participer' : 'Voir les résultats'}
               </div>
             </button>
           </div>

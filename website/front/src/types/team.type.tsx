@@ -3,6 +3,4 @@ export type Team = {
   name: string;
   slogan: string;
   mentorFullname: string;
-  leader: any;
-  users?: any[],
 }

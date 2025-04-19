@@ -66,88 +66,46 @@ export const columns = [
   { header: 'Status', key: 'status', width: 15 },
 ];
 
-export const rowFactory = (usersGroupByTeams: any[], configService) => {
+export const rowFactory = (users: any[], configService) => {
   const awsBucketName = configService.get('AWS_BUCKET_NAME');
   const awsBucketRegion = configService.get('AWS_BUCKET_REGION');
-  const mapGroup = (group: any[]) => {
-    const groupRows = [];
-    group.forEach((user: User) => {
-      const application = user?.application;
-      // Remove team reference
-      if (!application) return;
+  const mapUser = (user: User) => {
+    const application = user?.application;
+    if (!application) return;
 
-      const userData = {
-        id: application?.id,
-        teamId: null, // Set to null since teams no longer exist
-        teamName: null, // Set to null since teams no longer exist
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-        email: user?.email,
-        dateOfBirth: new Date(application?.dateOfBirth),
-        identityCardNumber: application?.identityCardNumber,
-        city: application?.city,
-        region: regionLabels[application?.region],
-        phoneNumber: application?.phoneNumber,
-        guardianFullName: application?.guardianFullName,
-        guardianPhoneNumber: application?.guardianPhoneNumber,
-        relationshipWithGuardian:
-          relationshipWithGuardianLabels[application?.relationshipWithGuardian],
-        specialConditions: application?.specialConditions,
+    return {
+      id: application?.id,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      email: user?.email,
+      dateOfBirth: new Date(application?.dateOfBirth),
+      identityCardNumber: application?.identityCardNumber,
+      city: application?.city,
+      region: regionLabels[application?.region],
+      phoneNumber: application?.phoneNumber,
+      guardianFullName: application?.guardianFullName,
+      guardianPhoneNumber: application?.guardianPhoneNumber,
+      relationshipWithGuardian:
+        relationshipWithGuardianLabels[application?.relationshipWithGuardian],
+      specialConditions: application?.specialConditions,
 
-        educationLevel: educationLevelLabels[application?.educationLevel],
-        educationField: educationFieldLabels[application?.educationField],
-        highschool: application?.highschool,
-        averageGrade: application?.averageGrade,
-        mathAverageGrade: application?.mathAverageGrade,
-        ranking: application?.ranking,
-        mathRanking: application?.mathRanking,
-        numberOfStudentsInClass: application?.numberOfStudentsInClass,
+      educationLevel: educationLevelLabels[application?.educationLevel],
+      educationField: educationFieldLabels[application?.educationField],
+      highschool: application?.highschool,
+      averageGrade: application?.averageGrade,
+      mathAverageGrade: application?.mathAverageGrade,
+      ranking: application?.ranking,
+      mathRanking: application?.mathRanking,
+      numberOfStudentsInClass: application?.numberOfStudentsInClass,
 
-        hasPreviouslyParticipated: application?.hasPreviouslyParticipated,
-        previousCompetitions: application?.previousCompetitions,
-        hasPreviouslyParticipatedInMtym:
-          application?.hasPreviouslyParticipatedInMtym,
-        motivations: application?.motivations,
-        comments: application?.comments,
-
-        cnieUrl: {
-          text: 'link',
-          hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.cnieUrl}`,
-        },
-        schoolCertificateUrl: {
-          text: 'link',
-          hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.schoolCertificateUrl}`,
-        },
-        gradesUrl: {
-          text: 'link',
-          hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.gradesUrl}`,
-        },
-        regulationsUrl: {
-          text: 'link',
-          hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.regulationsUrl}`,
-        },
-        parentalAuthorizationUrl: {
-          text: 'link',
-          hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.parentalAuthorizationUrl}`,
-        },
-
-        status: application?.status?.status,
-      };
-
-      groupRows.push(userData);
-    });
-
-    groupRows.push({});
-    return groupRows;
+      hasPreviouslyParticipated: application?.hasPreviouslyParticipated,
+      previousCompetitions: application?.previousCompetitions,
+      hasPreviouslyParticipatedInMtym:
+        application?.hasPreviouslyParticipatedInMtym,
+    };
   };
 
-  const rows = usersGroupByTeams.reduce((prev, current) => {
-    const groupRows = mapGroup(current);
-    prev.push(...groupRows);
-    return prev;
-  }, []);
-
-  return rows;
+  return users.map(mapUser).filter(Boolean);
 };
 
 export const styleSheet = (sheet) => {
