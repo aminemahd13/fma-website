@@ -8,7 +8,6 @@ import ProfileSkeleton from "../profile/profile-skeleton";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getApplicationsOpenStatus } from "@/api/SettingsApi";
-import { Alert, AlertTitle, AlertDescription } from "@/components/shared/alert";
 import { Button } from "@/components/shared";
 
 export default function ApplicationPage() {
@@ -53,11 +52,11 @@ export default function ApplicationPage() {
     return (
       <div className="z-10 w-full px-5 max-w-screen-xl xl:px-0">
         <div className="space-y-6 p-10 pb-16">
-          <Alert className="bg-yellow-50 border-yellow-200">
-            <AlertTitle className="text-xl font-semibold">
+          <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-md">
+            <h2 className="text-xl font-semibold">
               Les inscriptions sont désormais closes
-            </AlertTitle>
-            <AlertDescription className="mt-4">
+            </h2>
+            <div className="mt-4">
               <p className="mb-4">Merci pour l&apos;intérêt que vous portez à MTYM! Malheureusement les inscriptions sont désormais closes.</p>
               <p className="mb-4">Néanmoins, restez à l&apos;écoute pour ne pas manquer de futures opportunités.</p>
               <Button
@@ -66,8 +65,8 @@ export default function ApplicationPage() {
               >
                 Retour au profil
               </Button>
-            </AlertDescription>
-          </Alert>
+            </div>
+          </div>
         </div>
       </div>
     )
