@@ -27,6 +27,7 @@ export class TeamService {
     const team = await this.teamRepository.create(createTeamDto);
     const leader = await this.userService.findOneById(userId);
     team.leader = new SerializedUser(leader);
+    team.users = []; // Initialize empty users array
 
     return this.teamRepository.save(team);
   }
@@ -35,56 +36,67 @@ export class TeamService {
     return this.teamRepository
       .createQueryBuilder('team')
       .leftJoinAndSelect('team.leader', 'leader')
-      .leftJoinAndSelect('team.users', 'user')
-      .leftJoinAndSelect('user.application', 'application')
-      .leftJoinAndSelect('application.status', 'status')
-      .getMany();
+      // Removed the team.users join since it's no longer a DB relationship
+      .getMany()
+      .then(teams => {
+        // Initialize empty users array for each team
+        return teams.map(team => {
+          team.users = [];
+          return team;
+        });
+      });
   }
 
   findOneById(id: number) {
     return this.teamRepository
       .createQueryBuilder('team')
       .leftJoinAndSelect('team.leader', 'leader')
-      .leftJoinAndSelect('team.users', 'user')
-      .leftJoinAndSelect('user.application', 'application')
-      .leftJoinAndSelect('application.status', 'status')
+      // Removed the team.users join since it's no longer a DB relationship
       .where('team.id = :id', { id })
-      .getOne();
+      .getOne()
+      .then(team => {
+        if (team) {
+          team.users = []; // Initialize empty users array
+        }
+        return team;
+      });
   }
 
   findOneByName(name: string) {
     return this.teamRepository
       .createQueryBuilder('team')
       .leftJoinAndSelect('team.leader', 'leader')
-      .leftJoinAndSelect('team.users', 'user')
-      .leftJoinAndSelect('user.application', 'application')
-      .leftJoinAndSelect('application.status', 'status')
+      // Removed the team.users join since it's no longer a DB relationship
       .where('team.name = :name', { name })
-      .getOne();
+      .getOne()
+      .then(team => {
+        if (team) {
+          team.users = []; // Initialize empty users array
+        }
+        return team;
+      });
   }
 
+  // This method is simplified since we don't actually store users in teams anymore
   async addUser(id: number, userId: number) {
     const user = await this.userService.findOneById(userId);
     const team = (await this.findOneById(id)) as Team;
     if (!user || !team) {
       throw new NotFoundException('The user or team does not exist');
     }
-    if (team.users.length >= 5) {
-      throw new NotFoundException('This team can not have more that 5 members');
-    }
-
-    team.users = [...team.users, user];
-    await this.teamRepository.save(team);
+    
+    // Since we're removing the functionality, we'll just return without modifying anything
     return;
   }
 
+  // This method is simplified since we don't actually store users in teams anymore
   async removeUser(id: number, userId: number) {
     const team = (await this.findOneById(id)) as Team;
     if (!team) {
       throw new NotFoundException('The team does not exist');
     }
-    team.users = team.users.filter((user) => user?.id != userId);
-    await this.teamRepository.save(team);
+    
+    // Since we're removing the functionality, we'll just return without modifying anything
     return;
   }
 

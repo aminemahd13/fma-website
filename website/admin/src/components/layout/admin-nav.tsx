@@ -19,7 +19,6 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { adminState } from "@/store/adminState";
 import { applicationsState } from "@/store/applicationsState";
 import { usersState } from "@/store/usersState";
-import { teamsState } from "@/store/teamsState";
 
 export function AdminNav() {
   const router = useRouter();
@@ -27,14 +26,12 @@ export function AdminNav() {
   const setAdmin = useSetRecoilState(adminState);
   const setUsers = useSetRecoilState(usersState);
   const setApplications = useSetRecoilState(applicationsState);
-  const setTeams = useSetRecoilState(teamsState);
 
   const handleLogOut = useCallback(() => {
     localStorage.removeItem('access_token');
     setAdmin(undefined);
     setUsers(undefined);
     setApplications(undefined);
-    setTeams(undefined)
 
     router.push('/login');
     window.location.reload();

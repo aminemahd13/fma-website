@@ -43,7 +43,7 @@ export class TeamController {
       team: {
         ...team,
         leader: team?.leader ? new SerializedUser(team?.leader) : team?.leader,
-        users: team?.users?.map((user) => new SerializedUser(user)),
+        users: [], // Teams no longer have users
       },
       statusCode: 200,
     };
@@ -60,7 +60,7 @@ export class TeamController {
           leader: team?.leader
             ? new SerializedUser(team?.leader)
             : team?.leader,
-          users: team?.users?.map((user) => new SerializedUser(user)),
+          users: [], // Teams no longer have users
         };
       }),
       statusCode: 200,
@@ -78,7 +78,7 @@ export class TeamController {
       team: {
         ...team,
         leader: team?.leader ? new SerializedUser(team?.leader) : team?.leader,
-        users: team?.users?.map((user) => new SerializedUser(user)),
+        users: [], // Teams no longer have users
       },
       statusCode: 200,
     };
@@ -95,6 +95,7 @@ export class TeamController {
     };
   }
 
+  // These endpoints will still exist but won't actually modify the team structure
   @Put('join/:teamId')
   async addUser(@Req() request: Request, @Param('teamId') teamId: string) {
     const userId = request['user'].id;

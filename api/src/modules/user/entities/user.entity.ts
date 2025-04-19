@@ -1,11 +1,9 @@
 import { Application } from 'src/modules/application/entities/application.entity';
-import { Team } from 'src/modules/team/entities/team.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -53,10 +51,6 @@ export class User {
   @OneToOne(() => Application, (application) => application.user)
   @JoinColumn()
   application: Application;
-
-  @ManyToOne(() => Team, (team) => team.users)
-  @JoinColumn()
-  team: Team
 
   @CreateDateColumn({
     type: 'timestamp',

@@ -3,9 +3,8 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
-  OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -31,7 +30,6 @@ export class Team {
   @JoinColumn()
   leader: User;
 
-  @OneToMany(() => User, (user) => user.team)
-  @JoinColumn()
-  users: User[];
+  // Add a simple property for users but don't create a real database relationship
+  users: User[] = [];
 }

@@ -73,13 +73,13 @@ export const rowFactory = (usersGroupByTeams: any[], configService) => {
     const groupRows = [];
     group.forEach((user: User) => {
       const application = user?.application;
-      const team = user?.team;
+      // Remove team reference
       if (!application) return;
 
       const userData = {
         id: application?.id,
-        teamId: team?.id,
-        teamName: team?.name,
+        teamId: null, // Set to null since teams no longer exist
+        teamName: null, // Set to null since teams no longer exist
         firstName: user?.firstName,
         lastName: user?.lastName,
         email: user?.email,
