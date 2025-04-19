@@ -225,14 +225,13 @@ export const ApplicationForm = ({
           <DialogHeader>
             <DialogTitle className="my-2 text-red-700">La soumission de votre candidature a échouée</DialogTitle>
             <DialogDescription className="text-xs space-y-2">
-              <p>
+              <div>
                 Une erreur est survenue lors de la soumission de votre candidature. <br/>
                 Message de l&apos;erreur: <span className="text-black">{error?.message} (app {userData?.application?.id ?? ''})</span>
-              </p>
-              <p>
+              </div>
+              <div>
                 Veuillez réessayer plus tard <span className="text-black">ou</span> contactez-nous sur l&apos;addresse email <span className="text-blue-500">math.maroc.mtym@gmail.com</span> en précisant votre nom, prénom et en joignant le message de l&apos;erreur çi-haut.
-              </p>
-              
+              </div>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>

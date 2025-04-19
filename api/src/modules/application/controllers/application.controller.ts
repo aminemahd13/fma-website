@@ -187,4 +187,32 @@ export class ApplicationController {
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.applicationService.delete(id);
   }
+
+  @Put('submit/:id')
+  @HttpCode(200)
+  async submitApplication(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() req,
+  ) {
+    const userId = req['user'].id;
+    const application = await this.applicationService.findOneByUserId(userId);
+
+    if (id !== application?.id) {
+      throw new ForbiddenException(
+        `This user 'id: ${userId}') can not submit this application (id: ${application?.id})`,
+      );
+    }
+
+    const applicationStatus = application?.status;
+    await this.applicationStatusService.update(applicationStatus?.id, {
+      ...applicationStatus,
+      status: 'PENDING',
+    });
+
+    return {
+      id: id,
+      status: 'PENDING',
+      statusCode: 200,
+    };
+  }
 }

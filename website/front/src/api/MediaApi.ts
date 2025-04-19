@@ -20,6 +20,7 @@ export const uploadFile = async (url: string, file: File) => {
     fetch(url, {
       method: 'PUT',
       body: file,
+      mode: 'cors',
       headers: {
         "Content-Type": file.type
       }
@@ -28,5 +29,4 @@ export const uploadFile = async (url: string, file: File) => {
       .then(resolve)
       .catch(reject);
   }) 
-  
 }
