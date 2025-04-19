@@ -59,7 +59,7 @@ export default function TeamMembersPage() {
   }, []);
 
   const handleEdit = (id: number) => {
-    router.push(`/team-members/edit/${id}`);
+    router.push(`/home/team-members/edit/${id}`);
   };
 
   const handleDelete = async () => {
@@ -113,7 +113,7 @@ export default function TeamMembersPage() {
                 <CardDescription>Manage your organizing team members here</CardDescription>
               </div>
               <Button asChild>
-                <Link href="/team-members/new">Add New Team Member</Link>
+                <Link href="/home/team-members/new">Add New Team Member</Link>
               </Button>
             </div>
           </CardHeader>

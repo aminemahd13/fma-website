@@ -30,7 +30,7 @@ export default function EditTeamMemberPage() {
       } catch (error) {
         console.error('Failed to load team member:', error);
         toast.error('Failed to load team member');
-        router.push('/team-members');
+        router.push('/home/team-members');
       } finally {
         setIsLoadingData(false);
       }
@@ -46,7 +46,7 @@ export default function EditTeamMemberPage() {
     try {
       await updateTeamMember(teamMember.id, data);
       toast.success('Team member updated successfully');
-      router.push('/team-members');
+      router.push('/home/team-members');
     } catch (error) {
       console.error('Failed to update team member:', error);
       toast.error('Failed to update team member');
@@ -67,7 +67,7 @@ export default function EditTeamMemberPage() {
           asChild 
           className="mb-4"
         >
-          <Link href="/team-members">
+          <Link href="/home/team-members">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Team Members
           </Link>

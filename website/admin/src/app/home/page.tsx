@@ -32,7 +32,7 @@ const links = [
     title: "Team Members",
     description:
       "Manage organizing team members",
-    link: "/team-members",
+    link: "/home/team-members",
   },
 ];
 

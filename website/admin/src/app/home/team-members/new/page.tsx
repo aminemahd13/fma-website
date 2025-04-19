@@ -20,7 +20,7 @@ export default function NewTeamMemberPage() {
     try {
       await createTeamMember(data);
       toast.success('Team member created successfully');
-      router.push('/team-members');
+      router.push('/home/team-members');
     } catch (error) {
       console.error('Failed to create team member:', error);
       toast.error('Failed to create team member');
@@ -41,7 +41,7 @@ export default function NewTeamMemberPage() {
           asChild 
           className="mb-4"
         >
-          <Link href="/team-members">
+          <Link href="/home/team-members">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Team Members
           </Link>
