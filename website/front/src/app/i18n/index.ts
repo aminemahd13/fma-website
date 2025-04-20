@@ -12,7 +12,7 @@ const initI18next = async (lang: string, ns: string) => {
   return i18nInstance
 }
 
-export async function useTranslation(lang: string, ns: string = defaultNS, options: any = {}) {
+export async function getTranslation(lang: string, ns: string = defaultNS, options: any = {}) {
   const i18nextInstance = await initI18next(lang, ns)
   return {
     t: i18nextInstance.getFixedT(lang, Array.isArray(ns) ? ns[0] : ns, options.keyPrefix),

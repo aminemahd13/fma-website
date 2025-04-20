@@ -30,7 +30,7 @@ export function UserNav(props: any) {
 
     router.push('/');
     window.location.reload();
-  }, [])
+  }, [router, setUserData])
 
   return (
     <DropdownMenu>

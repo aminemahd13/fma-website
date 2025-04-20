@@ -11,7 +11,7 @@ export interface TeamMember {
   order: number;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/mtym-api';
+const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5000/mtym-api';
 
 export async function fetchActiveTeamMembers(): Promise<TeamMember[]> {
   try {

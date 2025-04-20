@@ -5,7 +5,7 @@ import { getSlideshowImages } from "@/lib/utils";
 import CtaButton from "@/components/home/cta-button";
 import Informations from "@/components/home/informations";
 import InstagramReels from "@/components/home/instagram-reels";
-import { useTranslation } from "../i18n";
+import { getTranslation } from "../i18n";
 import AboutSection from "@/components/home/about-section";
 import TutorialSection from "@/components/home/tutorial-section";
 
@@ -15,7 +15,7 @@ export default async function Home({
   params: { lang: string },
 }) {
   // console.log('home lang', params?.lang)
-  const { t } = await useTranslation(params?.lang, 'home')
+  const { t } = await getTranslation(params?.lang, 'home')
   // console.log('home t', t)
   // console.log('home t(hero-title)', t('hero-title'))
   return (

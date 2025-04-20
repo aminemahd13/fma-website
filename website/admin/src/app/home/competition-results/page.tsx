@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CompetitionResult, CreateCompetitionResultData, MedalType, updateCompetitionResult, updateAllCompetitionResultsActive } from "@/lib/api/competition-results";
+import { CompetitionResult, CreateCompetitionResultData, MedalType, UpdateCompetitionResultData, updateCompetitionResult, updateAllCompetitionResultsActive } from "@/lib/api/competition-results";
 import { CompetitionResultForm } from "@/app/home/competition-results/components/competition-result-form";
 import { CompetitionResultList } from "@/app/home/competition-results/components/competition-result-list";
 import { Button } from "@/components/shared/button";
@@ -100,16 +100,21 @@ export default function CompetitionResultsPage() {
     }
   };
 
-  const handleCreateResult = async (formData: CreateCompetitionResultData) => {
-    console.log("handleCreateResult called with data:", formData);
+  const handleCreateResult = async (formData: CreateCompetitionResultData | UpdateCompetitionResultData) => {
+    //console.log("handleCreateResult called with data:", formData);
+    if (
+      typeof formData.rank !== "number" ||
+      typeof formData.name !== "string" ||
+      typeof formData.school !== "string"
+    ) {
+      toast.error("All required fields must be filled.");
+      return;
+    }
     setIsSubmitting(true);
     try {
-      console.log("About to call API to create competition result");
-      const newResult = await createCompetitionResult(formData);
-      console.log("Created new competition result:", newResult);
+      const newResult = await createCompetitionResult(formData as CreateCompetitionResultData);
       setCompetitionResults((prevResults) => [...prevResults, newResult]);
       toast.success("Competition result created successfully");
-      // Close dialog after successful creation
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Failed to create competition result:", error);
@@ -119,13 +124,13 @@ export default function CompetitionResultsPage() {
     }
   };
 
-  const handleUpdateResult = async (formData: CreateCompetitionResultData) => {
+  const handleUpdateResult = async (formData: CreateCompetitionResultData | UpdateCompetitionResultData) => {
     if (!selectedResult) return;
     
     console.log("Updating competition result with data:", formData);
     setIsSubmitting(true);
     try {
-      const updatedResult = await updateCompetitionResult(selectedResult.id, formData);
+      const updatedResult = await updateCompetitionResult(selectedResult.id, formData as UpdateCompetitionResultData);
       console.log("Updated competition result:", updatedResult);
       
       setCompetitionResults((prevResults) => 

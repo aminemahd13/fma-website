@@ -2,6 +2,7 @@
 
 import { Diploma } from '@/components/shared/icons'
 import React from 'react'
+import Image from 'next/image'
 import Button from '@/components/shared/button';
 import Link from 'next/link';
 import {
@@ -34,8 +35,12 @@ const SpeakerCard = ({
   return (
     <div className="w-fit flex flex-col items-center p-4 md:items-start md:w-[48%] md:flex-row md:space-x-4 border-b-2">
       <div className="h-3/4 w-3/4 mb-4 md:mb-0 md:h-1/3 md:w-1/3">
-        <img
+        <Image
           src={imageUrl}
+          alt={`${firstName} ${lastName}`}
+          layout="responsive"
+          width={500}
+          height={500}
         />
       </div>
 
@@ -90,8 +95,12 @@ const SpeakerCard = ({
                     <DrawerTitle className='text-2xl -mb-2'>{firstName} {lastName}</DrawerTitle>
                     <DrawerDescription>{position}</DrawerDescription>
                     <div className="h-3/4 w-3/4 md:h-1/2 md:w-1/2">
-                      <img
+                      <Image
                         src={imageUrl}
+                        alt={`${firstName} ${lastName}`}
+                        layout="responsive"
+                        width={500}
+                        height={500}
                       />
                     </div>
                   </DrawerHeader>

@@ -31,11 +31,10 @@ export default function PastEditionPage() {
     const fetchResults = async () => {
       try {
         setLoading(true);
-        const data = await getAllCompetitionResults();
-        // If data is an array, use it directly, otherwise check if there's a nested array
-        const resultsData = Array.isArray(data) ? data : data?.results || [];
+        // Get the competition results and explicitly cast the response
+        const data = await getAllCompetitionResults() as CompetitionResult[];
         console.log("API Response:", data); // Log the actual API response for debugging
-        setResults(resultsData);
+        setResults(data || []); // Use data directly, provide fallback
         setError(null);
       } catch (err) {
         console.error('Error fetching competition results:', err);

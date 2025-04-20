@@ -35,7 +35,7 @@ export function AdminNav() {
 
     router.push('/login');
     window.location.reload();
-  }, [])
+  }, [router, setUsers, setApplications, setAdmin])
 
   return (
     <DropdownMenu>
