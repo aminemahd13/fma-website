@@ -14,7 +14,7 @@ const Informations = () => {
         className="drop-shadow-sm md:flex"
       >
         <div className="w-full md:text-xl py-4 space-y-4">
-          <p className="md:w-3/4">MTYM est une compétition de recherche déstinée aux lycéens d&apos;orientation scientifique. Elle consiste à explorer des problèmes mathématiques pendant trois mois en équipe et présenter les solutions sous forme d&apos;un débat. </p>
+          <p className="md:w-3/4">MFA est une compétition de recherche déstinée aux lycéens d&apos;orientation scientifique. Elle consiste à explorer des problèmes mathématiques pendant trois mois en équipe et présenter les solutions sous forme d&apos;un débat. </p>
           <p className="md:w-3/4">Préparez-vous à vivre une expérience riche en divertissement, workshops, conférences scientifiques et séances d&apos;orientation.</p>
           <Button disabled variant='default'>
         Le programme complet sera publié prochainement
@@ -48,7 +48,7 @@ const Informations = () => {
         <div className='w-full'>
           <MeteorCard 
             title='Dernière Édition' 
-            description='Découvrez comment s&apos;est déroulé la dernière édition de MTYM.'
+            description='Découvrez comment s&apos;est déroulé la dernière édition de MFA.'
             ctaLabel='Voir la dernière édition'
             className='h-full'
             onClick={() => router.push('/last-edition')}

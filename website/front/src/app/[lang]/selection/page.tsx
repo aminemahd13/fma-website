@@ -22,7 +22,7 @@ export default function SelectionPage() {
           style={{ animationDelay: "0.35s", animationFillMode: "forwards" }}
         >
           <p className="mt-12">
-            La sélection pour la participation à <span className='bg-gradient-to-br from-sky-500 to-[#272162] inline-block text-transparent bg-clip-text'>MTYM</span> se fait principalement sur la base d&apos;un test de sélection en ligne qui aura lieu le <span className="font-bold">06 octobre 2024</span>. <span className="font-bold">Bloquer bien ce jour dans votre calendrier.</span>
+            La sélection pour la participation à <span className='bg-gradient-to-br from-sky-500 to-[#272162] inline-block text-transparent bg-clip-text'>MFA</span> se fait principalement sur la base d&apos;un test de sélection en ligne qui aura lieu le <span className="font-bold">06 octobre 2024</span>. <span className="font-bold">Bloquer bien ce jour dans votre calendrier.</span>
           </p>
 
           <p className="mt-6">

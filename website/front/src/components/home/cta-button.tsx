@@ -124,7 +124,7 @@ const CtaButton = () => {
       </div> */}
 
       <p>
-        Merci pour l&apos;intérêt que vous portez à <span className='font-semibold text-[#272162]'>MTYM</span>!
+        Merci pour l&apos;intérêt que vous portez à <span className='font-semibold text-[#272162]'>MFA</span>!
       </p>
       <p>
         Pour consulter votre candidature, {!userData

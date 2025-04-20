@@ -7,7 +7,7 @@ import { DataLoader } from '@/components/layout/data-loader';
 import { Toaster } from '@/components/shared/toaster';
 
 export const metadata: Metadata = {
-  title: "MTYM 2024 Admin",
+  title: "MFA 2025 Admin",
 };
 
 export default function RootLayout({

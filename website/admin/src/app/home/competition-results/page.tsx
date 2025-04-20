@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { CompetitionResult, CreateCompetitionResultData, MedalType, updateCompetitionResult, updateAllCompetitionResultsActive } from "@/lib/api/competition-results";
-import { CompetitionResultForm } from "@/app/competition-results/components/competition-result-form";
-import { CompetitionResultList } from "@/app/competition-results/components/competition-result-list";
+import { CompetitionResultForm } from "@/app/home/competition-results/components/competition-result-form";
+import { CompetitionResultList } from "@/app/home/competition-results/components/competition-result-list";
 import { Button } from "@/components/shared/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/shared/dialog";
 import { Switch } from "@/components/shared/switch";

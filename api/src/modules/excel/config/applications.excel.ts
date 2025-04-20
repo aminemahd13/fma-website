@@ -47,7 +47,7 @@ export const columns = [
   },
   { header: 'Achieved result', key: 'achieved-result', width: 20 },
   {
-    header: 'Have you participated in MTYM before ?',
+    header: 'Have you participated in a Math&Maroc event before ?',
     key: 'has-previously-participated-in-mmc',
     width: 15,
   },

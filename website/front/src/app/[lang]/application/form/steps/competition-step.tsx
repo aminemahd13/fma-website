@@ -94,7 +94,7 @@ export const CompetitionStep = ({
           name="hasPreviouslyParticipatedInMtym"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel>Avez-vous participé à MTYM in Mai 2024 ? <RequiredAsterisk /></FormLabel>
+              <FormLabel>Avez-vous participé à MFA in Mai 2024 ? <RequiredAsterisk /></FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
