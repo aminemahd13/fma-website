@@ -1,13 +1,78 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CompetitionResult, CreateCompetitionResultData, MedalType, updateCompetitionResult } from "@/lib/api/competition-results";
+import { CompetitionResult, CreateCompetitionResultData, MedalType, updateCompetitionResult, updateAllCompetitionResultsActive } from "@/lib/api/competition-results";
 import { CompetitionResultForm } from "@/app/competition-results/components/competition-result-form";
 import { CompetitionResultList } from "@/app/competition-results/components/competition-result-list";
 import { Button } from "@/components/shared/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/shared/dialog";
+import { Switch } from "@/components/shared/switch";
 import { toast } from "sonner";
 import { createCompetitionResult, fetchCompetitionResults } from "@/lib/api/competition-results";
+
+function ResultsVisibilityToggle({ onToggleComplete }: { onToggleComplete: () => void }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPublished, setIsPublished] = useState(false);
+  
+  useEffect(() => {
+    const checkIfResultsActive = async () => {
+      try {
+        const data = await fetchCompetitionResults();
+        // If we have results and at least one is active, consider results as published
+        const published = Array.isArray(data) && data.length > 0 && data.some(result => result.isActive);
+        setIsPublished(published);
+      } catch (error) {
+        console.error("Error checking results status:", error);
+      }
+    };
+    
+    checkIfResultsActive();
+  }, []);
+
+  const handleTogglePublishResults = async (checked: boolean) => {
+    try {
+      setIsLoading(true);
+      await updateAllCompetitionResultsActive(checked);
+      setIsPublished(checked);
+      toast.success(checked 
+        ? "Les résultats ont été publiés avec succès" 
+        : "Les résultats ont été dépubliés avec succès"
+      );
+      if (onToggleComplete) {
+        onToggleComplete();
+      }
+    } catch (error) {
+      console.error("Error toggling results publication:", error);
+      toast.error("Une erreur est survenue lors de la modification de la visibilité des résultats");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-between p-4 border rounded-lg bg-white shadow-sm mb-6">
+      <div>
+        <h3 className="text-lg font-medium">Visibilité des résultats</h3>
+        <p className="text-sm text-gray-500">
+          {isPublished 
+            ? "Les résultats sont actuellement visibles sur le site" 
+            : "Les résultats sont actuellement masqués"
+          }
+        </p>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium">
+          {isLoading ? "Chargement..." : (isPublished ? "Publié" : "Non publié")}
+        </span>
+        <Switch
+          checked={isPublished}
+          onCheckedChange={handleTogglePublishResults}
+          disabled={isLoading}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function CompetitionResultsPage() {
   const [competitionResults, setCompetitionResults] = useState<CompetitionResult[]>([]);
@@ -105,6 +170,9 @@ export default function CompetitionResultsPage() {
         <Button onClick={openDialog}>Add New Result</Button>
       </div>
 
+      {/* Add the toggle component for bulk activation/deactivation */}
+      <ResultsVisibilityToggle onToggleComplete={loadCompetitionResults} />
+
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
@@ -150,4 +218,4 @@ export default function CompetitionResultsPage() {
       </div>
     </div>
   );
-} 
+}

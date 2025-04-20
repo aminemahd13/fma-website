@@ -32,6 +32,15 @@ export class CompetitionResultController {
     return this.competitionResultService.findAll();
   }
 
+  // Move the update-all-active route before the :id route to ensure proper route matching
+  @Patch('update-all-active')
+  @UseGuards(RolesGuard)
+  @Roles(ADMIN_ROLE)
+  async updateAllActive(@Body() body: { isActive: boolean }): Promise<{ success: boolean }> {
+    await this.competitionResultService.updateAllActive(body.isActive);
+    return { success: true };
+  }
+
   @Get(':id')
   @Public()
   findOne(@Param('id') id: string): Promise<CompetitionResult> {
@@ -51,4 +60,4 @@ export class CompetitionResultController {
   remove(@Param('id') id: string): Promise<void> {
     return this.competitionResultService.remove(+id);
   }
-} 
+}

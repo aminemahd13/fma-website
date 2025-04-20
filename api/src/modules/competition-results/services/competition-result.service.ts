@@ -61,4 +61,8 @@ export class CompetitionResultService {
       throw new NotFoundException(`Competition result with ID ${id} not found`);
     }
   }
+
+  async updateAllActive(isActive: boolean): Promise<void> {
+    await this.competitionResultRepository.update({}, { isActive });
+  }
 }

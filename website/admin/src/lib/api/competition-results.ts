@@ -162,4 +162,31 @@ export async function deleteCompetitionResult(id: number): Promise<void> {
     console.error(`Exception during competition result #${id} deletion:`, error);
     throw error;
   }
-} 
+}
+
+export async function updateAllCompetitionResultsActive(isActive: boolean): Promise<void> {
+  const token = getToken();
+  console.log(`${isActive ? 'Activating' : 'Deactivating'} all competition results`);
+  
+  try {
+    const response = await fetch(`${API_URL}/competition-results/update-all-active`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ isActive })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Error updating all competition results visibility:`, errorText);
+      throw new Error(`Failed to update all competition results visibility: ${response.status} ${errorText}`);
+    }
+    
+    console.log(`Successfully ${isActive ? 'activated' : 'deactivated'} all competition results`);
+  } catch (error) {
+    console.error(`Exception during updating all competition results:`, error);
+    throw error;
+  }
+}
