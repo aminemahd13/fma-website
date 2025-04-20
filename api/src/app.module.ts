@@ -23,6 +23,7 @@ import { ExcelModule } from './modules/excel/excel.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { FaqModule } from './modules/faq/faq.module';
 import { TeamMembersModule } from './modules/team-members/team-members.module';
+import { CompetitionResultsModule } from './modules/competition-results/competition-results.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { TeamMembersModule } from './modules/team-members/team-members.module';
     SettingsModule,
     FaqModule,
     TeamMembersModule,
+    CompetitionResultsModule,
   ],
   controllers: [AppController],
   providers: [

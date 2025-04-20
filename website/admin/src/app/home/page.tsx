@@ -34,6 +34,12 @@ const links = [
       "Manage organizing team members",
     link: "/home/team-members",
   },
+  {
+    title: "Competition Results",
+    description:
+      "Manage competition results",
+    link: "/home/competition-results",
+  },
 ];
 
 export default function Home() {

@@ -60,6 +60,10 @@ export default function HomeLayout({
                 <UsersIcon className="h-4 w-4" />
                 FAQ Management
               </NavItem>
+              <NavItem href="/home/competition-results" className="h-12">
+                <UsersIcon className="h-4 w-4" />
+                Competition Results
+              </NavItem>
             </nav>
           </div>
         </div>
