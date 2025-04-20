@@ -1,4 +1,6 @@
 
+import Image from 'next/image';
+
 const organizers = [
   {
     key: 'math-and-maroc',
@@ -55,9 +57,11 @@ export default function PartnersPage() {
             key={organizers[0].key}
           > 
             <div className="h-[8rem] w-[16rem] md:h-fit md:w-[18rem] flex justify-center items-center">
-              <img
+              <Image
                 src={organizers[0].imageHref}
-                style={{height: '60px', width: 'auto'}}
+                alt="Math&Maroc Logo"
+                height={60}
+                width={120}
               />
             </div>
 
