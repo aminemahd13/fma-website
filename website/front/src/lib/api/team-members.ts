@@ -15,7 +15,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5000/m
 
 export async function fetchActiveTeamMembers(): Promise<TeamMember[]> {
   try {
-    const response = await fetch(`${API_URL}/team-members`);
+    const response = await fetch(`${API_URL}team-members`);
     
     if (!response.ok) {
       throw new Error('Failed to fetch team members');
@@ -30,7 +30,7 @@ export async function fetchActiveTeamMembers(): Promise<TeamMember[]> {
 
 export async function fetchTeamMembersByCategory(category: TeamMemberCategory): Promise<TeamMember[]> {
   try {
-    const response = await fetch(`${API_URL}/team-members/category/${category}`);
+    const response = await fetch(`${API_URL}team-members/category/${category}`);
     
     if (!response.ok) {
       throw new Error(`Failed to fetch ${category} team members`);
