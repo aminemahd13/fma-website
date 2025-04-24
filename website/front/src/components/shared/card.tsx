@@ -52,14 +52,23 @@ CardTitle.displayName = "CardTitle"
 
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
-    {...props}
-  />
-))
+  React.HTMLAttributes<HTMLParagraphElement> & { loading?: boolean }
+>(({ className, loading, ...props }, ref) => {
+  // Use consistent classnames for both server and client
+  const baseClasses = "text-sm text-muted-foreground";
+  const loadingClasses = "animate-pulse rounded-md h-10 w-[200px] md:w-[650px] bg-gray-300";
+  
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        loading ? loadingClasses : baseClasses,
+        className
+      )}
+      {...props}
+    />
+  );
+})
 CardDescription.displayName = "CardDescription"
 
 const CardContent = React.forwardRef<

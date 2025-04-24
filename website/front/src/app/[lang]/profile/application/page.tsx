@@ -119,7 +119,7 @@ export default function ApplicationPage() {
         <CardTitle loading={isLoading}>
           {content?.title}
         </CardTitle>
-        <CardDescription>
+        <CardDescription loading={isLoading}>
           {content?.subtitle}
         </CardDescription>
       </CardHeader>

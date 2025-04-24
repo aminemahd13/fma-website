@@ -31,8 +31,8 @@ export const CompetitionStep = ({
       </h2>
       <p className='mt-1 text-sm leading-6 text-gray-600'>
         Fournissez des informations à propos de vos expériences et participations
-        <Separator className='mt-4 bg-[#0284C7]'/>
       </p>
+      <Separator className='mt-4 bg-[#0284C7]'/>
       <div className='mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 justify-between'>
         {/* Previous competitions */}
         <FormField
