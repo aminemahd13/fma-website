@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "framer-motion": "^11.3.24"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.16"
   }
 }
