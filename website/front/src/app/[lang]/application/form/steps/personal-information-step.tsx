@@ -161,7 +161,7 @@ export const PersonalInformationStep = ({
           name="massarCode"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Code Massar ou Code National de l'Etudiant (CNE) <RequiredAsterisk /></FormLabel>
+              <FormLabel>Code Massar (CNE) <RequiredAsterisk /></FormLabel>
               <FormControl>
                 <Input placeholder="Code Massar" {...field} />
               </FormControl>
@@ -176,7 +176,7 @@ export const PersonalInformationStep = ({
           name="city"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Ville actuelle de résidence <RequiredAsterisk /></FormLabel>
+              <FormLabel>Ville de résidence <RequiredAsterisk /></FormLabel>
               <FormControl>
                 <Input placeholder="Ville" {...field} />
               </FormControl>
@@ -191,7 +191,7 @@ export const PersonalInformationStep = ({
           name="region"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Région actuelle de résidence <RequiredAsterisk /></FormLabel>
+              <FormLabel>Région de résidence <RequiredAsterisk /></FormLabel>
               <FormControl>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <SelectTrigger>
@@ -218,7 +218,7 @@ export const PersonalInformationStep = ({
           name="phoneNumber"
           render={({ field }) => (
             <FormItem className="flex flex-col mt-2 items-start">
-              <FormLabel className="text-left">Téléphone de l'élève <RequiredAsterisk /></FormLabel>
+              <FormLabel className="text-left">Téléphone de l&apos;élève <RequiredAsterisk /></FormLabel>
               <FormControl className="w-full">
                 <PhoneInput placeholder="Numéro de téléphone" {...field} />
               </FormControl>
@@ -250,10 +250,10 @@ export const PersonalInformationStep = ({
       </div>
 
       <h2 className='text-base font-semibold leading-7 text-[#0284C7] mt-6'>
-        Informations personnelles du parent
+        Informations personnelles du tuteur
       </h2>
       <p className='mt-1 text-sm leading-6 text-gray-600'>
-        Fournissez les informations personnelles d&apos;un parent.
+        Fournissez les informations personnelles d&apos;un tuteur.
       </p>
       <Separator className='mt-4 bg-[#0284C7]'/>
       <div className='mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-between'>
@@ -263,7 +263,7 @@ export const PersonalInformationStep = ({
           name="guardianFullName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom et prénom du parent <RequiredAsterisk /></FormLabel>
+              <FormLabel>Nom et prénom du tuteur <RequiredAsterisk /></FormLabel>
               <FormControl>
                 <Input placeholder="Nom complet" {...field} />
               </FormControl>
@@ -278,9 +278,9 @@ export const PersonalInformationStep = ({
           name="parentCNIE"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Numéro CNIE des parents <RequiredAsterisk /></FormLabel>
+              <FormLabel>Numéro CNIE du tuteur <RequiredAsterisk /></FormLabel>
               <FormControl>
-                <Input placeholder="CNIE du parent" {...field} />
+                <Input placeholder="CNIE du tuteur" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -293,7 +293,7 @@ export const PersonalInformationStep = ({
           name="guardianPhoneNumber"
           render={({ field }) => (
             <FormItem className="flex flex-col mt-2 items-start">
-              <FormLabel className="text-left">Téléphone d'un parent <RequiredAsterisk /></FormLabel>
+              <FormLabel className="text-left">Téléphone du tuteur <RequiredAsterisk /></FormLabel>
               <FormControl className="w-full">
                 <PhoneInput placeholder="Numéro de téléphone" {...field} />
               </FormControl>
@@ -308,7 +308,7 @@ export const PersonalInformationStep = ({
           name="relationshipWithGuardian"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Relation avec ce parent <RequiredAsterisk /></FormLabel>
+              <FormLabel>Relation avec ce tuteur <RequiredAsterisk /></FormLabel>
               <FormControl>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <SelectTrigger>

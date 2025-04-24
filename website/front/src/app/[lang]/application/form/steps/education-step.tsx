@@ -63,7 +63,7 @@ export const EducationStep = ({
         Notes du 1er semestre
       </h2>
       <p className='mt-1 text-sm leading-6 text-gray-600'>
-        Fournir les notes du contrôle continu du 1er semestre de l'année en cours
+        Fournir les notes du contrôle continu du 1er semestre de l&apos;année en cours
       </p>
       <Separator className='mt-4 bg-[#0284C7]'/>
       
