@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectS3, S3 } from 'nestjs-s3';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
@@ -51,5 +51,16 @@ export class MediaService {
     });
 
     return signedURL;
+  }
+
+  async getPresignedFileUrl(key: string): Promise<string> {
+    const command = new GetObjectCommand({
+      Bucket: this.configService.get('AWS_BUCKET_NAME'),
+      Key: key,
+    });
+    
+    // URL expiration time (3600 seconds = 1 hour)
+    const presignedUrl = await getSignedUrl(this.s3, command, { expiresIn: 3600 });
+    return presignedUrl;
   }
 }
