@@ -1,7 +1,5 @@
 import { User } from 'src/modules/user/entities/user.entity';
 import {
-  educationFieldLabels,
-  educationLevelLabels,
   regionLabels,
   relationshipWithGuardianLabels,
 } from '../labels';
@@ -14,11 +12,12 @@ export const columns = [
   { header: 'Last Name', key: 'last-name', width: 15 },
   { header: 'Email', key: 'email', width: 25 },
   { header: 'Date of Birth', key: 'dob', width: 15 },
-  { header: 'CNIE', key: 'cnie', width: 12 },
+  { header: 'Massar Code', key: 'massar-code', width: 12 },
   { header: 'City', key: 'city', width: 15 },
   { header: 'Region', key: 'region', width: 20 },
   { header: 'Phone number', key: 'phone-number', width: 20 },
   { header: 'Guardian Full Name', key: 'guardian-full-name', width: 25 },
+  { header: 'Parent CNIE', key: 'parent-cnie', width: 15 },
   { header: 'Guardian Phone Number', key: 'guardian-phone-number', width: 25 },
   {
     header: 'Relationship With Guardian',
@@ -27,40 +26,44 @@ export const columns = [
   },
   { header: 'Special conditions', key: 'special conditions', width: 30 },
 
-  { header: 'Education level', key: 'education-level', width: 25 },
-  { header: 'Education field', key: 'education-field', width: 25 },
   { header: 'Highschool', key: 'highschool', width: 20 },
   { header: 'Average grade', key: 'average-grade', width: 15 },
-  { header: 'Math Average grade', key: 'math-average-grade', width: 15 },
+  { header: 'Physics Average grade', key: 'physics-average-grade', width: 15 },
   { header: 'Ranking', key: 'ranking', width: 15 },
-  { header: 'Math Ranking', key: 'math-ranking', width: 15 },
-  {
-    header: 'Number of students in class',
-    key: 'number-of-students',
-    width: 15,
-  },
+  { header: 'Physics Ranking', key: 'physics-ranking', width: 15 },
+
 
   {
-    header: 'Have you participated in competitions before ?',
+    header: 'Have you participated in competitions before?',
     key: 'has-previously-participated',
     width: 15,
   },
-  { header: 'Achieved result', key: 'achieved-result', width: 20 },
+  { header: 'Previous competitions', key: 'previous-competitions', width: 20 },
   {
-    header: 'Have you participated in a Math&Maroc event before ?',
-    key: 'has-previously-participated-in-mmc',
+    header: 'Physics olympiads participation',
+    key: 'physics-olympiads-participation',
     width: 15,
   },
-  { header: 'Motivations', key: 'id', width: 30 },
-  { header: 'Comments', key: 'id', width: 30 },
+  { 
+    header: 'Olympiads training selection', 
+    key: 'olympiads-training-selection', 
+    width: 15 
+  },
+  { header: 'Comments', key: 'comments', width: 30 },
 
-  { header: 'CNIE', key: 'cnie', width: 10 },
+  { header: 'Parent ID', key: 'parent-id', width: 10 },
+  { header: 'Birth Certificate', key: 'birth-certificate', width: 10 },
   { header: 'School certificate', key: 'school-certificate', width: 10 },
   { header: 'Grades', key: 'grades', width: 10 },
   { header: 'Regulations', key: 'regulations', width: 10 },
   {
     header: 'Parental authorization',
     key: 'parental-authorization',
+    width: 10,
+  },
+  {
+    header: 'Image Rights',
+    key: 'image-rights',
     width: 10,
   },
   { header: 'Status', key: 'status', width: 15 },
@@ -79,29 +82,27 @@ export const rowFactory = (users: any[], configService) => {
       lastName: user?.lastName,
       email: user?.email,
       dateOfBirth: new Date(application?.dateOfBirth),
-      identityCardNumber: application?.identityCardNumber,
+      massarCode: application?.massarCode,
       city: application?.city,
       region: regionLabels[application?.region],
       phoneNumber: application?.phoneNumber,
       guardianFullName: application?.guardianFullName,
+      parentCNIE: application?.parentCNIE,
       guardianPhoneNumber: application?.guardianPhoneNumber,
       relationshipWithGuardian:
         relationshipWithGuardianLabels[application?.relationshipWithGuardian],
       specialConditions: application?.specialConditions,
 
-      educationLevel: educationLevelLabels[application?.educationLevel],
-      educationField: educationFieldLabels[application?.educationField],
       highschool: application?.highschool,
       averageGrade: application?.averageGrade,
-      mathAverageGrade: application?.mathAverageGrade,
+      physicsAverageGrade: application?.physicsAverageGrade,
       ranking: application?.ranking,
-      mathRanking: application?.mathRanking,
-      numberOfStudentsInClass: application?.numberOfStudentsInClass,
-
+      physicsRanking: application?.physicsRanking,
       hasPreviouslyParticipated: application?.hasPreviouslyParticipated,
       previousCompetitions: application?.previousCompetitions,
-      hasPreviouslyParticipatedInMtym:
-        application?.hasPreviouslyParticipatedInMtym,
+      physicsOlympiadsParticipation: application?.physicsOlympiadsParticipation,
+      olympiadsTrainingSelection: application?.olympiadsTrainingSelection,
+      comments: application?.comments,
     };
   };
 
@@ -120,7 +121,7 @@ export const styleSheet = (sheet) => {
   }
 
   // personal informations style
-  for (let i = 4; i <= 15; i++) {
+  for (let i = 4; i <= 16; i++) {
     sheet.getColumn(i).fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -130,7 +131,7 @@ export const styleSheet = (sheet) => {
   }
 
   // education style
-  for (let i = 16; i <= 23; i++) {
+  for (let i = 17; i <= 22; i++) {
     sheet.getColumn(i).fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -140,7 +141,7 @@ export const styleSheet = (sheet) => {
   }
 
   // competition style
-  for (let i = 24; i <= 28; i++) {
+  for (let i = 23; i <= 27; i++) {
     sheet.getColumn(i).fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -150,7 +151,7 @@ export const styleSheet = (sheet) => {
   }
 
   // uploads style
-  for (let i = 29; i <= 34; i++) {
+  for (let i = 28; i <= 35; i++) {
     sheet.getColumn(i).fill = {
       type: 'pattern',
       pattern: 'solid',

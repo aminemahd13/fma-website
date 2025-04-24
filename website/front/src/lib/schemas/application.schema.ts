@@ -35,7 +35,6 @@ export const applicationSchema: ZodSchema = z.object({
   mathAverageGrade: z.string().min(1).max(50),
   ranking: z.string().min(1).max(50),
   mathRanking: z.string().min(1).max(50),
-  numberOfStudentsInClass: z.string().min(1).max(50),
 
   /* Competition */
   hasPreviouslyParticipated: z.enum(["yes", "no"], { required_error: "Please select an option." }),

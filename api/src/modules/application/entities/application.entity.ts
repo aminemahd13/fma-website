@@ -41,7 +41,7 @@ export class Application {
   dateOfBirth: Date;
 
   @Column({ type: 'varchar', default: '' })
-  identityCardNumber: string;
+  massarCode: string;
 
   @Column({ type: 'varchar', default: '' })
   city: string;
@@ -56,6 +56,9 @@ export class Application {
   guardianFullName: string;
 
   @Column({ type: 'varchar', default: '' })
+  parentCNIE: string;
+
+  @Column({ type: 'varchar', default: '' })
   guardianPhoneNumber: string;
 
   @Column({ type: 'varchar', default: '' })
@@ -66,28 +69,20 @@ export class Application {
 
   /* Education */
   @Column({ type: 'varchar', default: '' })
-  educationLevel: string;
-
-  @Column({ type: 'varchar', default: '' })
-  educationField: string;
-
-  @Column({ type: 'varchar', default: '' })
   highschool: string;
 
   @Column({ type: 'varchar', default: '' })
   averageGrade: string;
 
   @Column({ type: 'varchar', default: '' })
-  mathAverageGrade: string;
+  physicsAverageGrade: string;
 
   @Column({ type: 'varchar', default: '' })
   ranking: string;
 
   @Column({ type: 'varchar', default: '' })
-  mathRanking: string;
+  physicsRanking: string;
 
-  @Column({ type: 'varchar', default: '' })
-  numberOfStudentsInClass: string;
 
   /* Competition */
   @Column({ type: 'varchar', default: '' })
@@ -97,17 +92,20 @@ export class Application {
   previousCompetitions: string;
 
   @Column({ type: 'varchar', default: '' })
-  hasPreviouslyParticipatedInMtym: string;
+  physicsOlympiadsParticipation: string;
 
-  @Column({ type: 'text', nullable: true })
-  motivations: string;
+  @Column({ type: 'varchar', default: '' })
+  olympiadsTrainingSelection: string;
 
   @Column({ type: 'text', nullable: true })
   comments: string;
 
   /* Files */
   @Column({ type: 'varchar', nullable: true })
-  cnieUrl: string;
+  parentIdUrl: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  birthCertificateUrl: string;
 
   @Column({ type: 'varchar', nullable: true })
   schoolCertificateUrl: string;
@@ -120,6 +118,9 @@ export class Application {
 
   @Column({ type: 'varchar', nullable: true })
   parentalAuthorizationUrl: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  imageRightsUrl: string;
 
   /* createAt & updatedAt */
   @CreateDateColumn({

@@ -16,7 +16,7 @@ export class CreateApplicationDto {
 
   @IsString()
   @IsOptional()
-  identityCardNumber: string;
+  massarCode: string;
 
   @IsString()
   @IsOptional()
@@ -36,6 +36,10 @@ export class CreateApplicationDto {
 
   @IsString()
   @IsOptional()
+  parentCNIE: string;
+
+  @IsString()
+  @IsOptional()
   guardianPhoneNumber: string;
 
   @IsString()
@@ -49,14 +53,6 @@ export class CreateApplicationDto {
   /* Education */
   @IsString()
   @IsOptional()
-  educationLevel: string;
-
-  @IsString()
-  @IsOptional()
-  educationField: string;
-
-  @IsString()
-  @IsOptional()
   highschool: string;
 
   @IsString()
@@ -65,7 +61,7 @@ export class CreateApplicationDto {
 
   @IsString()
   @IsOptional()
-  mathAverageGrade: string;
+  physicsAverageGrade: string;
 
   @IsString()
   @IsOptional()
@@ -73,11 +69,8 @@ export class CreateApplicationDto {
 
   @IsString()
   @IsOptional()
-  mathRanking: string;
+  physicsRanking: string;
 
-  @IsString()
-  @IsOptional()
-  numberOfStudentsInClass: string;
 
   /* Competition */
   @IsString()
@@ -90,11 +83,11 @@ export class CreateApplicationDto {
 
   @IsString()
   @IsOptional()
-  hasPreviouslyParticipatedInMtym: string;
+  physicsOlympiadsParticipation: string;
 
   @IsString()
   @IsOptional()
-  motivations: string;
+  olympiadsTrainingSelection: string;
 
   @IsString()
   @IsOptional()
@@ -103,7 +96,11 @@ export class CreateApplicationDto {
   /* Files */
   @IsString()
   @IsOptional()
-  cnieUrl: string;
+  parentIdUrl: string;
+
+  @IsString()
+  @IsOptional()
+  birthCertificateUrl: string;
 
   @IsString()
   @IsOptional()
@@ -120,4 +117,8 @@ export class CreateApplicationDto {
   @IsString()
   @IsOptional()
   parentalAuthorizationUrl: string;
+
+  @IsString()
+  @IsOptional()
+  imageRightsUrl: string;
 }

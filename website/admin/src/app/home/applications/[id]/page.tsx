@@ -164,7 +164,6 @@ export default function ApplicationDetailsPage({ params }: { params: { id: strin
                 <Field label='Math average grade'>{renderText(application?.mathAverageGrade)}</Field>
                 <Field label='Ranking'>{renderText(application?.ranking)}</Field>
                 <Field label='Math ranking'>{renderText(application?.mathRanking)}</Field>
-                <Field label='Number of students in class'>{renderText(application?.numberOfStudentsInClass)}</Field>                 
               </div>
             </TabsContent>
               

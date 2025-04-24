@@ -8,8 +8,12 @@ export class UpdateApplicationStatusDto {
 
   @IsString()
   @IsOptional()
-  cnieStatus: FileStatus;
-
+  parentIdStatus: FileStatus;
+  
+  @IsString()
+  @IsOptional()
+  birthCertificateStatus: FileStatus;
+  
   @IsString()
   @IsOptional()
   schoolCertificateStatus: FileStatus;
@@ -21,4 +25,12 @@ export class UpdateApplicationStatusDto {
   @IsString()
   @IsOptional()
   gradesStatus: FileStatus;
+  
+  @IsString()
+  @IsOptional()
+  parentalAuthorizationStatus: FileStatus;
+  
+  @IsString()
+  @IsOptional()
+  imageRightsStatus: FileStatus;
 }

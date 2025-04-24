@@ -41,19 +41,25 @@ export class ApplicationStatus {
 
   /* Files status */
   @Column({ type: 'varchar', default: 'PENDING' })
-  cnieStatus: FileStatus;
-
+  parentIdStatus: FileStatus;
+  
+  @Column({ type: 'varchar', default: 'PENDING' })
+  birthCertificateStatus: FileStatus;
+  
   @Column({ type: 'varchar', default: 'PENDING' })
   schoolCertificateStatus: FileStatus;
-
-  @Column({ type: 'varchar', default: 'PENDING' })
-  regulationsStatus: FileStatus;
 
   @Column({ type: 'varchar', default: 'PENDING' })
   gradesStatus: FileStatus;
 
   @Column({ type: 'varchar', default: 'PENDING' })
+  regulationsStatus: FileStatus;
+
+  @Column({ type: 'varchar', default: 'PENDING' })
   parentalAuthorizationStatus: FileStatus;
+  
+  @Column({ type: 'varchar', default: 'PENDING' })
+  imageRightsStatus: FileStatus;
 
   /* createAt & updatedAt */
   @CreateDateColumn({
