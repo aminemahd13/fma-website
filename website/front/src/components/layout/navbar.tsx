@@ -23,11 +23,11 @@ const links = [
     label: 'Résultats',
     href: '/results',
   },
-  {
-    key: 'last-edition',
-    label: 'Dernière Édition',
-    href: '/last-edition',
-  },
+  //{
+    //key: 'last-edition',
+    //label: 'Dernière Édition',
+    //href: '/last-edition',
+  //},
   {
     key: 'selection',
     label: 'Test de sélection',

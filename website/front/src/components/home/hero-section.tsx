@@ -7,21 +7,16 @@ export default function HeroSection({
   heroTitle,
   heroSubtitle,
   heroTitleResults,
-}:{
-  heroTitle: string,
-  heroSubtitle: string,
-  heroTitleResults: string,
+}: {
+  heroTitle: string;
+  heroSubtitle: string;
+  heroTitleResults: string;
 }) {
   return (
     <div className="w-full bg-transparent flex flex-col items-center justify-center rounded-md">
       {/* Logo */}
       <div className="z-10 mt-8 mb-2">
-        <Image
-          src="/mtym.png"
-          alt="M&M logo"
-          width='400'
-          height='200'
-        />
+        <Image src="/fma.png" alt="FMA logo" width="300" height="300" />
       </div>
 
       {/* Sparkles */}
@@ -41,7 +36,7 @@ export default function HeroSection({
             particleColor="#00008B"
           />
         </div>
-      </div> 
+      </div>
 
       {/* Content */}
       <div className="z-10 space-y-8">

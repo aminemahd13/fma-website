@@ -17,24 +17,14 @@ const Footer = () => {
           style={{height: isMobile ? 'auto' : '40px', width: 'auto'}}
         />
         <img
-          src="/adria_official_partner.png"
-          alt="M&M logo"
+          src="/CDG_logo.png"
+          alt="CDG"
           style={{height: isMobile ? 'auto' : '60px', width: 'auto'}}
         />
         <img
-          src="/akhawayn.png"
-          alt="Al Akhawayn"
+          src="/LM6E.png"
+          alt="LM6E"
           style={{height: isMobile ? 'auto' : '70px', width: 'auto'}}
-        />
-        <img
-          src="/ram.svg"
-          alt="RAM"
-          style={{height: isMobile ? 'auto' : '60px', width: 'auto'}}
-        />
-        <img
-          src="/evalmee.png"
-          alt="evalmee"
-          style={{height: isMobile ? 'auto' : '30px', width: 'auto'}}
         />
       </div>
       <div className='z-10'>

@@ -12,6 +12,14 @@ const config = {
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
 	],
+  safelist: [
+    "from-[#937868]",
+    "to-[#f44434]",
+    "from-[#628c11]",
+    "to-[#2596be]",
+    "from-stone-500",
+    "from-sky-500",
+  ],
   prefix: "",
   theme: {
     container: {

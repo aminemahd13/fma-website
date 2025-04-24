@@ -1,20 +1,46 @@
+'use client';
+
+import React from 'react';
+import { useRecoilValue } from 'recoil';
+import { useRouter } from 'next/navigation';
+import { userState } from '@/store/userState';
+import { useAuthModal } from '../layout/auth-modal';
 
 const TutorialSection = () => {
+  const userData = useRecoilValue(userState);
+  const router = useRouter();
+  const { AuthModal, setShowAuthModal } = useAuthModal();
+
+  const handleApplyClick = () => {
+    if (!userData) {
+      setShowAuthModal(true);
+    } else {
+      router.push('/application');
+    }
+  };
+
   return (
     <div className="">
-      <div className='drop-shadow-sm space-y-6 md:space-y-0 md:flex md:justify-around mb-12 text-center text-lg'>
-        Etes-vous intéressé par nous rejoindre dans cette aventure?<br/>
-        Nous vous avons préparé un tutoriel pour vous guider dans votre candidature et votre choix d&apos;équipe
+      <AuthModal />
+
+      <div className="drop-shadow-sm space-y-6 md:space-y-0 md:flex md:justify-around mb-12 text-center text-lg">
+        Êtes-vous intéressé à nous rejoindre dans cette aventure ?<br />
+        Il suffit de consulter le test de sélection et de nous envoyer votre candidature directement depuis votre profil !
       </div>
 
-      <div 
-        className="flex justify-around flex-wrap gap-6 p-8 rounded-lg animate-fade-up opacity-0"
-        style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
+      <div
+        className="flex justify-center p-8 rounded-lg animate-fade-up opacity-0"
+        style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}
       >
-        <iframe width="718" height="450" src="https://www.youtube.com/embed/bLxunPmuipQ?si=h58D0wPOWl11apqj" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+        <button className="p-[3px] relative" onClick={handleApplyClick}>
+          <div className="absolute inset-0 bg-gradient-to-r from-sky-500 to-[#272162] rounded-lg" />
+          <div className="px-16 py-8 bg-blue rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent hover:text-white">
+            Envoyer ma candidature
+          </div>
+        </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TutorialSection
+export default TutorialSection;

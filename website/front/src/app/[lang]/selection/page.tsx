@@ -1,68 +1,126 @@
-"use client"
+"use client";
 
-import { Compass, Exam, Rocket, Solution, Trophy } from "@/components/shared/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import React from "react";
+import { useRecoilValue } from "recoil";
+import { userState } from "@/store/userState";
+import { useAuthModal } from "@/components/layout/auth-modal";
 
 export default function SelectionPage() {
   const router = useRouter();
+  const userData = useRecoilValue(userState);
+  const { AuthModal, setShowAuthModal } = useAuthModal();
+
+  const handleApplicationClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!userData) {
+      setShowAuthModal(true);
+    } else {
+      router.push("/profile/application");
+    }
+  };
 
   return (
     <div className="w-full max-w-sm md:max-w-5xl px-5 xl:px-0 mt-10">
+      <AuthModal />
+
       <div className="space-y-6">
         <h1
-          className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-4xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm [text-wrap:balance] md:text-5xl md:leading-[4rem]"
+          className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-4xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm md:text-5xl md:leading-[4rem]"
           style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
         >
           Test de sélection
         </h1>
 
         <div
-          className="mt-6 animate-fade-up text-center text-gray-800 opacity-0 [text-wrap:balance] md:text-lg"
+          className="mt-6 animate-fade-up text-center text-gray-800 opacity-0 md:text-lg"
           style={{ animationDelay: "0.35s", animationFillMode: "forwards" }}
         >
           <p className="mt-12">
-            La sélection pour la participation à <span className='bg-gradient-to-br from-sky-500 to-[#272162] inline-block text-transparent bg-clip-text'>MTYM</span> se fait principalement sur la base d&apos;un test de sélection en ligne qui aura lieu le <span className="font-bold">06 octobre 2024</span>. <span className="font-bold">Bloquer bien ce jour dans votre calendrier.</span>
+            La sélection pour participer au{" "}
+            <span className="bg-gradient-to-br from-sky-500 to-[#272162] inline-block text-transparent bg-clip-text">
+              FMA Summer Camp
+            </span>{" "}
+            se déroule en deux phases. Le test commence le{" "}
+            <span className="font-bold">5 mai</span>.
           </p>
 
-          <p className="mt-6">
-            Le <span className="font-bold">syllabus</span> vous permettra de connaître les sujets couverts lors du test. 
-          </p>
+          <div className="mt-8 text-left md:text-center">
+            <p className="font-bold mb-2">📝 Phase 1 – Rapport écrit :</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Choisissez l’un des deux thèmes proposés ci-dessous.</li>
+              <li>Téléchargez le document du thème, et répondez aux questions dans un rapport structuré.</li>
+              <li>Connectez-vous à la plateforme pour soumettre votre candidature via votre espace personnel.</li>
+            </ul>
 
-          <p className="mt-6">
-            Les <span className="font-bold">questions types</span> du test de sélection vous donneront une idée sur les questions auxquelles il faut s&apos;attendre et sont mises à votre disposition pour vous aider à vous y préparer.
+            <p className="font-bold mt-6 mb-2">🎙️ Phase 2 – Entretien (si nécessaire) :</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Les rapports seront examinés par notre jury scientifique.</li>
+              <li>Certains candidats pourront être conviés à un entretien oral.</li>
+              <li>Les résultats finaux seront annoncés après cette étape.</li>
+            </ul>
+          </div>
+
+          <p className="mt-8">
+            Retrouvez ci-dessous les deux thèmes de cette édition, puis connectez-vous pour soumettre votre travail :
           </p>
         </div>
-        
+
+        {/* Buttons */}
         <div
-          className="flex justify-around flex-wrap gap-6 p-8 animate-fade-up opacity-0"
+          className="flex flex-col items-center gap-8 p-8 animate-fade-up opacity-0"
           style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
         >
-          <div className="space-y-4 flex flex-col md:flex-row md:space-x-8 md:space-y-0">          
-            <Link href='https://drive.google.com/file/d/1jw5CnHPFfalatYdoPDCz9cKt7yYp6bdL/view?usp=drive_link' target="_blank">
-              <div 
-                className="h-[8rem] w-[9rem] bg-white border-b-4 border-b-red-500 border-2 shadow-md flex justify-center items-center rounded-md py-2 hover:cursor-pointer"
-              > 
-                <div className="flex flex-col items-center text-center">
-                <span className="text-sm">Syllabus 2024/2025</span>
-                <Compass />
-                </div>
+          {/* Candidater Button */}
+          <button
+            className="relative h-40 w-40 rounded-full bg-gradient-to-br from-green-600 via-teal-500 to-blue-700 shadow-[0_0_40px_rgba(34,197,94,0.7)] hover:scale-105 transition-transform duration-500 animate-float flex items-center justify-center text-center backdrop-blur-sm ring-2 ring-white/20"
+            onClick={handleApplicationClick}
+          >
+            <span className="text-white font-semibold text-base z-10 pointer-events-none select-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]">
+              🔐<br />
+              Candidater
+            </span>
+            <div className="absolute w-[170%] h-[170%] border border-green-300/20 rounded-full animate-spin-slow pointer-events-none" />
+            <div className="absolute h-3.5 w-3.5 bg-white rounded-full right-0 top-2 shadow-[0_0_10px_rgba(255,255,255,0.8)] animate-moon" />
+          </button>
+
+          {/* Thematic PDFs */}
+          <div className="flex flex-col md:flex-row justify-center gap-8">
+            {/* Refroidissement Laser */}
+            <Link
+              href="https://drive.google.com/file/d/13OfY6lj-gnpoeGwJXQNPraipxILEXZos/view?usp=sharing"
+              target="_blank"
+            >
+              <div className="relative h-40 w-40 rounded-full bg-gradient-to-br from-sky-600 via-blue-600 to-indigo-700 shadow-[0_0_40px_rgba(59,130,246,0.7)] hover:scale-105 transition-transform duration-500 animate-float flex items-center justify-center text-center backdrop-blur-sm ring-2 ring-white/20">
+                <span className="text-white font-semibold text-sm z-10 pointer-events-none select-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]">
+                  🧊<br />
+                  Thème 1<br />
+                  Refroidissement Laser
+                </span>
+                <div className="absolute w-[170%] h-[170%] border border-blue-300/20 rounded-full animate-spin-slow pointer-events-none" />
+                <div className="absolute h-3.5 w-3.5 bg-white rounded-full right-0 top-2 shadow-[0_0_10px_rgba(255,255,255,0.8)] animate-moon" />
               </div>
             </Link>
 
-            <Link href='https://drive.google.com/file/d/1LoMTILi7YbOp11FdCioLDpyR5smT7m7i/view?usp=sharing' target="_blank">
-              <div 
-                className="h-[8rem] w-[9rem] bg-white border-b-4 border-b-red-500 border-2 shadow-md flex justify-center items-center rounded-md py-2 hover:cursor-pointer"
-              > 
-                <div className="flex flex-col items-center text-center">
-                  <span className="text-sm">Questions types</span>
-                  <Exam />
-                </div>
+            {/* Expansion de l'univers */}
+            <Link
+              href="https://drive.google.com/file/d/13OfY6lj-gnpoeGwJXQNPraipxILEXZos/view?usp=sharing"
+              target="_blank"
+            >
+              <div className="relative h-40 w-40 rounded-full bg-gradient-to-br from-purple-700 via-violet-600 to-pink-600 shadow-[0_0_40px_rgba(168,85,247,0.7)] hover:scale-105 transition-transform duration-500 animate-float flex items-center justify-center text-center backdrop-blur-sm ring-2 ring-white/20">
+                <span className="text-white font-semibold text-sm z-10 pointer-events-none select-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]">
+                  🌌<br />
+                  Thème 2<br />
+                  Expansion de l’univers
+                </span>
+                <div className="absolute w-[170%] h-[170%] border border-purple-300/20 rounded-full animate-spin-slow pointer-events-none" />
+                <div className="absolute h-3.5 w-3.5 bg-white rounded-full right-0 top-2 shadow-[0_0_10px_rgba(255,255,255,0.8)] animate-moon" />
               </div>
             </Link>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
