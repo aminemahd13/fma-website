@@ -33,7 +33,7 @@ export const ValidationStep = ({
       </p>
       <Separator className='mt-4 bg-[#0284C7]'/>
 
-      <div className='mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 justify-between'>
+      <div className='mt-10 grid grid-cols-1 gap-8 justify-between'>
         <FormField
           control={form.control}
           name="termsAgreement"
@@ -48,11 +48,11 @@ export const ValidationStep = ({
                 </FormControl>
                 <div className="space-y-1 leading-none">
                   <FormLabel>
-                    Conditions Générales <RequiredAsterisk />
+                    Règlement de Feynman Moroccan Adventure (FMA) <RequiredAsterisk />
                   </FormLabel>
-                  <FormDescription>
-                  Je confirme avoir lu entièrement le règlement de la compétition et m&apos;engage à le respecter.<br/> 
-                  En particulier, je m&apos;engage à être présent sur le campus de AUI Ifrane pendant toute la durée de la compétition (sauf dérogation demandée par mail et approuvée explicitement par le comité d&apos;organisation)<br/>
+                  <FormDescription className="text-sm">
+                    Je confirme avoir lu entièrement le règlement de Feynman Moroccan Adventure (FMA) et m&apos;engage à le respecter.<br/> 
+                    En particulier, je m&apos;engage à être présent sur le campus du LYDEX pendant toute la durée prévue du Camp (sauf dérogation demandée par mail et approuvée explicitement par le comité d&apos;organisation).
                   </FormDescription>
                 </div>
               </FormItem>

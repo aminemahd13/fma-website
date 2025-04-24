@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { UseFormReturn } from 'react-hook-form'
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,20 +27,20 @@ export const CompetitionStep = ({
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       <h2 className='text-base font-semibold leading-7 text-[#0284C7]'>
-        Compétition
+        Feynman Moroccan Adventure (FMA)
       </h2>
       <p className='mt-1 text-sm leading-6 text-gray-600'>
-        Fournissez des informations à propos de vos participations passées et vos motivations.
+        Fournissez des informations à propos de vos expériences et participations
         <Separator className='mt-4 bg-[#0284C7]'/>
       </p>
       <div className='mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 justify-between'>
-        {/* Has Previously Participated */}
+        {/* Previous competitions */}
         <FormField
           control={form.control}
           name="hasPreviouslyParticipated"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel>Avez-vous déjà participé à des compétitions (Olympiades, concours nationaux...)  <RequiredAsterisk /></FormLabel>
+              <FormLabel>Avez-vous déjà participé à des compétitions ou toute autre expérience que vous pensez être utile pour votre candidature? <RequiredAsterisk /></FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -69,16 +70,16 @@ export const CompetitionStep = ({
           )}
         />
 
-        {/* Previous Participations */}
+        {/* Previous competitions details */}
         <FormField
           control={form.control}
           name="previousCompetitions"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Si oui, veuillez spécifier lesquelles et le résultat obtenu.</FormLabel>
+              <FormLabel>Si oui : lesquelles ?</FormLabel>
               <FormControl>
               <Textarea
-                placeholder="Parlez-nous de vos accomplissements"
+                placeholder="Décrivez vos expériences précédentes"
                 className="resize-none"
                 {...field}
               />
@@ -88,13 +89,13 @@ export const CompetitionStep = ({
           )}
         />
 
-        {/* Has Previously Participated in MMC */}
+        {/* Physics olympiads participation */}
         <FormField
           control={form.control}
-          name="hasPreviouslyParticipatedInMtym"
+          name="physicsOlympiadsParticipation"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel>Avez-vous participé à MFA in Mai 2024 ? <RequiredAsterisk /></FormLabel>
+              <FormLabel>Êtes-vous participant aux olympiades de physique cette année? <RequiredAsterisk /></FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -117,36 +118,46 @@ export const CompetitionStep = ({
                       Non
                     </FormLabel>
                   </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="not-selected" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      J&apos;ai postulé, mais je n&apos;ai pas été sélectionné.
-                    </FormLabel>
-                  </FormItem>
                 </RadioGroup>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-      </div>
 
-      <div className='mt-10 grid grid-cols-1 gap-4 justify-between'>
-        {/* Motivations */}
+        {/* Selected for July training */}
         <FormField
           control={form.control}
-          name="motivations"
+          name="olympiadsTrainingSelection"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Parlez-nous de vos motivations à participer à cette compétition <RequiredAsterisk /></FormLabel>
+            <FormItem className="space-y-3">
+              <FormLabel>Êtes-vous sélectionné au stage de formation de juillet ?</FormLabel>
+              <FormDescription className="text-xs mt-0 mb-2">
+                (Question pour les élèves de bac 1 - critère de sélection)
+              </FormDescription>
               <FormControl>
-              <Textarea
-                placeholder="Maximum 300 mots"
-                className="resize-none"
-                {...field}
-              />
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-col space-y-1"
+                >
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="yes" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      Oui
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="no" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      Non
+                    </FormLabel>
+                  </FormItem>
+                </RadioGroup>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -164,7 +175,7 @@ export const CompetitionStep = ({
               <FormLabel>Remarques / Commentaires</FormLabel>
               <FormControl>
               <Textarea
-                placeholder="Quelque chose à ajouter ?"
+                placeholder="Avez-vous quelque chose à ajouter ?"
                 className="resize-none"
                 {...field}
               />

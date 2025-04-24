@@ -4,26 +4,27 @@ export const steps: Step[] = [
   {
     id: 'Étape 1',
     name: 'Informations Personnelles',
-    fields: ['firstName', 'lastName', 'dateOfBirth', 'identityCardNumber', 'city', 'region', 'phoneNumber', 'guardianFullName', 'guardianPhoneNumber', 'relationshipWithGuardian', 'specialConditions']
+    fields: ['firstName', 'lastName', 'dateOfBirth', 'massarCode', 'city', 'region', 'phoneNumber', 'guardianFullName', 'parentCNIE', 'guardianPhoneNumber', 'relationshipWithGuardian', 'specialConditions']
   },
   {
     id: 'Étape 2',
-    name: 'Éducation',
-    fields: ['educationLevel', 'educationField', 'highschool', 'averageGrade', 'ranking', 'mathAverageGrade', 'mathRanking', 'numberOfStudentsInClass']
+    name: 'Études',
+    fields: ['highschool', 'averageGrade', 'physicsAverageGrade', 'ranking', 'physicsRanking']
   },
   {
     id: 'Étape 3',
-    name: 'Compétition',
-    fields: ['hasPreviouslyParticipated', 'previousCompetitions', 'hasPreviouslyParticipatedInMtym', 'motivations', 'comments']
+    name: 'Feynman Moroccan Adventure',
+    fields: ['hasPreviouslyParticipated', 'previousCompetitions', 'physicsOlympiadsParticipation', 'olympiadsTrainingSelection', 'comments']
   },
   {
     id: 'Étape 4',
-    name: 'Uploads',
-    fields: ['cnie', 'schoolCertificate', 'grades', 'regulations', 'parentalAuthorization']
+    name: 'Documents',
+    fields: ['parentId', 'birthCertificate', 'schoolCertificate', 'grades', 'regulations', 'parentalAuthorization', 'imageRights']
   },
-  { id: 'Étape 5', 
+  { 
+    id: 'Étape 5', 
     name: 'Validation',
-    fields: ['termsAgreement']
+    fields: ['termsAgreement']
   }
 ];
 
