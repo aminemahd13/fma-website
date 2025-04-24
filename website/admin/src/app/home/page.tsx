@@ -34,6 +34,12 @@ const links = [
       "Manage organizing team members",
     link: "/home/team-members",
   },
+  {
+    title: "Competition Results",
+    description:
+      "Manage competition results",
+    link: "/home/competition-results",
+  },
 ];
 
 export default function Home() {
@@ -47,7 +53,7 @@ export default function Home() {
         <div className="mt-20">
           <Image
             src="/mtym.png"
-            alt="MTYM logo"
+            alt="MFA logo"
             width='400'
             height='200'
           />

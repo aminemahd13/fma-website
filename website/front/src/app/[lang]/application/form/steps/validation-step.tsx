@@ -30,10 +30,10 @@ export const ValidationStep = ({
       </h2>
       <p className='mt-1 text-sm leading-6 text-gray-600'>
         Lisez attentivement nos Conditions Générales et validez votre candidature
-        <Separator className='mt-4 bg-[#0284C7]'/>
       </p>
+      <Separator className='mt-4 bg-[#0284C7]'/>
 
-      <div className='mt-10 grid grid-cols-1 md:grid-cols-2md:grid-cols-2 gap-8 justify-between'>
+      <div className='mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 justify-between'>
         <FormField
           control={form.control}
           name="termsAgreement"
@@ -42,7 +42,7 @@ export const ValidationStep = ({
               <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                 <FormControl>
                   <Checkbox
-                    checked={field.value}
+                    checked={field.value || false}
                     onCheckedChange={field.onChange}
                   />
                 </FormControl>

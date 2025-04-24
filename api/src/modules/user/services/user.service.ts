@@ -21,7 +21,6 @@ export class UserService {
   findAll() {
     return this.userRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.team', 'team')
       .leftJoinAndSelect('user.application', 'application')
       .leftJoinAndSelect('application.status', 'status')
       .getMany();
@@ -31,9 +30,6 @@ export class UserService {
     return this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
-      .leftJoinAndSelect('user.team', 'team')
-      .leftJoinAndSelect('team.users', 'users')
-      .leftJoinAndSelect('team.leader', 'leader')
       .leftJoinAndSelect('user.application', 'application')
       .leftJoinAndSelect('application.status', 'status')
       .getOne();
@@ -43,7 +39,6 @@ export class UserService {
     return this.userRepository
       .createQueryBuilder('user')
       .where('user.email = :email', { email })
-      .leftJoinAndSelect('user.team', 'team')
       .leftJoinAndSelect('user.application', 'application')
       .leftJoinAndSelect('application.status', 'status')
       .getOne();

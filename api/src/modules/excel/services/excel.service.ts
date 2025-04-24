@@ -22,9 +22,10 @@ export class ExcelService {
 
     // rows
     const users = await this.userService.findAll();
+    // Group users by individual IDs instead of team IDs 
     const usersGroupByTeams = groupBy(
       users,
-      (user) => user?.team?.id ?? 'null',
+      (user) => 'individual', // Group all users together since teams no longer exist
     );
     const rows = rowFactory(
       Object.values(usersGroupByTeams),

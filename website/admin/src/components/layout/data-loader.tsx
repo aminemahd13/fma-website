@@ -2,12 +2,10 @@
 
 import { getAdminData } from '@/api/AdminApi';
 import { getAllApplications } from '@/api/ApplicationApi';
-import { getAllTeams } from '@/api/TeamApi';
 import { getAllUsers } from '@/api/UsersApi';
 import { checkToken, getToken } from '@/lib/utils';
 import { adminState } from '@/store/adminState';
 import { applicationsState } from '@/store/applicationsState';
-import { teamsState } from '@/store/teamsState';
 import { usersState } from '@/store/usersState';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
@@ -17,7 +15,6 @@ export const DataLoader = () => {
   const setAdminData = useSetRecoilState<any>(adminState)
   const setUsersData = useSetRecoilState<any>(usersState)
   const setApplicationsData = useSetRecoilState<any>(applicationsState)
-  const setTeams = useSetRecoilState<any>(teamsState)
   const router = useRouter();
   const pathname = usePathname();
 
@@ -48,20 +45,11 @@ export const DataLoader = () => {
       })
   }
 
-  const getTeams = () => {
-    return getAllTeams()
-    .then((res: any) => {
-      if (res?.statusCode === 200) {
-        setTeams(res.teams);
-      }
-    })
-  }
-
   useEffect(() => {
     const token = getToken();
 
     if (token && checkToken(token)) {
-      Promise.all([getAdmin(), getUsers(), getApplications(), getTeams()])
+      Promise.all([getAdmin(), getUsers(), getApplications()])
         .then(_ => {
           router.push(pathname.startsWith('/home') ? pathname : '/home');
         })

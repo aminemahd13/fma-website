@@ -20,10 +20,10 @@ import {
 import { AdminUserModule } from './modules/admin-user/admin-user.module';
 import { MailModule } from './modules/mail/mail.module';
 import { ExcelModule } from './modules/excel/excel.module';
-import { TeamModule } from './modules/team/team.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { FaqModule } from './modules/faq/faq.module';
 import { TeamMembersModule } from './modules/team-members/team-members.module';
+import { CompetitionResultsModule } from './modules/competition-results/competition-results.module';
 
 @Module({
   imports: [
@@ -53,10 +53,10 @@ import { TeamMembersModule } from './modules/team-members/team-members.module';
     AuthModule,
     MailModule,
     ExcelModule,
-    TeamModule,
     SettingsModule,
     FaqModule,
     TeamMembersModule,
+    CompetitionResultsModule,
   ],
   controllers: [AppController],
   providers: [

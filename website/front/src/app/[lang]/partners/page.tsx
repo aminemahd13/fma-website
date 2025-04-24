@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+
+import Image from 'next/image';
+
+>>>>>>> 9539bf1efddb52e048130d246585fda9b1aab263
 const organizers = [
   {
     key: "math-and-maroc",
@@ -43,6 +49,7 @@ export default function PartnersPage() {
         <div className="flex justify-around flex-wrap gap-6 p-8 rounded-lg animate-fade-up opacity-0" style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}>
           <Card
             key={organizers[0].key}
+<<<<<<< HEAD
             imageHref={organizers[0].imageHref}
             imageAlt={organizers[0].label}
             imageHeight="60px"
@@ -58,6 +65,24 @@ export default function PartnersPage() {
               </>
             ]}
           />
+=======
+          > 
+            <div className="h-[8rem] w-[16rem] md:h-fit md:w-[18rem] flex justify-center items-center">
+              <Image
+                src={organizers[0].imageHref}
+                alt="Math&Maroc Logo"
+                height={60}
+                width={120}
+              />
+            </div>
+
+            <div className="h-fit w-[16rem] p-4 md:w-[24rem] flex flex-col space-y-2">
+              <div><span className='mb-8 bg-gradient-to-br from-sky-500 to-[#272162] text-transparent bg-clip-text font-semibold'>Math&Maroc</span> est une association à but non lucratif créée en 2016 par de jeunes Marocains souhaitant redonner à la collectivité.</div>
+              <div><span className="font-bold">Notre mission</span> est de promouvoir les mathématiques et les sciences au Maroc, et ainsi guider les jeunes vers l&apos;excellence.</div>
+              <div><span className='mb-8 bg-gradient-to-br from-sky-500 to-[#272162] text-transparent bg-clip-text font-semibold'>Math&Maroc</span> organise <span className="font-bold">MFA</span> pour sa première édition en 2025.</div>
+            </div>
+          </div>
+>>>>>>> 9539bf1efddb52e048130d246585fda9b1aab263
         </div>
 
         {/* SPONSOR */}

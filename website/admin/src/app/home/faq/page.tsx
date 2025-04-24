@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { FAQ, createFAQ, fetchFAQs, updateFAQ } from "@/lib/api/faq";
-import { FAQForm } from "@/app/faq/components/faq-form";
-import { FAQList } from "@/app/faq/components/faq-list";
+import { FAQForm } from "@/app/home/faq/components/faq-form";
+import { FAQList } from "@/app/home/faq/components/faq-list";
 import { Button } from "@/components/shared/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/shared/dialog";
 import { toast } from "sonner";

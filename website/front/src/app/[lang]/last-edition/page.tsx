@@ -22,15 +22,15 @@ export default function ProblemsPage() {
           style={{ animationDelay: "0.35s", animationFillMode: "forwards" }}
         >
           <p className="mt-12">
-            Découvrez comment s&apos;est déroulée la dernière édition de <span className='bg-gradient-to-br from-sky-500 to-[#272162] inline-block text-transparent bg-clip-text'>MTYM</span> au Lycée Mohamed 6 d&apos;Excellence de Benguerir, avec des participants venus de tous les coins du Maroc pour démontrer leurs compétences dans le cadre d&apos;une compétition de recherche de haut niveau valorisant la bienveillance entre les compétiteurs.  
+            Découvrez comment s&apos;est déroulée la dernière édition de <span className='bg-gradient-to-br from-sky-500 to-[#272162] inline-block text-transparent bg-clip-text'>MFA</span> au Lycée Mohamed 6 d&apos;Excellence de Benguerir, avec des participants venus de tous les coins du Maroc pour démontrer leurs compétences dans le cadre d&apos;une compétition de recherche de haut niveau valorisant la bienveillance entre les compétiteurs.  
           </p>
 
           <p className="mt-12">
-            Les problèmes proposés à <span className='bg-gradient-to-br from-sky-500 to-[#272162] inline-block text-transparent bg-clip-text'>MTYM</span> sont très stimulants et nécessitent une bonne maîtrise des bases mathématiques, puisqu&apos;ils sont conçus pour aider à développer l&apos;esprit de recherche chez les lycéens.  
+            Les problèmes proposés à <span className='bg-gradient-to-br from-sky-500 to-[#272162] inline-block text-transparent bg-clip-text'>MFA</span> sont très stimulants et nécessitent une bonne maîtrise des bases mathématiques et physiques, puisqu&apos;ils sont conçus pour aider à développer l&apos;esprit de recherche chez les lycéens.  
           </p>
 
           <p className="mt-6">
-            Besoin de plus d&apos;idées sur le type de problèmes à <span className='bg-gradient-to-br from-sky-500 to-[#272162] inline-block text-transparent bg-clip-text'>MTYM</span> ? Ici tu trouveras tout pour assouvir ta curiosité !
+            Besoin de plus d&apos;idées sur le type de problèmes à <span className='bg-gradient-to-br from-sky-500 to-[#272162] inline-block text-transparent bg-clip-text'>MFA</span> ? Ici tu trouveras tout pour assouvir ta curiosité !
           </p>
         </div>
         

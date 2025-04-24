@@ -8,7 +8,6 @@ export type UserRow = {
   lastName: string,
   email: string,
   applicationId: string,
-  teamId: string,
 }
  
 export const columns: ColumnDef<UserRow>[] = [
@@ -77,20 +76,6 @@ export const columns: ColumnDef<UserRow>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Application Id
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-  },
-  {
-    accessorKey: "teamId",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Team Id
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )

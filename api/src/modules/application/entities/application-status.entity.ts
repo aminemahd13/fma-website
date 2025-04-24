@@ -36,7 +36,7 @@ export class ApplicationStatus {
   application: Application;
 
   /* Global status */
-  @Column({ type: 'varchar', default: 'PENDING' })
+  @Column({ type: 'varchar', default: 'DRAFT' })
   status: Status;
 
   /* Files status */

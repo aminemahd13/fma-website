@@ -15,7 +15,7 @@ export async function generateStaticParams() {
 }
 
 export const metadata = {
-  title: "MTYM",
+  title: "MFA",
   description: "",
 };
 

@@ -173,7 +173,7 @@ export default function ApplicationDetailsPage({ params }: { params: { id: strin
               <div className='space-y-6'>
                 <Field label='Have you participated in competitions before (Olympiads, national contests...) ?'>{renderText(booleanLabels[application?.hasPreviouslyParticipated])}</Field>
                 <Field label='If yes, please specify which ones and the achieved result.'>{renderText(application?.previousCompetitions)}</Field>
-                <Field label='Have you participated in MTYM 2023/2024 ?'>{renderText(booleanLabels[application?.hasPreviouslyParticipatedInMtym])}</Field>
+                <Field label='Have you participated in Math&Maroc events before ?'>{renderText(booleanLabels[application?.hasPreviouslyParticipatedInMtym])}</Field>
                 <Separator className="my-6" />
                 <Field label='Motivations'>{renderText(application?.motivations)}</Field>
                 <Field label='Comments'>{renderText(application?.comments)}</Field>

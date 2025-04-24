@@ -27,7 +27,7 @@ export const DataLoader = ({ lang }: { lang: string }) => {
       }
     }
     setLang(lang)
-  }, [])
+  }, [lang, setLang, setUserData])
 
   return <></>;
 }

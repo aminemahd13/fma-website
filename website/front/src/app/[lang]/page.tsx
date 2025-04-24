@@ -5,7 +5,7 @@ import { getSlideshowImages } from "@/lib/utils";
 import CtaButton from "@/components/home/cta-button";
 import Informations from "@/components/home/informations";
 import InstagramReels from "@/components/home/instagram-reels";
-import { useTranslation } from "../i18n";
+import { getTranslation } from "../i18n";
 import AboutSection from "@/components/home/about-section";
 import TutorialSection from "@/components/home/tutorial-section";
 
@@ -15,7 +15,7 @@ export default async function Home({
   params: { lang: string },
 }) {
   // console.log('home lang', params?.lang)
-  const { t } = await useTranslation(params?.lang, 'home')
+  const { t } = await getTranslation(params?.lang, 'home')
   // console.log('home t', t)
   // console.log('home t(hero-title)', t('hero-title'))
   return (
@@ -44,7 +44,7 @@ export default async function Home({
             className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-4xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm [text-wrap:balance] md:text-5xl md:leading-[4rem]"
             style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
           >
-            C&apos;est quoi, MTYM ?
+            C&apos;est quoi, MFA ?
           </h1>
 
           <Informations />
