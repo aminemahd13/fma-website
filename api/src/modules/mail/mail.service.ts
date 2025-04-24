@@ -13,13 +13,13 @@ export class MailService {
   async sendResetPasswordEmail(user: User, token: string) {
     const link =
       this.configService.get('NODE_ENV') === 'production'
-        ? `https://mfa.mathmaroc.org/fr/reset-password?token=${token}`
+        ? `https://fma.mathmaroc.org/fr/reset-password?token=${token}`
         : `http://localhost:3000/fr/reset-password?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,
       // from: '"Support Team" <support@example.com>', // override default from
-      subject: 'MFA | Reset your password',
+      subject: 'FMA | Reset your password',
       template: './reset-password',
       context: {
         firstName: user.firstName,

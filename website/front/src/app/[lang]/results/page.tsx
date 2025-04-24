@@ -86,7 +86,7 @@ export default function PastEditionPage() {
         className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-4xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm [text-wrap:balance] md:text-5xl md:leading-[4rem]"
         style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
       >
-        Résultats <span className='bg-gradient-to-br from-sky-500 to-[#272162] inline-block text-transparent bg-clip-text'>MFA</span>
+        Résultats <span className='bg-gradient-to-br from-sky-500 to-[#272162] inline-block text-transparent bg-clip-text'>FMA</span>
       </h1>
 
       <div

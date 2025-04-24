@@ -32,7 +32,7 @@ export default function NewTeamMemberPage() {
   return (
     <>
       <Head>
-        <title>Add Team Member | MTYM Admin</title>
+        <title>Add Team Member | FMA Admin</title>
       </Head>
 
       <div className="container mx-auto py-10">

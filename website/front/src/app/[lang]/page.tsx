@@ -44,7 +44,7 @@ export default async function Home({
             className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-4xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm [text-wrap:balance] md:text-5xl md:leading-[4rem]"
             style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
           >
-            C&apos;est quoi, MFA ?
+            C&apos;est quoi, FMA ?
           </h1>
 
           <Informations />

@@ -80,13 +80,13 @@ export default function ApplicationPage() {
       if (isApplicationsOpen) {
         setContent({
           title: "Vous n'avez pas encore soumis de candidature",
-          subtitle: "Nous sommes ravis de votre intérêt pour MFA! Vous pouvez dès maintenant soumettre votre candidature en cliquant sur le bouton ci-dessous.",
+          subtitle: "Nous sommes ravis de votre intérêt pour FMA! Vous pouvez dès maintenant soumettre votre candidature en cliquant sur le bouton ci-dessous.",
           ctaLabel: "Créer votre candidature",
         });
       } else {
         setContent({
           title: "Vous n'avez pas soumis une candidature",
-          subtitle: "Merci pour l'intérêt que vous portez à MFA! Malheureusement les inscriptions sont désormais closes. Néanmoins, restez à l'écoute pour ne pas manquer de futures opportunités.",
+          subtitle: "Merci pour l'intérêt que vous portez à FMA! Malheureusement les inscriptions sont désormais closes. Néanmoins, restez à l'écoute pour ne pas manquer de futures opportunités.",
           ctaLabel: "Créer votre candidature",
         });
       }
@@ -100,7 +100,7 @@ export default function ApplicationPage() {
       } else {
         setContent({
           title: "Vous avez sauvegardé un brouillon de candidature. Elle n'est pas encore soumise.",
-          subtitle: "Merci pour l'intérêt que vous portez à MFA! Malheureusement les inscriptions sont désormais closes. Néanmoins, restez à l'écoute pour ne pas manquer de futures opportunités.",
+          subtitle: "Merci pour l'intérêt que vous portez à FMA! Malheureusement les inscriptions sont désormais closes. Néanmoins, restez à l'écoute pour ne pas manquer de futures opportunités.",
           ctaLabel: "Continuer votre candidature",
         });
       }

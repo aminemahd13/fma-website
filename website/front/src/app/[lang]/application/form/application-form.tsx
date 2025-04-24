@@ -232,7 +232,7 @@ export const ApplicationForm = ({
                 Message de l&apos;erreur: <span className="text-black">{error?.message} (app {userData?.application?.id ?? ''})</span>
               </div>
               <div>
-                Veuillez réessayer plus tard <span className="text-black">ou</span> contactez-nous sur l&apos;addresse email <span className="text-blue-500">math.maroc.mfa@gmail.com</span> en précisant votre nom, prénom et en joignant le message de l&apos;erreur çi-haut.
+                Veuillez réessayer plus tard <span className="text-black">ou</span> contactez-nous sur l&apos;addresse email <span className="text-blue-500">math.maroc.fma@gmail.com</span> en précisant votre nom, prénom et en joignant le message de l&apos;erreur çi-haut.
               </div>
             </DialogDescription>
           </DialogHeader>

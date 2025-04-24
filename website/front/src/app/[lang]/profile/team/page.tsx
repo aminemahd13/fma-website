@@ -44,7 +44,7 @@ export default function TeamPage() {
     if (!team) {
       setContent({
         title: "Vous ne faites pas partie d'une équipe!",
-        subtitle: "Merci pour l'intérêt que vous portez à MFA! Malheureusement les inscriptions sont désormais closes. Néanmoins, restez à l'écoute pour ne pas manquer de futures opportunités.",
+        subtitle: "Merci pour l'intérêt que vous portez à FMA! Malheureusement les inscriptions sont désormais closes. Néanmoins, restez à l'écoute pour ne pas manquer de futures opportunités.",
       })
     } else {
       setContent({

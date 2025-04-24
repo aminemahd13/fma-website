@@ -58,7 +58,7 @@ export default function EditTeamMemberPage() {
   return (
     <>
       <Head>
-        <title>Edit Team Member | MTYM Admin</title>
+        <title>Edit Team Member | FMA Admin</title>
       </Head>
 
       <div className="container mx-auto py-10">

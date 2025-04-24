@@ -101,7 +101,7 @@ export default function TeamMembersPage() {
   return (
     <>
       <Head>
-        <title>Team Members Management | MFA Admin</title>
+        <title>Team Members Management | FMA Admin</title>
       </Head>
 
       <div className="container mx-auto py-10">

@@ -53,7 +53,7 @@ export default function Home() {
         <div className="mt-20">
           <Image
             src="/mtym.png"
-            alt="MFA logo"
+            alt="FMA logo"
             width='400'
             height='200'
           />
