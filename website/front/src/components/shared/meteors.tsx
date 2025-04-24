@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { useId } from "react";
 
 export const Meteors = ({
   number,
@@ -8,7 +8,20 @@ export const Meteors = ({
   number?: number;
   className?: string;
 }) => {
+  // Use client-side only rendering to avoid hydration mismatch
+  const [mounted, setMounted] = React.useState(false);
+  
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+  
   const meteors = new Array(number || 20).fill(true);
+  
+  // Only render on client-side to avoid hydration mismatch
+  if (!mounted) {
+    return null;
+  }
+  
   return (
     <>
       {meteors.map((el, idx) => (

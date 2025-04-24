@@ -29,17 +29,3 @@ services:
       - 8080:80
 
   # Node.js API service
-  api:
-    image: node
-    container_name: api_mtym
-    restart: always
-    depends_on:
-      - db
-    ports:
-      - "5000:5000"
-    volumes:
-      - ".:/home/node/app"
-    environment:
-      - MYSQL_HOST=db
-    working_dir: /home/node/app
-    command: npm run start:dev

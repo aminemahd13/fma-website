@@ -31,18 +31,23 @@ CardHeader.displayName = "CardHeader"
 
 const CardTitle = React.forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
-      className
-    )}
-    {...props}
-  >
-  </div>
-))
+  React.HTMLAttributes<HTMLHeadingElement> & { loading?: boolean }
+>(({ className, loading, ...props }, ref) => {
+  // Use consistent classnames for both server and client
+  const baseClasses = "text-2xl font-semibold leading-none tracking-tight";
+  const loadingClasses = "animate-pulse rounded-md h-6 w-[80px] bg-gray-300";
+  
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        loading ? loadingClasses : baseClasses,
+        className
+      )}
+      {...props}
+    />
+  );
+})
 CardTitle.displayName = "CardTitle"
 
 const CardDescription = React.forwardRef<

@@ -16,7 +16,7 @@ export default function HeroSection({
     <div className="w-full bg-transparent flex flex-col items-center justify-center rounded-md">
       {/* Logo */}
       <div className="z-10 mt-8 mb-2">
-        <Image src="/fma.png" alt="FMA logo" width="300" height="300" />
+        <Image src="/fma.png" alt="FMA logo" width="300" height="300" priority />
       </div>
 
       {/* Sparkles */}

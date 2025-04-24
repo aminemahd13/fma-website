@@ -46,6 +46,7 @@ export default function ApplicationPage() {
   const userData = useRecoilValue<any>(userState);
   const [content, setContent] = useState<any>(undefined);
   const [isApplicationsOpen, setIsApplicationsOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
   
   // Check if applications are open
@@ -67,6 +68,11 @@ export default function ApplicationPage() {
   }, []);
   
   useEffect(() => {
+    // If userData is loaded, set isLoading to false
+    if (userData !== undefined) {
+      setIsLoading(false);
+    }
+    
     const application = userData?.application;
     const applicationStatus = application?.status?.status;
 
@@ -110,7 +116,7 @@ export default function ApplicationPage() {
   const applicationCard = (
     <Card>
       <CardHeader>
-        <CardTitle>
+        <CardTitle loading={isLoading}>
           {content?.title}
         </CardTitle>
         <CardDescription>
