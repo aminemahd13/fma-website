@@ -48,11 +48,11 @@ export const ApplicationForm = ({
 
   const onSubmit = async (formData: z.infer<typeof applicationSchema>) => {
     setIsFormLoading(true);
-    const { cnie, schoolCertificate, grades, regulations, parentalAuthorization } = formData;
+    const { parentId, birthCertificate, schoolCertificate, grades, regulations, parentalAuthorization, imageRights } = formData;
     const uploadFolderName = getUploadFolderName(userData.firstName, userData.lastName);
-    const uploadFileNames = ['cnie', 'school_certificate', 'grades', 'regulations', 'parental_authorization']
+    const uploadFileNames = ['parent_id', 'birth_certificate', 'school_certificate', 'grades', 'regulations', 'parental_authorization', 'image_rights']
       .map(name => `${name}_${generateFileName()}`)
-    const files = [cnie, schoolCertificate, grades, regulations, parentalAuthorization]
+    const files = [parentId, birthCertificate, schoolCertificate, grades, regulations, parentalAuthorization, imageRights]
       .map((files, index) => new File(
         [files[0]], 
         uploadFileNames[index] + '.' + files[0].name.split('.').pop(),
@@ -78,11 +78,13 @@ export const ApplicationForm = ({
 
       // Update Application upload links
       await putApplication(applicationId, {
-        cnieUrl: `upload_mtym/${uploadFolderName}/${files[0].name}`,
-        schoolCertificateUrl: `upload_mtym/${uploadFolderName}/${files[1].name}`,
-        gradesUrl: `upload_mtym/${uploadFolderName}/${files[2].name}`,
-        regulationsUrl: `upload_mtym/${uploadFolderName}/${files[3].name}`,
-        parentalAuthorizationUrl: `upload_mtym/${uploadFolderName}/${files[4].name}`,
+        parentIdUrl: `upload_mtym/${uploadFolderName}/${files[0].name}`,
+        birthCertificateUrl: `upload_mtym/${uploadFolderName}/${files[1].name}`,
+        schoolCertificateUrl: `upload_mtym/${uploadFolderName}/${files[2].name}`,
+        gradesUrl: `upload_mtym/${uploadFolderName}/${files[3].name}`,
+        regulationsUrl: `upload_mtym/${uploadFolderName}/${files[4].name}`,
+        parentalAuthorizationUrl: `upload_mtym/${uploadFolderName}/${files[5].name}`,
+        imageRightsUrl: `upload_mtym/${uploadFolderName}/${files[6].name}`,
       }) as any
 
       // Update Application status

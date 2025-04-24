@@ -13,11 +13,12 @@ export const applicationSchema: ZodSchema = z.object({
   firstName: z.string().min(1).max(50),
   lastName: z.string().min(1).max(50),
   dateOfBirth: z.date({ required_error: "A date of birth is required." }),
-  identityCardNumber: z.string().optional(),
+  massarCode: z.string().min(1).max(50),
   city: z.string().min(1).max(50),
   region: z.string().nonempty("Please select an option"),
   phoneNumber: z.string().refine(isValidPhoneNumber, { message: "Invalid phone number" }),
   guardianFullName: z.string().min(1).max(50),
+  parentCNIE: z.string().min(1).max(50),
   guardianPhoneNumber: z.string().refine(isValidPhoneNumber, { message: "Numéro de téléphone invalide" }),
   relationshipWithGuardian: z.string().min(1).max(50),
   specialConditions: z.string().optional().refine((val) => {
@@ -28,19 +29,17 @@ export const applicationSchema: ZodSchema = z.object({
   } , { message: "Maximum 100 mots"}),
 
   /* Education */
-  educationLevel: z.string().nonempty("Please select an option"),
-  educationField: z.string().nonempty("Please select an option"),
   highschool: z.string().min(1).max(50),
   averageGrade: z.string().min(1).max(50),
-  mathAverageGrade: z.string().min(1).max(50),
+  physicsAverageGrade: z.string().min(1).max(50),
   ranking: z.string().min(1).max(50),
-  mathRanking: z.string().min(1).max(50),
+  physicsRanking: z.string().min(1).max(50),
 
   /* Competition */
   hasPreviouslyParticipated: z.enum(["yes", "no"], { required_error: "Please select an option." }),
   previousCompetitions: z.string().optional(),
-  hasPreviouslyParticipatedInMtym: z.enum(["yes", "no", "not-selected"], { required_error: "Please select an option." }),
-  motivations: z.string().min(1).refine(async text => text.split(' ').length <= 300, { message: "Text can't be more than 300 words", }),
+  physicsOlympiadsParticipation: z.enum(["yes", "no"], { required_error: "Please select an option." }),
+  olympiadsTrainingSelection: z.enum(["yes", "no"], { required_error: "Please select an option." }),
   comments: z.string().optional().refine((val) => {
     if (val) {
       return val.split(' ').length <= 100
@@ -49,11 +48,13 @@ export const applicationSchema: ZodSchema = z.object({
   } , { message: "Text can't be more than 100 words"}),
 
   /* Uploads */
-  cnie: zodFileValidation,
+  parentId: zodFileValidation,
+  birthCertificate: zodFileValidation,
   schoolCertificate: zodFileValidation,
   grades: zodFileValidation,
   regulations: zodFileValidation,
   parentalAuthorization: zodFileValidation,
+  imageRights: zodFileValidation,
 
   /* Terms of agreement */
   termsAgreement: z.boolean().default(false).refine(value => value === true, { message: "Vous devez accepter les Conditions Générales."}),
@@ -63,35 +64,35 @@ export const getApplicationDefaultValues = (userData: any) => ({
   firstName: userData?.firstName || "",
   lastName: userData?.lastName || "",
   dateOfBirth: "",
-  identityCardNumber: "",
+  massarCode: "",
   city: "",
   region: "",
   phoneNumber: "",
   guardianFullName: "",
+  parentCNIE: "",
   guardianPhoneNumber: "",
   relationshipWithGuardian: "",
   specialConditions: "",
 
-  educationLevel: "",
-  educationField: "",
   highschool: "",
   averageGrade: "",
-  mathAverageGrade: "",
+  physicsAverageGrade: "",
   ranking: "",
-  mathRanking: "",
-  numberOfStudentsInClass: "",
+  physicsRanking: "",
 
   hasPreviouslyParticipated: "",
   previousCompetitions: "",
-  hasPreviouslyParticipatedInMtym: "",
-  motivations: "",
+  physicsOlympiadsParticipation: "",
+  olympiadsTrainingSelection: "",
   comments: "",
 
-  cnie: undefined,
+  parentId: undefined,
+  birthCertificate: undefined,
   schoolCertificate: undefined,
   grades: undefined,
   regulations: undefined,
   parentalAuthorization: undefined,
+  imageRights: undefined,
 
   termsAgreement: false,
 })

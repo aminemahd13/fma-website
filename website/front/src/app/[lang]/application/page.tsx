@@ -57,7 +57,7 @@ export default function ApplicationPage() {
               Les inscriptions sont désormais closes
             </h2>
             <div className="mt-4">
-              <p className="mb-4">Merci pour l&apos;intérêt que vous portez à MTYM! Malheureusement les inscriptions sont désormais closes.</p>
+              <p className="mb-4">Merci pour l&apos;intérêt que vous portez à FMA! Malheureusement les inscriptions sont désormais closes.</p>
               <p className="mb-4">Néanmoins, restez à l&apos;écoute pour ne pas manquer de futures opportunités.</p>
               <Button
                 onClick={() => router.push(`/${userData?.locale || 'fr'}/profile/application`)}

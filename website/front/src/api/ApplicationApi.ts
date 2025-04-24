@@ -12,10 +12,7 @@ export const updateApplicationStatus = (applicationId: number, partialApplicatio
   return ApiMethods.put(url, body);
 }
 
-export const getAllApplications = () => {
-  const url = 'applications';
-  return ApiMethods.get(url);
-}
+
 
 export const getApplicationById = (id: number) => {
   const url = 'applications';

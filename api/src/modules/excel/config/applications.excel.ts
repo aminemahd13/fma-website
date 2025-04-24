@@ -72,6 +72,7 @@ export const columns = [
 export const rowFactory = (users: any[], configService) => {
   const awsBucketName = configService.get('AWS_BUCKET_NAME');
   const awsBucketRegion = configService.get('AWS_BUCKET_REGION');
+  
   const mapUser = (user: User) => {
     const application = user?.application;
     if (!application) return;
@@ -103,6 +104,37 @@ export const rowFactory = (users: any[], configService) => {
       physicsOlympiadsParticipation: application?.physicsOlympiadsParticipation,
       olympiadsTrainingSelection: application?.olympiadsTrainingSelection,
       comments: application?.comments,
+      
+      parentIdUrl: {
+        text: 'link',
+        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.parentIdUrl}`,
+      },
+      birthCertificateUrl: {
+        text: 'link',
+        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.birthCertificateUrl}`,
+      },
+      schoolCertificateUrl: {
+        text: 'link',
+        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.schoolCertificateUrl}`,
+      },
+      gradesUrl: {
+        text: 'link',
+        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.gradesUrl}`,
+      },
+      regulationsUrl: {
+        text: 'link',
+        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.regulationsUrl}`,
+      },
+      parentalAuthorizationUrl: {
+        text: 'link',
+        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.parentalAuthorizationUrl}`,
+      },
+      imageRightsUrl: {
+        text: 'link',
+        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.imageRightsUrl}`,
+      },
+      
+      status: application?.status?.status,
     };
   };
 

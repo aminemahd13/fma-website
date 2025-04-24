@@ -75,7 +75,7 @@ export const EducationStep = ({
             <FormItem>
               <FormLabel>Contrôle Continu 1er semestre moyenne générale <RequiredAsterisk /></FormLabel>
               <FormControl>
-                <Input placeholder="Votre moyenne générale (ex: 17.5)" type="number" step="0.01" {...field} />
+                <Input placeholder="Votre moyenne générale (ex: 16.5)" type="number" step="0.01" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -89,7 +89,7 @@ export const EducationStep = ({
             <FormItem>
               <FormLabel>Contrôle Continu 1er semestre moyenne de physique <RequiredAsterisk /></FormLabel>
               <FormControl>
-                <Input placeholder="Votre moyenne en physique (ex: 18.0)" type="number" step="0.01" {...field} />
+                <Input placeholder="Votre moyenne en physique (ex: 16.0)" type="number" step="0.01" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

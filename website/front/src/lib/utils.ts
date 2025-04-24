@@ -64,11 +64,13 @@ export const checkToken = (token: string) => {
 }
 
 export const excludeFileFields = ({
-  cnie,
+  parentId,
+  birthCertificate,
   schoolCertificate,
   grades,
   regulations,
   parentalAuthorization,
+  imageRights,
   termsAgreement,
   ...keep
 }: any) => keep
