@@ -140,7 +140,6 @@ export default function ApplicationDetailsPage({ params }: { params: { id: strin
                 <Field label='First name'>{renderText(application?.firstName)}</Field>
                 <Field label='Last name'>{renderText(application?.lastName)}</Field>
                 <Field label='Date of birth'>{renderText(formatDate(application?.dateOfBirth))}</Field>
-                <Field label='CNIE number'>{renderText(application?.identityCardNumber)}</Field>
                 <Field label='City of residence'>{renderText(application?.city)}</Field>
                 <Field label='Region of residence'>{renderText(regionLabels[application?.region])}</Field>
                 <Field label='Phone number'>{renderText(application?.phoneNumber)}</Field>
@@ -155,15 +154,13 @@ export default function ApplicationDetailsPage({ params }: { params: { id: strin
             {/* EDUCATION */}
             <TabsContent value="education">
               <div className='space-y-6'>
-                <Field label='Education levels'>{renderText(educationLevelLabels[application?.educationLevel])}</Field>
-                <Field label='Education program'>{renderText(educationFieldLabels[application?.educationField])}</Field>
                 <Field label='Highschool'>{renderText(application?.highschool)}</Field>
                 <Separator className="my-6" />
 
                 <Field label='Average grade'>{renderText(application?.averageGrade)}</Field>
-                <Field label='Math average grade'>{renderText(application?.mathAverageGrade)}</Field>
+                <Field label='Physics average grade'>{renderText(application?.physicsAverageGrade)}</Field>
                 <Field label='Ranking'>{renderText(application?.ranking)}</Field>
-                <Field label='Math ranking'>{renderText(application?.mathRanking)}</Field>
+                <Field label='Physics ranking'>{renderText(application?.physicsRanking)}</Field>
               </div>
             </TabsContent>
               
@@ -172,9 +169,9 @@ export default function ApplicationDetailsPage({ params }: { params: { id: strin
               <div className='space-y-6'>
                 <Field label='Have you participated in competitions before (Olympiads, national contests...) ?'>{renderText(booleanLabels[application?.hasPreviouslyParticipated])}</Field>
                 <Field label='If yes, please specify which ones and the achieved result.'>{renderText(application?.previousCompetitions)}</Field>
-                <Field label='Have you participated in Math&Maroc events before ?'>{renderText(booleanLabels[application?.hasPreviouslyParticipatedInMtym])}</Field>
+                <Field label='Physics Olympiads participation'>{renderText(application?.physicsOlympiadsParticipation)}</Field>
+                <Field label='Olympiads training selection'>{renderText(application?.olympiadsTrainingSelection)}</Field>
                 <Separator className="my-6" />
-                <Field label='Motivations'>{renderText(application?.motivations)}</Field>
                 <Field label='Comments'>{renderText(application?.comments)}</Field>
               </div>
             </TabsContent>

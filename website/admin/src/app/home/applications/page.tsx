@@ -16,12 +16,12 @@ export default function ApplicationsPage() {
       setTableData(
         applications.map((application: any) => ({
           id: application?.id,
-          firstName: application?.user?.firstName,
-          lastName: application?.user?.lastName,
+          firstName: application?.firstName || application?.user?.firstName,
+          lastName: application?.lastName || application?.user?.lastName,
           email: application?.user?.email,
           dateOfBirth: application?.dateOfBirth,
           city: application?.city,
-          establishment: application?.highschool,
+          highschool: application?.highschool,
           status: application?.status?.status,
         }))
       )

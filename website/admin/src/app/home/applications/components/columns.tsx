@@ -11,9 +11,10 @@ export type ApplicationRow = {
   id: string
   firstName: string,
   lastName: string,
+  email: string,
   dateOfBirth: string,
   city: string,
-  establishment: string,
+  highschool: string,
   status: string,
 }
 
@@ -116,14 +117,14 @@ export const columns: ColumnDef<ApplicationRow>[] = [
     },
   },
   {
-    accessorKey: "establishment",
+    accessorKey: "highschool",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Establishment
+          Highschool
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )

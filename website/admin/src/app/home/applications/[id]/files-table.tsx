@@ -47,10 +47,16 @@ const FilesTable = ({
       </TableHeader>
 
       <TableBody>
-        <TableRow key='cnie'>
-          <TableCell>CNIE</TableCell>
-          <TableCell><FileCard href={application?.cnieUrl} /></TableCell>
-          <TableCell><FileStatus slug='cnie' application={application} /></TableCell>
+        <TableRow key='parent-id'>
+          <TableCell>Parent ID</TableCell>
+          <TableCell><FileCard href={application?.parentIdUrl} /></TableCell>
+          <TableCell><FileStatus slug='parentId' application={application} /></TableCell>
+        </TableRow>
+
+        <TableRow key='birth-certificate'>
+          <TableCell>Birth Certificate</TableCell>
+          <TableCell><FileCard href={application?.birthCertificateUrl} /></TableCell>
+          <TableCell><FileStatus slug='birthCertificate' application={application} /></TableCell>
         </TableRow>
 
         <TableRow key='school-certificate'>
@@ -60,13 +66,13 @@ const FilesTable = ({
         </TableRow>
 
         <TableRow key='grades'>
-          <TableCell>Grades 2023/2024</TableCell>
+          <TableCell>Grades</TableCell>
           <TableCell><FileCard href={application?.gradesUrl} /></TableCell>
           <TableCell><FileStatus slug='grades' application={application} /></TableCell>
         </TableRow>
 
         <TableRow key='regulations'>
-          <TableCell>Handwritten signed regulation</TableCell>
+          <TableCell>Regulations</TableCell>
           <TableCell><FileCard href={application?.regulationsUrl} /></TableCell>
           <TableCell><FileStatus slug='regulations' application={application} /></TableCell>
         </TableRow>
@@ -75,6 +81,12 @@ const FilesTable = ({
           <TableCell>Parental Authorization</TableCell>
           <TableCell><FileCard href={application?.parentalAuthorizationUrl} /></TableCell>
           <TableCell><FileStatus slug='parentalAuthorization' application={application} /></TableCell>
+        </TableRow>
+
+        <TableRow key='image-rights'>
+          <TableCell>Image Rights</TableCell>
+          <TableCell><FileCard href={application?.imageRightsUrl} /></TableCell>
+          <TableCell><FileStatus slug='imageRights' application={application} /></TableCell>
         </TableRow>
       </TableBody>
     </Table>
