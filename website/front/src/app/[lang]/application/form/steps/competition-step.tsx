@@ -20,6 +20,10 @@ export const CompetitionStep = ({
   form: UseFormReturn,
   delta: number
 }) => {
+  // Get the current values to conditionally render questions
+  const physicsOlympiadsValue = form.watch("physicsOlympiadsParticipation");
+  const hasPreviouslyParticipatedValue = form.watch("hasPreviouslyParticipated");
+  
   return (
     <motion.div
       initial={{ x: delta >= 0 ? '50%' : '-50%', opacity: 0 }}
@@ -70,24 +74,26 @@ export const CompetitionStep = ({
           )}
         />
 
-        {/* Previous competitions details */}
-        <FormField
-          control={form.control}
-          name="previousCompetitions"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Si oui : lesquelles ?</FormLabel>
-              <FormControl>
-              <Textarea
-                placeholder="Décrivez vos expériences précédentes"
-                className="resize-none"
-                {...field}
-              />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* Previous competitions details - Only show if hasPreviouslyParticipated is "yes" */}
+        {hasPreviouslyParticipatedValue === "yes" && (
+          <FormField
+            control={form.control}
+            name="previousCompetitions"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Si oui : lesquelles ?</FormLabel>
+                <FormControl>
+                <Textarea
+                  placeholder="Décrivez vos expériences précédentes"
+                  className="resize-none"
+                  {...field}
+                />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         {/* Physics olympiads participation */}
         <FormField
@@ -125,44 +131,46 @@ export const CompetitionStep = ({
           )}
         />
 
-        {/* Selected for July training */}
-        <FormField
-          control={form.control}
-          name="olympiadsTrainingSelection"
-          render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Êtes-vous sélectionné au stage de formation de juillet ?</FormLabel>
-              <FormDescription className="text-xs mt-0 mb-2">
-                (Question pour les élèves de bac 1 - critère de sélection)
-              </FormDescription>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col space-y-1"
-                >
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="yes" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      Oui
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="no" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      Non
-                    </FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* Selected for July training - Only show if olympiads participation is "yes" */}
+        {physicsOlympiadsValue === "yes" && (
+          <FormField
+            control={form.control}
+            name="olympiadsTrainingSelection"
+            render={({ field }) => (
+              <FormItem className="space-y-3">
+                <FormLabel>Êtes-vous sélectionné au stage de formation de juillet ?</FormLabel>
+                <FormDescription className="text-xs mt-0 mb-2">
+                  (Question pour les élèves de 1ere Bac)
+                </FormDescription>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-col space-y-1"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="yes" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Oui
+                      </FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="no" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Non
+                      </FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
       </div>
 
       <div className='mt-10 grid grid-cols-1 gap-4 justify-between'>
