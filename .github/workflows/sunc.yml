@@ -1,0 +1,27 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # every day at midnight UTC
+  workflow_dispatch: # allows manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Add upstream and sync
+        run: |
+          git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPO.git
+          git fetch upstream
+          git merge upstream/main --allow-unrelated-histories -m "Sync from upstream"
+          git push origin main
