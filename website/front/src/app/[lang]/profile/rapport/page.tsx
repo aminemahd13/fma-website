@@ -116,7 +116,7 @@ export default function ReportPage() {
         {userData?.report && (
           <>
             <div className="text-sm">
-              <span className="font-bold">Date d'envoi</span>: {formatDate(userData?.report?.sentAt)}
+              <span className="font-bold">Date d&apos;envoi</span>: {formatDate(userData?.report?.sentAt)}
             </div>
             <div className="text-sm">
               <span className="font-bold">Status</span>:{" "}
@@ -142,7 +142,7 @@ export default function ReportPage() {
     <div className="space-y-6">
       <div>
         <div className="text-lg font-medium">Rapport</div>
-        <p className="text-sm text-muted-foreground">Retrouvez ici l'état de votre rapport.</p>
+        <p className="text-sm text-muted-foreground">Retrouvez ici l&apos;état de votre rapport.</p>
       </div>
 
       <Separator />
