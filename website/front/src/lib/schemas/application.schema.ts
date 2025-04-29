@@ -8,6 +8,9 @@ const zodFileValidation = z.any()
   .refine(files => files ? ACCEPTED_FILE_TYPES.includes(files[0]?.type) : true, { message: 'Please choose PNG, JPEG or PDF format files only' })
   .refine(files => files ? files[0]?.size <= MAX_UPLOAD_SIZE : true, 'File size must be less than 3MB')
 
+// Optional file validation for fields that will be required only in final registration
+const zodOptionalFileValidation = z.any().optional();
+
 export const applicationSchema: ZodSchema = z.object({
   /* Personal Informations */
   firstName: z.string().min(1).max(50),
@@ -48,13 +51,13 @@ export const applicationSchema: ZodSchema = z.object({
   } , { message: "Text can't be more than 100 words"}),
 
   /* Uploads */
-  parentId: zodFileValidation,
-  birthCertificate: zodFileValidation,
+  parentId: zodOptionalFileValidation,
+  birthCertificate: zodOptionalFileValidation,
   schoolCertificate: zodFileValidation,
   grades: zodFileValidation,
-  regulations: zodFileValidation,
-  parentalAuthorization: zodFileValidation,
-  imageRights: zodFileValidation,
+  regulations: zodOptionalFileValidation,
+  parentalAuthorization: zodOptionalFileValidation,
+  imageRights: zodOptionalFileValidation,
 
   /* Terms of agreement */
   termsAgreement: z.boolean().default(false).refine(value => value === true, { message: "Vous devez accepter les Conditions Générales."}),

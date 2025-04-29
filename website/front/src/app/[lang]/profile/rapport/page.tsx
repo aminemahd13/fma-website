@@ -12,6 +12,8 @@ import ProfileSkeleton from "../profile-skeleton";
 import { formatDate, computeSHA256, getUploadFolderName, generateFileName } from "@/lib/utils";
 import { getSignedURL, uploadFile } from "@/api/MediaApi";
 import { toast } from "@/components/hooks/use-toast";
+import LoadingDots from "@/components/shared/icons/loading-dots";
+import { putApplication } from "@/api/ApplicationApi"; // Add this import
 
 const getBadgeClassname = (status: string) => {
   switch (status) {
@@ -107,19 +109,12 @@ export default function ReportPage() {
       // Update the application record with the report URL
       const reportUrl = `upload_mtym/${uploadFolderName}/${file.name}`;
       
-      // Update application with the report URL
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}applications/${userData?.application?.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          reportUrl: reportUrl
-        }),
-      });
+      // Update application with the report URL using the ApplicationApi
+      const response = await putApplication(userData?.application?.id, {
+        reportUrl: reportUrl
+      }) as any;
       
-      if (response.ok) {
+      if (response?.statusCode === 200) {
         toast({
           title: "Rapport envoyé avec succès",
           description: "Votre rapport a été téléchargé et sera examiné par notre équipe",
@@ -231,15 +226,62 @@ export default function ReportPage() {
       <CardFooter>
         <div className="flex flex-col space-y-4 w-full">
           {!content?.redirectToApplication && (
-            <input 
-              type="file" 
-              accept="application/pdf,image/png,image/jpeg,image/jpg" 
-              onChange={handleFileChange}
-              className="w-full"
-            />
+            <div className="flex flex-col w-full">
+              <div className="relative">
+                <Button 
+                  variant="outline" 
+                  className="w-full flex items-center justify-center border-dashed border-2 py-6"
+                  onClick={() => document.getElementById('file-upload')?.click()}
+                  type="button"
+                >
+                  {selectedFile ? (
+                    <span className="text-sm font-medium">{selectedFile.name}</span>
+                  ) : (
+                    <>
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        width="20" 
+                        height="20" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="2" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        className="mr-2"
+                      >
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                      </svg>
+                      <span className="text-sm font-medium">Choisir un fichier PDF, JPG ou PNG (max 5Mo)</span>
+                    </>
+                  )}
+                </Button>
+                <input 
+                  id="file-upload"
+                  type="file" 
+                  accept="application/pdf,image/png,image/jpeg,image/jpg" 
+                  onChange={handleFileChange}
+                  className="sr-only"
+                />
+              </div>
+              {selectedFile && (
+                <div className="flex justify-between items-center mt-2 text-sm text-muted-foreground">
+                  <span>{(selectedFile.size / (1024 * 1024)).toFixed(2)} Mo</span>
+                  <button 
+                    type="button" 
+                    onClick={() => setSelectedFile(null)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Supprimer
+                  </button>
+                </div>
+              )}
+            </div>
           )}
           <Button onClick={handleButtonClick} disabled={!content?.redirectToApplication && (uploading || !selectedFile)} className="w-full">
-            {uploading ? "Envoi en cours..." : content?.ctaLabel}
+            {uploading ? <LoadingDots color="#808080" /> : content?.ctaLabel}
           </Button>
         </div>
       </CardFooter>
