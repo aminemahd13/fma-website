@@ -75,7 +75,7 @@ export const EducationStep = ({
       <FormItem>
         <FormLabel>Contrôle Continu 1er semestre moyenne générale <RequiredAsterisk /></FormLabel>
         <FormControl>
-          <Input placeholder="Votre moyenne générale (ex: 16.5)" type="number" step="0.01" {...field} />
+          <Input placeholder="Votre moyenne générale" type="number" step="0.01" {...field} />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -89,7 +89,7 @@ export const EducationStep = ({
       <FormItem>
         <FormLabel>Contrôle Continu 1er semestre moyenne de physique <RequiredAsterisk /></FormLabel>
         <FormControl>
-          <Input placeholder="Votre moyenne en physique (ex: 16.0)" type="number" step="0.01" {...field} />
+          <Input placeholder="Votre moyenne en physique" type="number" step="0.01" {...field} />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -103,14 +103,14 @@ export const EducationStep = ({
       <FormItem>
         <FormLabel>Contrôle Continu 1er semestre classement général <RequiredAsterisk /></FormLabel>
         <FormControl>
-          <Input placeholder="Votre classement (ex: 3)" type="number" {...field} />
+          <Input placeholder="Votre classement" type="number" {...field} />
         </FormControl>
         <FormMessage />
       </FormItem>
     )}
   />
 
-  {/* 
+  {
   <FormField
     control={form.control}
     name="physicsRanking"
@@ -121,13 +121,13 @@ export const EducationStep = ({
           (facultatif)
         </FormDescription>
         <FormControl>
-          <Input placeholder="Votre classement en physique (ex: 2)" type="number" {...field} />
+          <Input placeholder="Votre classement en physique" type="number" {...field} />
         </FormControl>
         <FormMessage />
       </FormItem>
     )}
   />
-  */}
+  }
 </div>
     </motion.div>
   )

@@ -66,6 +66,11 @@ export const columns = [
     key: 'image-rights',
     width: 10,
   },
+  {
+    header: 'Report',
+    key: 'report',
+    width: 10,
+  },
   { header: 'Status', key: 'status', width: 15 },
 ];
 
@@ -132,6 +137,10 @@ export const rowFactory = (users: any[], configService) => {
       imageRightsUrl: {
         text: 'link',
         hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.imageRightsUrl}`,
+      },
+      reportUrl: {
+        text: 'link',
+        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.reportUrl}`,
       },
       
       status: application?.status?.status,

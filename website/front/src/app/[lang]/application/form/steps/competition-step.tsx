@@ -1,3 +1,4 @@
+import React from 'react'
 import { motion } from 'framer-motion'
 import { UseFormReturn } from 'react-hook-form'
 import {
@@ -23,6 +24,13 @@ export const CompetitionStep = ({
   // Get the current values to conditionally render questions
   const physicsOlympiadsValue = form.watch("physicsOlympiadsParticipation");
   const hasPreviouslyParticipatedValue = form.watch("hasPreviouslyParticipated");
+
+  // Reset olympiadsTrainingSelection when physicsOlympiadsValue changes to "no"
+  React.useEffect(() => {
+    if (physicsOlympiadsValue === "no") {
+      form.setValue("olympiadsTrainingSelection", undefined);
+    }
+  }, [physicsOlympiadsValue, form]);
   
   return (
     <motion.div
@@ -37,6 +45,7 @@ export const CompetitionStep = ({
         Fournissez des informations à propos de vos expériences et participations
       </p>
       <Separator className='mt-4 bg-[#0284C7]'/>
+
       <div className='mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 justify-between'>
         {/* Previous competitions */}
         <FormField
@@ -145,7 +154,7 @@ export const CompetitionStep = ({
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
-                    defaultValue="no"
+                    defaultValue={field.value}
                     className="flex flex-col space-y-1"
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">

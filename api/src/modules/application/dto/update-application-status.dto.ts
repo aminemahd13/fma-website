@@ -33,4 +33,8 @@ export class UpdateApplicationStatusDto {
   @IsString()
   @IsOptional()
   imageRightsStatus: FileStatus;
+  
+  @IsString()
+  @IsOptional()
+  reportStatus: FileStatus;
 }

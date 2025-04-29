@@ -33,13 +33,13 @@ export const applicationSchema: ZodSchema = z.object({
   averageGrade: z.string().min(1).max(50),
   physicsAverageGrade: z.string().min(1).max(50),
   ranking: z.string().min(1).max(50),
-  physicsRanking: z.string().min(1).max(50),
+  physicsRanking: z.string().optional(),
 
   /* Competition */
   hasPreviouslyParticipated: z.enum(["yes", "no"], { required_error: "Please select an option." }),
   previousCompetitions: z.string().optional(),
   physicsOlympiadsParticipation: z.enum(["yes", "no"], { required_error: "Please select an option." }),
-  olympiadsTrainingSelection: z.enum(["yes", "no"], { required_error: "Please select an option." }),
+  olympiadsTrainingSelection: z.enum(["yes", "no"]).optional(),
   comments: z.string().optional().refine((val) => {
     if (val) {
       return val.split(' ').length <= 100
@@ -58,7 +58,13 @@ export const applicationSchema: ZodSchema = z.object({
 
   /* Terms of agreement */
   termsAgreement: z.boolean().default(false).refine(value => value === true, { message: "Vous devez accepter les Conditions Générales."}),
-})
+}).refine(
+  (data) => true, // Remove the validation that makes olympiadsTrainingSelection required
+  {
+    message: "Please select whether you are selected for July training",
+    path: ["olympiadsTrainingSelection"]
+  }
+);
 
 export const getApplicationDefaultValues = (userData: any) => ({
   firstName: userData?.firstName || "",
@@ -83,7 +89,7 @@ export const getApplicationDefaultValues = (userData: any) => ({
   hasPreviouslyParticipated: "",
   previousCompetitions: "",
   physicsOlympiadsParticipation: "",
-  olympiadsTrainingSelection: "",
+  olympiadsTrainingSelection: undefined,
   comments: "",
 
   parentId: undefined,

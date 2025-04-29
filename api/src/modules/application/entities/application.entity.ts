@@ -121,6 +121,9 @@ export class Application {
 
   @Column({ type: 'varchar', nullable: true })
   imageRightsUrl: string;
+  
+  @Column({ type: 'varchar', nullable: true })
+  reportUrl: string;
 
   /* createAt & updatedAt */
   @CreateDateColumn({
