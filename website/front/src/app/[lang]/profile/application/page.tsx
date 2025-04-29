@@ -105,10 +105,17 @@ export default function ApplicationPage() {
         });
       }
     } else {
+      // Set content based on application status
+      // For ACCEPTED status, don't show the update button
+      const isAccepted = applicationStatus === 'ACCEPTED';
+      
       setContent({
         title: "Vous avez déjà soumis une candidature",
-        subtitle: "Vous trouverez l'avancement de votre candidature ci-dessous. On vous notifiera des prochaines étapes par mail.",
+        subtitle: isAccepted 
+          ? "Félicitations! Votre candidature a été acceptée. Vous ne pouvez plus la modifier."
+          : "Vous trouverez l'avancement de votre candidature ci-dessous. On vous notifiera des prochaines étapes par mail.",
         ctaLabel: "Mettre à jour votre candidature",
+        showUpdateButton: !isAccepted // Only show update button if not accepted
       });
     }
   }, [userData, isApplicationsOpen]);

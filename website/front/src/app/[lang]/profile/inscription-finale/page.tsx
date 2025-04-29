@@ -176,9 +176,55 @@ export default function InscriptionFinalePage() {
 
       if (!hasAcceptedApplication) {
         router.push(`/${userData?.locale || 'fr'}/profile/application`);
+        return;
+      }
+      
+      // Check if the application is in a final state where edits are no longer allowed
+      const applicationFinalized = Boolean(
+        userData?.application?.status?.status === 'ACCEPTED' && 
+        userData?.application?.status?.parentIdStatus === 'VALID' &&
+        userData?.application?.status?.birthCertificateStatus === 'VALID' &&
+        userData?.application?.status?.regulationsStatus === 'VALID' &&
+        userData?.application?.status?.parentalAuthorizationStatus === 'VALID' &&
+        userData?.application?.status?.imageRightsStatus === 'VALID'
+      );
+      
+      // If application is finalized, disable all document selections
+      if (applicationFinalized) {
+        setSelectedDocuments({
+          parentId: false,
+          birthCertificate: false,
+          regulations: false,
+          parentalAuthorization: false,
+          imageRights: false
+        });
+      } else {
+        // Disable selection of validated documents
+        if (userData?.application) {
+          const { status } = userData.application;
+          const updatedSelection = { ...selectedDocuments };
+          
+          if (status?.parentIdStatus === 'VALID') {
+            updatedSelection.parentId = false;
+          }
+          if (status?.birthCertificateStatus === 'VALID') {
+            updatedSelection.birthCertificate = false;
+          }
+          if (status?.regulationsStatus === 'VALID') {
+            updatedSelection.regulations = false;
+          }
+          if (status?.parentalAuthorizationStatus === 'VALID') {
+            updatedSelection.parentalAuthorization = false;
+          }
+          if (status?.imageRightsStatus === 'VALID') {
+            updatedSelection.imageRights = false;
+          }
+          
+          setSelectedDocuments(updatedSelection);
+        }
       }
     }
-  }, [userData, router]);
+  }, [userData, router]); // Removed selectedDocuments from dependencies
 
   const onSubmit = async (data: z.infer<typeof finalRegistrationSchema>) => {
     if (!userData?.application?.id) {
@@ -510,6 +556,55 @@ export default function InscriptionFinalePage() {
         </Card>
       ) : null}
 
+      {/* Documents à télécharger */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Documents à télécharger</CardTitle>
+          <CardDescription>
+            Veuillez télécharger les documents suivants, les remplir, les signer et les soumettre via le formulaire ci-dessous.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50">
+              <div>
+                <h4 className="font-medium">Règlement</h4>
+                <p className="text-sm text-muted-foreground">À signer par l'élève et le tuteur légal</p>
+              </div>
+              <Button variant="outline" size="sm" className="shrink-0" asChild>
+                <a href="/documents/reglement.pdf" target="_blank" download>Télécharger</a>
+              </Button>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50">
+              <div>
+                <h4 className="font-medium">Autorisation parentale</h4>
+                <p className="text-sm text-muted-foreground">À signer et légaliser par le tuteur légal</p>
+              </div>
+              <Button variant="outline" size="sm" className="shrink-0" asChild>
+                <a href="/documents/autorisation_parentale.pdf" target="_blank" download>Télécharger</a>
+              </Button>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50">
+              <div>
+                <h4 className="font-medium">Droit à l'image</h4>
+                <p className="text-sm text-muted-foreground">À signer par l'élève et le tuteur légal</p>
+              </div>
+              <Button variant="outline" size="sm" className="shrink-0" asChild>
+                <a href="/documents/droit_image.pdf" target="_blank" download>Télécharger</a>
+              </Button>
+            </div>
+          </div>
+          
+          <div className="mt-4 p-3 bg-blue-50 rounded-md border border-blue-200">
+            <p className="text-sm text-blue-800">
+              <strong>Important :</strong> Après avoir téléchargé les documents, veuillez les imprimer, les signer et les scanner avant de les soumettre. L'autorisation parentale doit également être légalisée.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
       {!hasDocuments ? (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -675,16 +770,19 @@ export default function InscriptionFinalePage() {
                   Sélectionnez les documents que vous souhaitez mettre à jour, puis téléchargez les nouvelles versions.
                   <br />
                   <strong>Note:</strong> Chaque document mis à jour sera automatiquement placé en statut "En attente" de validation.
+                  <br />
+                  <strong>Important:</strong> Les documents déjà validés ne peuvent plus être modifiés.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   {userData.application.parentIdUrl && (
-                    <div className="p-4 border rounded-md">
+                    <div className={`p-4 border rounded-md ${userData.application.status?.parentIdStatus === 'VALID' ? 'bg-green-50' : ''}`}>
                       <div className="flex items-center space-x-3 mb-2">
                         <Checkbox 
                           id="parentId-checkbox" 
                           checked={selectedDocuments.parentId}
+                          disabled={userData.application.status?.parentIdStatus === 'VALID'}
                           onCheckedChange={(checked) => 
                             setSelectedDocuments(prev => ({
                               ...prev, 
@@ -712,6 +810,11 @@ export default function InscriptionFinalePage() {
                               : 'En attente'}
                         </span>
                       </div>
+                      {userData.application.status?.parentIdStatus === 'VALID' && (
+                        <p className="text-xs text-green-700 mt-1 mb-2">
+                          Ce document a été validé et ne peut plus être modifié.
+                        </p>
+                      )}
                       {selectedDocuments.parentId && (
                         <FormField
                           control={updateForm.control}
@@ -740,11 +843,12 @@ export default function InscriptionFinalePage() {
                   )}
 
                   {userData.application.birthCertificateUrl && (
-                    <div className="p-4 border rounded-md">
+                    <div className={`p-4 border rounded-md ${userData.application.status?.birthCertificateStatus === 'VALID' ? 'bg-green-50' : ''}`}>
                       <div className="flex items-center space-x-3 mb-2">
                         <Checkbox 
                           id="birthCertificate-checkbox" 
                           checked={selectedDocuments.birthCertificate}
+                          disabled={userData.application.status?.birthCertificateStatus === 'VALID'}
                           onCheckedChange={(checked) => 
                             setSelectedDocuments(prev => ({
                               ...prev, 
@@ -772,6 +876,11 @@ export default function InscriptionFinalePage() {
                               : 'En attente'}
                         </span>
                       </div>
+                      {userData.application.status?.birthCertificateStatus === 'VALID' && (
+                        <p className="text-xs text-green-700 mt-1 mb-2">
+                          Ce document a été validé et ne peut plus être modifié.
+                        </p>
+                      )}
                       {selectedDocuments.birthCertificate && (
                         <FormField
                           control={updateForm.control}
@@ -800,11 +909,12 @@ export default function InscriptionFinalePage() {
                   )}
 
                   {userData.application.regulationsUrl && (
-                    <div className="p-4 border rounded-md">
+                    <div className={`p-4 border rounded-md ${userData.application.status?.regulationsStatus === 'VALID' ? 'bg-green-50' : ''}`}>
                       <div className="flex items-center space-x-3 mb-2">
                         <Checkbox 
                           id="regulations-checkbox" 
                           checked={selectedDocuments.regulations}
+                          disabled={userData.application.status?.regulationsStatus === 'VALID'}
                           onCheckedChange={(checked) => 
                             setSelectedDocuments(prev => ({
                               ...prev, 
@@ -832,6 +942,11 @@ export default function InscriptionFinalePage() {
                               : 'En attente'}
                         </span>
                       </div>
+                      {userData.application.status?.regulationsStatus === 'VALID' && (
+                        <p className="text-xs text-green-700 mt-1 mb-2">
+                          Ce document a été validé et ne peut plus être modifié.
+                        </p>
+                      )}
                       {selectedDocuments.regulations && (
                         <FormField
                           control={updateForm.control}
@@ -860,11 +975,12 @@ export default function InscriptionFinalePage() {
                   )}
 
                   {userData.application.parentalAuthorizationUrl && (
-                    <div className="p-4 border rounded-md">
+                    <div className={`p-4 border rounded-md ${userData.application.status?.parentalAuthorizationStatus === 'VALID' ? 'bg-green-50' : ''}`}>
                       <div className="flex items-center space-x-3 mb-2">
                         <Checkbox 
                           id="parentalAuthorization-checkbox" 
                           checked={selectedDocuments.parentalAuthorization}
+                          disabled={userData.application.status?.parentalAuthorizationStatus === 'VALID'}
                           onCheckedChange={(checked) => 
                             setSelectedDocuments(prev => ({
                               ...prev, 
@@ -892,6 +1008,11 @@ export default function InscriptionFinalePage() {
                               : 'En attente'}
                         </span>
                       </div>
+                      {userData.application.status?.parentalAuthorizationStatus === 'VALID' && (
+                        <p className="text-xs text-green-700 mt-1 mb-2">
+                          Ce document a été validé et ne peut plus être modifié.
+                        </p>
+                      )}
                       {selectedDocuments.parentalAuthorization && (
                         <FormField
                           control={updateForm.control}
@@ -920,11 +1041,12 @@ export default function InscriptionFinalePage() {
                   )}
 
                   {userData.application.imageRightsUrl && (
-                    <div className="p-4 border rounded-md">
+                    <div className={`p-4 border rounded-md ${userData.application.status?.imageRightsStatus === 'VALID' ? 'bg-green-50' : ''}`}>
                       <div className="flex items-center space-x-3 mb-2">
                         <Checkbox 
                           id="imageRights-checkbox" 
                           checked={selectedDocuments.imageRights}
+                          disabled={userData.application.status?.imageRightsStatus === 'VALID'}
                           onCheckedChange={(checked) => 
                             setSelectedDocuments(prev => ({
                               ...prev, 
@@ -952,6 +1074,11 @@ export default function InscriptionFinalePage() {
                               : 'En attente'}
                         </span>
                       </div>
+                      {userData.application.status?.imageRightsStatus === 'VALID' && (
+                        <p className="text-xs text-green-700 mt-1 mb-2">
+                          Ce document a été validé et ne peut plus être modifié.
+                        </p>
+                      )}
                       {selectedDocuments.imageRights && (
                         <FormField
                           control={updateForm.control}
