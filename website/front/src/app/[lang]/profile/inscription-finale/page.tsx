@@ -5,7 +5,7 @@ import { useRecoilValue } from "recoil";
 import { userState } from "@/store/userState";
 import { useAuthGuard } from "@/components/hooks/use-auth-guard";
 import { useRouter } from "next/navigation";
-import { Button, Separator } from "@/components/shared";
+import { Button, Separator, Checkbox } from "@/components/shared";
 import { Input } from "@/components/shared";
 import { 
   Card, 
@@ -28,7 +28,7 @@ import {
 import { toast } from "@/components/hooks/use-toast";
 import { computeSHA256, getUploadFolderName, generateFileName } from "@/lib/utils";
 import { getSignedURL, uploadFile } from "@/api/MediaApi";
-import { putApplication } from "@/api/ApplicationApi";
+import { putApplication, updateApplicationStatus } from "@/api/ApplicationApi";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -90,11 +90,64 @@ const finalRegistrationSchema = z.object({
     ),
 });
 
+// Définir un schéma conditionnel pour les mises à jour individuelles
+const individualFileSchema = z.object({
+  file: z.any()
+    .optional()
+    .superRefine((val, ctx) => {
+      if (val && val.length > 0) {
+        // Vérifier la taille du fichier
+        if (val[0]?.size > MAX_FILE_SIZE) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "La taille du fichier ne doit pas dépasser 3MB",
+          });
+        }
+        
+        // Vérifier le type du fichier
+        if (!ACCEPTED_FILE_TYPES.includes(val[0]?.type)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Format de fichier non valide. Utilisez PDF, JPG ou PNG.",
+          });
+        }
+      }
+    }),
+});
+
+// Nouveaux types pour la mise à jour individuelle des fichiers
+const updateFileSchema = z.object({
+  parentId: individualFileSchema,
+  birthCertificate: individualFileSchema,
+  regulations: individualFileSchema,
+  parentalAuthorization: individualFileSchema,
+  imageRights: individualFileSchema,
+});
+
 export default function InscriptionFinalePage() {
   const userData = useRecoilValue<any>(userState);
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedDocuments, setSelectedDocuments] = useState<Record<string, boolean>>({
+    parentId: false,
+    birthCertificate: false,
+    regulations: false,
+    parentalAuthorization: false,
+    imageRights: false
+  });
+  
+  // Formulaire pour la mise à jour individuelle des fichiers
+  const updateForm = useForm<z.infer<typeof updateFileSchema>>({
+    resolver: zodResolver(updateFileSchema),
+    defaultValues: {
+      parentId: { file: undefined },
+      birthCertificate: { file: undefined },
+      regulations: { file: undefined },
+      parentalAuthorization: { file: undefined },
+      imageRights: { file: undefined },
+    },
+  });
   
   // Call useAuthGuard without trying to destructure anything from it
   useAuthGuard();
@@ -200,6 +253,104 @@ export default function InscriptionFinalePage() {
     }
   };
 
+  // Fonction pour gérer la mise à jour individuelle des documents
+  const handleUpdateSelectedFiles = async (data: z.infer<typeof updateFileSchema>) => {
+    if (!userData?.application?.id) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de trouver votre candidature",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Vérifier si au moins un document est sélectionné
+    const hasSelectedDocuments = Object.values(selectedDocuments).some(value => value);
+    if (!hasSelectedDocuments) {
+      toast({
+        title: "Aucun document sélectionné",
+        description: "Veuillez sélectionner au moins un document à mettre à jour",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Préparer le dossier de téléchargement
+      const uploadFolderName = getUploadFolderName(userData.firstName, userData.lastName);
+      
+      // Documents à mettre à jour et statuts à réinitialiser
+      const uploadedFiles: Record<string, string> = {};
+      const updatedStatuses: Record<string, string> = {};
+      
+      // Traiter chaque document sélectionné
+      for (const [field, isSelected] of Object.entries(selectedDocuments)) {
+        if (isSelected && data[field].file?.length > 0) {
+          const fileData = data[field].file[0];
+          const prefixMap = {
+            parentId: 'parent_id',
+            birthCertificate: 'birth_certificate',
+            regulations: 'regulations',
+            parentalAuthorization: 'parental_authorization',
+            imageRights: 'image_rights'
+          };
+          
+          const prefix = prefixMap[field];
+          const fileName = `${prefix}_${generateFileName()}.${fileData.name.split('.').pop()}`;
+          const file = new File([fileData], fileName, { type: fileData.type });
+          
+          const checksum = await computeSHA256(file);
+          const path = `upload_mtym/${uploadFolderName}/${fileName}`;
+          
+          // Obtenir l'URL signée pour le téléchargement S3
+          const signedURLResponse = await getSignedURL(path, file.type, file.size, checksum) as any;
+          
+          // Télécharger le fichier sur S3
+          await uploadFile(signedURLResponse?.url, file);
+          
+          // Stocker le chemin pour la mise à jour de la base de données
+          uploadedFiles[`${field}Url`] = path;
+          
+          // Réinitialiser le statut du document à "PENDING"
+          updatedStatuses[`${field}Status`] = 'PENDING';
+        }
+      }
+      
+      // Mettre à jour l'application avec les URLs des documents
+      if (Object.keys(uploadedFiles).length > 0) {
+        const applicationResponse = await putApplication(userData.application.id, uploadedFiles);
+        
+        // Mettre à jour les statuts des documents
+        if (Object.keys(updatedStatuses).length > 0) {
+          await updateApplicationStatus(userData.application.id, updatedStatuses);
+        }
+
+        if (applicationResponse) {
+          toast({
+            title: "Documents mis à jour avec succès",
+            description: "Les documents sélectionnés ont été mis à jour et seront examinés à nouveau.",
+          });
+
+          // Rafraîchir la page pour afficher le statut mis à jour
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        }
+      }
+    } catch (error) {
+      console.error("Erreur:", error);
+      toast({
+        title: "Erreur lors de la mise à jour",
+        description: "Une erreur est survenue lors de la mise à jour des documents. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   // Check if any documents are already submitted
   const hasDocuments = userData?.application && (
     userData.application.parentIdUrl || 
@@ -275,9 +426,9 @@ export default function InscriptionFinalePage() {
                         : 'bg-yellow-100 text-yellow-800'
                   }`}>
                     {userData.application.status?.parentIdStatus === 'VALID' 
-                      ? 'valide' 
+                      ? 'Validé' 
                       : userData.application.status?.parentIdStatus === 'NOT_VALID'
-                        ? 'Non valide'
+                        ? 'Non validé'
                         : 'En attente'}
                   </span>
                 </li>
@@ -293,9 +444,9 @@ export default function InscriptionFinalePage() {
                         : 'bg-yellow-100 text-yellow-800'
                   }`}>
                     {userData.application.status?.birthCertificateStatus === 'VALID' 
-                      ? 'valide' 
+                      ? 'Validé' 
                       : userData.application.status?.birthCertificateStatus === 'NOT_VALID'
-                        ? 'Non valide'
+                        ? 'Non validé'
                         : 'En attente'}
                   </span>
                 </li>
@@ -311,9 +462,9 @@ export default function InscriptionFinalePage() {
                         : 'bg-yellow-100 text-yellow-800'
                   }`}>
                     {userData.application.status?.regulationsStatus === 'VALID' 
-                      ? 'Valide' 
+                      ? 'Validé' 
                       : userData.application.status?.regulationsStatus === 'NOT_VALID'
-                        ? 'Non valide'
+                        ? 'Non validé'
                         : 'En attente'}
                   </span>
                 </li>
@@ -329,9 +480,9 @@ export default function InscriptionFinalePage() {
                         : 'bg-yellow-100 text-yellow-800'
                   }`}>
                     {userData.application.status?.parentalAuthorizationStatus === 'VALID' 
-                      ? 'valide' 
+                      ? 'Validé' 
                       : userData.application.status?.parentalAuthorizationStatus === 'NOT_VALID'
-                        ? 'Non valide'
+                        ? 'Non validé'
                         : 'En attente'}
                   </span>
                 </li>
@@ -347,9 +498,9 @@ export default function InscriptionFinalePage() {
                         : 'bg-yellow-100 text-yellow-800'
                   }`}>
                     {userData.application.status?.imageRightsStatus === 'VALID' 
-                      ? 'valide' 
+                      ? 'Validé' 
                       : userData.application.status?.imageRightsStatus === 'NOT_VALID'
-                        ? 'Non valide'
+                        ? 'Non validé'
                         : 'En attente'}
                   </span>
                 </li>
@@ -359,160 +510,489 @@ export default function InscriptionFinalePage() {
         </Card>
       ) : null}
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>{hasDocuments ? 'Mettre à jour les documents' : 'Documents requis'}</CardTitle>
-              <CardDescription>
-                Veuillez fournir tous les documents demandés ci-dessous (formats acceptés: PDF, JPG, PNG).
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Parent ID */}
-                <FormField
-                  control={form.control}
-                  name="parentId"
-                  render={({ field: { onChange, value, ...rest } }) => (
-                    <FormItem>
-                      <FormLabel>Justificatif d'identité des parents avec photo</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="file"
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={(e) => {
-                            const files = e.target.files;
-                            if (files?.length) {
-                              onChange(files);
-                            }
-                          }}
-                          {...rest}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Carte d'identité, passeport ou autre document officiel avec photo
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      {!hasDocuments ? (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>Documents requis</CardTitle>
+                <CardDescription>
+                  Veuillez fournir tous les documents demandés ci-dessous (formats acceptés: PDF, JPG, PNG).
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Parent ID */}
+                  <FormField
+                    control={form.control}
+                    name="parentId"
+                    render={({ field: { onChange, value, ...rest } }) => (
+                      <FormItem>
+                        <FormLabel>Justificatif d'identité des parents avec photo</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={(e) => {
+                              const files = e.target.files;
+                              if (files?.length) {
+                                onChange(files);
+                              }
+                            }}
+                            {...rest}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Carte d'identité, passeport ou autre document officiel avec photo
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                {/* Birth Certificate */}
-                <FormField
-                  control={form.control}
-                  name="birthCertificate"
-                  render={({ field: { onChange, value, ...rest } }) => (
-                    <FormItem>
-                      <FormLabel>Extrait d'acte de naissance</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="file"
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={(e) => {
-                            const files = e.target.files;
-                            if (files?.length) {
-                              onChange(files);
-                            }
-                          }}
-                          {...rest}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  {/* Birth Certificate */}
+                  <FormField
+                    control={form.control}
+                    name="birthCertificate"
+                    render={({ field: { onChange, value, ...rest } }) => (
+                      <FormItem>
+                        <FormLabel>Extrait d'acte de naissance</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={(e) => {
+                              const files = e.target.files;
+                              if (files?.length) {
+                                onChange(files);
+                              }
+                            }}
+                            {...rest}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                {/* Regulations */}
-                <FormField
-                  control={form.control}
-                  name="regulations"
-                  render={({ field: { onChange, value, ...rest } }) => (
-                    <FormItem>
-                      <FormLabel>Règlement signé par l'élève et le tuteur légal</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="file"
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={(e) => {
-                            const files = e.target.files;
-                            if (files?.length) {
-                              onChange(files);
-                            }
-                          }}
-                          {...rest}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Il faut l'<strong>imprimer</strong>, le <strong>signer</strong> à la main puis le <strong>scanner</strong>. Il n'y a <strong>pas besoin de le légaliser</strong>.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  {/* Regulations */}
+                  <FormField
+                    control={form.control}
+                    name="regulations"
+                    render={({ field: { onChange, value, ...rest } }) => (
+                      <FormItem>
+                        <FormLabel>Règlement signé par l'élève et le tuteur légal</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={(e) => {
+                              const files = e.target.files;
+                              if (files?.length) {
+                                onChange(files);
+                              }
+                            }}
+                            {...rest}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Il faut l'<strong>imprimer</strong>, le <strong>signer</strong> à la main puis le <strong>scanner</strong>. Il n'y a <strong>pas besoin de le légaliser</strong>.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                {/* Parental Authorization */}
-                <FormField
-                  control={form.control}
-                  name="parentalAuthorization"
-                  render={({ field: { onChange, value, ...rest } }) => (
-                    <FormItem>
-                      <FormLabel>Autorisation parentale signée et légalisée par le tuteur légal</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="file"
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={(e) => {
-                            const files = e.target.files;
-                            if (files?.length) {
-                              onChange(files);
-                            }
-                          }}
-                          {...rest}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Il faut l'<strong>imprimer</strong>, la <strong>signer</strong> à la main, la <strong>légaliser</strong>, puis la <strong>scanner</strong>. <strong>La légalisation est obligatoire</strong>.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  {/* Parental Authorization */}
+                  <FormField
+                    control={form.control}
+                    name="parentalAuthorization"
+                    render={({ field: { onChange, value, ...rest } }) => (
+                      <FormItem>
+                        <FormLabel>Autorisation parentale signée et légalisée par le tuteur légal</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={(e) => {
+                              const files = e.target.files;
+                              if (files?.length) {
+                                onChange(files);
+                              }
+                            }}
+                            {...rest}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Il faut l'<strong>imprimer</strong>, la <strong>signer</strong> à la main, la <strong>légaliser</strong>, puis la <strong>scanner</strong>. <strong>La légalisation est obligatoire</strong>.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                {/* Image Rights */}
-                <FormField
-                  control={form.control}
-                  name="imageRights"
-                  render={({ field: { onChange, value, ...rest } }) => (
-                    <FormItem>
-                      <FormLabel>Droit de l'image signé</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="file"
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={(e) => {
-                            const files = e.target.files;
-                            if (files?.length) {
-                              onChange(files);
-                            }
-                          }}
-                          {...rest}
+                  {/* Image Rights */}
+                  <FormField
+                    control={form.control}
+                    name="imageRights"
+                    render={({ field: { onChange, value, ...rest } }) => (
+                      <FormItem>
+                        <FormLabel>Droit de l'image signé</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={(e) => {
+                              const files = e.target.files;
+                              if (files?.length) {
+                                onChange(files);
+                              }
+                            }}
+                            {...rest}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting ? "Envoi en cours..." : "Soumettre les documents"}
+                </Button>
+              </CardFooter>
+            </Card>
+          </form>
+        </Form>
+      ) : (
+        <Form {...updateForm}>
+          <form onSubmit={updateForm.handleSubmit(handleUpdateSelectedFiles)} className="space-y-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>Mettre à jour les documents</CardTitle>
+                <CardDescription>
+                  Sélectionnez les documents que vous souhaitez mettre à jour, puis téléchargez les nouvelles versions.
+                  <br />
+                  <strong>Note:</strong> Chaque document mis à jour sera automatiquement placé en statut "En attente" de validation.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {userData.application.parentIdUrl && (
+                    <div className="p-4 border rounded-md">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <Checkbox 
+                          id="parentId-checkbox" 
+                          checked={selectedDocuments.parentId}
+                          onCheckedChange={(checked) => 
+                            setSelectedDocuments(prev => ({
+                              ...prev, 
+                              parentId: Boolean(checked)
+                            }))
+                          }
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                        <label 
+                          htmlFor="parentId-checkbox" 
+                          className="font-medium cursor-pointer"
+                        >
+                          Justificatif d'identité des parents
+                        </label>
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          userData.application.status?.parentIdStatus === 'VALID' 
+                            ? 'bg-green-100 text-green-800' 
+                            : userData.application.status?.parentIdStatus === 'NOT_VALID'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {userData.application.status?.parentIdStatus === 'VALID' 
+                            ? 'Validé' 
+                            : userData.application.status?.parentIdStatus === 'NOT_VALID'
+                              ? 'Non validé'
+                              : 'En attente'}
+                        </span>
+                      </div>
+                      {selectedDocuments.parentId && (
+                        <FormField
+                          control={updateForm.control}
+                          name="parentId.file"
+                          render={({ field: { onChange, value, ...rest } }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  type="file"
+                                  accept=".pdf,.jpg,.jpeg,.png"
+                                  onChange={(e) => {
+                                    const files = e.target.files;
+                                    if (files?.length) {
+                                      onChange(files);
+                                    }
+                                  }}
+                                  {...rest}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                    </div>
                   )}
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Envoi en cours..." : "Soumettre les documents"}
-              </Button>
-            </CardFooter>
-          </Card>
-        </form>
-      </Form>
+
+                  {userData.application.birthCertificateUrl && (
+                    <div className="p-4 border rounded-md">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <Checkbox 
+                          id="birthCertificate-checkbox" 
+                          checked={selectedDocuments.birthCertificate}
+                          onCheckedChange={(checked) => 
+                            setSelectedDocuments(prev => ({
+                              ...prev, 
+                              birthCertificate: Boolean(checked)
+                            }))
+                          }
+                        />
+                        <label 
+                          htmlFor="birthCertificate-checkbox" 
+                          className="font-medium cursor-pointer"
+                        >
+                          Extrait d'acte de naissance
+                        </label>
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          userData.application.status?.birthCertificateStatus === 'VALID' 
+                            ? 'bg-green-100 text-green-800' 
+                            : userData.application.status?.birthCertificateStatus === 'NOT_VALID'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {userData.application.status?.birthCertificateStatus === 'VALID' 
+                            ? 'Validé' 
+                            : userData.application.status?.birthCertificateStatus === 'NOT_VALID'
+                              ? 'Non validé'
+                              : 'En attente'}
+                        </span>
+                      </div>
+                      {selectedDocuments.birthCertificate && (
+                        <FormField
+                          control={updateForm.control}
+                          name="birthCertificate.file"
+                          render={({ field: { onChange, value, ...rest } }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  type="file"
+                                  accept=".pdf,.jpg,.jpeg,.png"
+                                  onChange={(e) => {
+                                    const files = e.target.files;
+                                    if (files?.length) {
+                                      onChange(files);
+                                    }
+                                  }}
+                                  {...rest}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  {userData.application.regulationsUrl && (
+                    <div className="p-4 border rounded-md">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <Checkbox 
+                          id="regulations-checkbox" 
+                          checked={selectedDocuments.regulations}
+                          onCheckedChange={(checked) => 
+                            setSelectedDocuments(prev => ({
+                              ...prev, 
+                              regulations: Boolean(checked)
+                            }))
+                          }
+                        />
+                        <label 
+                          htmlFor="regulations-checkbox" 
+                          className="font-medium cursor-pointer"
+                        >
+                          Règlement signé
+                        </label>
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          userData.application.status?.regulationsStatus === 'VALID' 
+                            ? 'bg-green-100 text-green-800' 
+                            : userData.application.status?.regulationsStatus === 'NOT_VALID'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {userData.application.status?.regulationsStatus === 'VALID' 
+                            ? 'Validé' 
+                            : userData.application.status?.regulationsStatus === 'NOT_VALID'
+                              ? 'Non validé'
+                              : 'En attente'}
+                        </span>
+                      </div>
+                      {selectedDocuments.regulations && (
+                        <FormField
+                          control={updateForm.control}
+                          name="regulations.file"
+                          render={({ field: { onChange, value, ...rest } }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  type="file"
+                                  accept=".pdf,.jpg,.jpeg,.png"
+                                  onChange={(e) => {
+                                    const files = e.target.files;
+                                    if (files?.length) {
+                                      onChange(files);
+                                    }
+                                  }}
+                                  {...rest}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  {userData.application.parentalAuthorizationUrl && (
+                    <div className="p-4 border rounded-md">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <Checkbox 
+                          id="parentalAuthorization-checkbox" 
+                          checked={selectedDocuments.parentalAuthorization}
+                          onCheckedChange={(checked) => 
+                            setSelectedDocuments(prev => ({
+                              ...prev, 
+                              parentalAuthorization: Boolean(checked)
+                            }))
+                          }
+                        />
+                        <label 
+                          htmlFor="parentalAuthorization-checkbox" 
+                          className="font-medium cursor-pointer"
+                        >
+                          Autorisation parentale
+                        </label>
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          userData.application.status?.parentalAuthorizationStatus === 'VALID' 
+                            ? 'bg-green-100 text-green-800' 
+                            : userData.application.status?.parentalAuthorizationStatus === 'NOT_VALID'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {userData.application.status?.parentalAuthorizationStatus === 'VALID' 
+                            ? 'Validé' 
+                            : userData.application.status?.parentalAuthorizationStatus === 'NOT_VALID'
+                              ? 'Non validé'
+                              : 'En attente'}
+                        </span>
+                      </div>
+                      {selectedDocuments.parentalAuthorization && (
+                        <FormField
+                          control={updateForm.control}
+                          name="parentalAuthorization.file"
+                          render={({ field: { onChange, value, ...rest } }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  type="file"
+                                  accept=".pdf,.jpg,.jpeg,.png"
+                                  onChange={(e) => {
+                                    const files = e.target.files;
+                                    if (files?.length) {
+                                      onChange(files);
+                                    }
+                                  }}
+                                  {...rest}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  {userData.application.imageRightsUrl && (
+                    <div className="p-4 border rounded-md">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <Checkbox 
+                          id="imageRights-checkbox" 
+                          checked={selectedDocuments.imageRights}
+                          onCheckedChange={(checked) => 
+                            setSelectedDocuments(prev => ({
+                              ...prev, 
+                              imageRights: Boolean(checked)
+                            }))
+                          }
+                        />
+                        <label 
+                          htmlFor="imageRights-checkbox" 
+                          className="font-medium cursor-pointer"
+                        >
+                          Droit à l'image signé
+                        </label>
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          userData.application.status?.imageRightsStatus === 'VALID' 
+                            ? 'bg-green-100 text-green-800' 
+                            : userData.application.status?.imageRightsStatus === 'NOT_VALID'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {userData.application.status?.imageRightsStatus === 'VALID' 
+                            ? 'Validé' 
+                            : userData.application.status?.imageRightsStatus === 'NOT_VALID'
+                              ? 'Non validé'
+                              : 'En attente'}
+                        </span>
+                      </div>
+                      {selectedDocuments.imageRights && (
+                        <FormField
+                          control={updateForm.control}
+                          name="imageRights.file"
+                          render={({ field: { onChange, value, ...rest } }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  type="file"
+                                  accept=".pdf,.jpg,.jpeg,.png"
+                                  onChange={(e) => {
+                                    const files = e.target.files;
+                                    if (files?.length) {
+                                      onChange(files);
+                                    }
+                                  }}
+                                  {...rest}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  type="submit" 
+                  className="w-full" 
+                  disabled={isSubmitting || !Object.values(selectedDocuments).some(v => v)}
+                >
+                  {isSubmitting ? "Mise à jour en cours..." : "Mettre à jour les documents sélectionnés"}
+                </Button>
+              </CardFooter>
+            </Card>
+          </form>
+        </Form>
+      )}
     </div>
   );
 }
