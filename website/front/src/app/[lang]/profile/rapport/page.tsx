@@ -202,6 +202,47 @@ export default function ReportPage() {
     }
   };
 
+  const subjectsCard = (
+    <Card className="mb-6">
+      <CardHeader>
+        <CardTitle>Sujets disponibles</CardTitle>
+        <CardDescription>
+          Téléchargez le sujet qui correspond à votre niveau scolaire pour préparer votre rapport
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50">
+            <div>
+              <h4 className="font-medium">Sujet Tronc Commun</h4>
+              <p className="text-sm text-muted-foreground">Pour les élèves en Tronc Commun</p>
+            </div>
+            <Button variant="outline" size="sm" className="shrink-0" asChild>
+              <a href="/documents/sujet_tronc_commun.pdf" target="_blank" download>Télécharger</a>
+            </Button>
+          </div>
+          
+          <div className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50">
+            <div>
+              <h4 className="font-medium">Sujet 1ère année Bac</h4>
+              <p className="text-sm text-muted-foreground">Pour les élèves en 1ère année du Baccalauréat</p>
+            </div>
+            <Button variant="outline" size="sm" className="shrink-0" asChild>
+              <a href="/documents/sujet_1ere_bac.pdf" target="_blank" download>Télécharger</a>
+            </Button>
+          </div>
+          
+          <div className="mt-4 p-3 bg-blue-50 rounded-md border border-blue-200">
+            <p className="text-sm text-blue-800">
+              <strong>Important :</strong> Veuillez télécharger et traiter le sujet correspondant à votre niveau actuel. 
+              Votre rapport sera évalué en fonction des critères spécifiques à votre niveau.
+            </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   const reportCard = (
     <Card>
       <CardHeader>
@@ -299,7 +340,12 @@ export default function ReportPage() {
 
       <Separator />
 
-      {!userData ? <ProfileSkeleton /> : reportCard}
+      {!userData ? <ProfileSkeleton /> : (
+        <>
+          {subjectsCard}
+          {reportCard}
+        </>
+      )}
     </div>
   );
 }
