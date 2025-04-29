@@ -51,21 +51,21 @@ export default function ReportPage() {
       alert("Veuillez sélectionner un fichier PDF.");
       return;
     }
-
+  
     setUploading(true);
-
+  
     const formData = new FormData();
-    formData.append("file", selectedFile);
-
+    formData.append("file", selectedFile); // use "file" field exactly like your previous FormData
+  
     try {
-      const response = await fetch("/api/upload", {
-        method: "POST",
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}reports/${userData?.report?.id}`, {
+        method: "PUT", // PUT or POST depending on your backend, but probably PUT
         body: formData,
       });
-
+  
       if (response.ok) {
         alert("Fichier envoyé avec succès !");
-        router.refresh(); // Refresh the page to reflect changes
+        router.refresh(); // Refresh page after upload
       } else {
         alert("Erreur lors de l'envoi du fichier.");
       }
@@ -75,7 +75,7 @@ export default function ReportPage() {
     } finally {
       setUploading(false);
     }
-  };
+  };  
 
   useEffect(() => {
     if (userData !== undefined) {
