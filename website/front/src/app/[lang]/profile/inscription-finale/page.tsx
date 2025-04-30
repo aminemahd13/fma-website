@@ -345,7 +345,7 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
             imageRights: 'image_rights'
           };
           
-          const prefix = prefixMap[field];
+          const prefix = prefixMap[field as keyof typeof prefixMap];
           const fileName = `${prefix}_${generateFileName()}.${fileData.name.split('.').pop()}`;
           const file = new File([fileData], fileName, { type: fileData.type });
           
