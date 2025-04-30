@@ -399,10 +399,10 @@ export default function ReportPage() {
               )}
             </div>
           )}
-          {/* Disable button if applications are closed OR if redirecting OR if uploading OR (no file selected AND not redirecting) */}
+          {/* Disable button if applications are closed and not redirecting OR if uploading OR (no file selected AND not redirecting) */}
           <Button 
             onClick={handleButtonClick} 
-            disabled={!isApplicationsOpen || content?.redirectToApplication || uploading || (!selectedFile && !content?.redirectToApplication)} 
+            disabled={(!isApplicationsOpen && !content?.redirectToApplication) || uploading || (!selectedFile && !content?.redirectToApplication)} 
             className="w-full"
           >
             {uploading ? <LoadingDots color="#808080" /> : content?.ctaLabel}
