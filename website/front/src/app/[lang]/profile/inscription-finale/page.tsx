@@ -332,18 +332,20 @@ export default function InscriptionFinalePage() {
       const updatedStatuses: Record<string, string> = {};
       
       // Traiter chaque document sélectionné
-      for (const [field, isSelected] of Object.entries(selectedDocuments)) {
-        if (isSelected && data[field].file?.length > 0) {
-          const fileData = data[field].file[0];
-          const prefixMap = {
-            parentId: 'parent_id',
+for (const [field, isSelected] of Object.entries(selectedDocuments)) {
+  const typedField = field as keyof typeof data;
+
+  if (isSelected && data[typedField]?.file?.length > 0) {
+    const fileData = data[typedField].file[0];
+    const prefixMap = {
+      parentId: 'parent_id',
             birthCertificate: 'birth_certificate',
             regulations: 'regulations',
             parentalAuthorization: 'parental_authorization',
             imageRights: 'image_rights'
           };
           
-          const prefix = prefixMap[field];
+          const prefix = prefixMap[field as keyof typeof prefixMap];
           const fileName = `${prefix}_${generateFileName()}.${fileData.name.split('.').pop()}`;
           const file = new File([fileData], fileName, { type: fileData.type });
           
@@ -455,7 +457,7 @@ export default function InscriptionFinalePage() {
           <CardHeader>
             <CardTitle>Documents déjà soumis</CardTitle>
             <CardDescription>
-              Vous avez déjà soumis vos documents d'inscription finale. Si vous souhaitez 
+              Vous avez déjà soumis vos documents d&apos;inscription finale. Si vous souhaitez 
               les mettre à jour, utilisez le formulaire ci-dessous.
             </CardDescription>
           </CardHeader>
@@ -463,7 +465,7 @@ export default function InscriptionFinalePage() {
             <ul className="list-disc pl-5 space-y-2">
               {userData.application.parentIdUrl && (
                 <li className="text-sm flex items-center justify-between">
-                  <span>Justificatif d'identité des parents</span>
+                  <span>Justificatif d&apos;identité des parents</span>
                   <span className={`text-xs px-2 py-1 rounded ${
                     userData.application.status?.parentIdStatus === 'VALID' 
                       ? 'bg-green-100 text-green-800' 
@@ -481,7 +483,7 @@ export default function InscriptionFinalePage() {
               )}
               {userData.application.birthCertificateUrl && (
                 <li className="text-sm flex items-center justify-between">
-                  <span>Extrait d'acte de naissance</span>
+                  <span>Extrait d&apos;acte de naissance</span>
                   <span className={`text-xs px-2 py-1 rounded ${
                     userData.application.status?.birthCertificateStatus === 'VALID' 
                       ? 'bg-green-100 text-green-800' 
@@ -535,7 +537,7 @@ export default function InscriptionFinalePage() {
               )}
               {userData.application.imageRightsUrl && (
                 <li className="text-sm flex items-center justify-between">
-                  <span>Droit à l'image signé</span>
+                  <span>Droit à l&apos;image signé</span>
                   <span className={`text-xs px-2 py-1 rounded ${
                     userData.application.status?.imageRightsStatus === 'VALID' 
                       ? 'bg-green-100 text-green-800' 
@@ -569,7 +571,7 @@ export default function InscriptionFinalePage() {
             <div className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50">
               <div>
                 <h4 className="font-medium">Règlement</h4>
-                <p className="text-sm text-muted-foreground">À signer par l'élève et le tuteur légal</p>
+                <p className="text-sm text-muted-foreground">À signer par l&apos;élève et le tuteur légal</p>
               </div>
               <Button variant="outline" size="sm" className="shrink-0" asChild>
                 <a href="/documents/reglement.pdf" target="_blank" download>Télécharger</a>
@@ -588,8 +590,8 @@ export default function InscriptionFinalePage() {
             
             <div className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50">
               <div>
-                <h4 className="font-medium">Droit à l'image</h4>
-                <p className="text-sm text-muted-foreground">À signer par l'élève et le tuteur légal</p>
+                <h4 className="font-medium">Droit à l&apos;image</h4>
+                <p className="text-sm text-muted-foreground">À signer par l&apos;élève et le tuteur légal</p>
               </div>
               <Button variant="outline" size="sm" className="shrink-0" asChild>
                 <a href="/documents/droit_image.pdf" target="_blank" download>Télécharger</a>
@@ -599,7 +601,7 @@ export default function InscriptionFinalePage() {
           
           <div className="mt-4 p-3 bg-blue-50 rounded-md border border-blue-200">
             <p className="text-sm text-blue-800">
-              <strong>Important :</strong> Après avoir téléchargé les documents, veuillez les imprimer, les signer et les scanner avant de les soumettre. L'autorisation parentale doit également être légalisée.
+              <strong>Important :</strong> Après avoir téléchargé les documents, veuillez les imprimer, les signer et les scanner avant de les soumettre. L&apos;autorisation parentale doit également être légalisée.
             </p>
           </div>
         </CardContent>
@@ -623,7 +625,7 @@ export default function InscriptionFinalePage() {
                     name="parentId"
                     render={({ field: { onChange, value, ...rest } }) => (
                       <FormItem>
-                        <FormLabel>Justificatif d'identité des parents avec photo</FormLabel>
+                        <FormLabel>Justificatif d&apos;identité des parents avec photo</FormLabel>
                         <FormControl>
                           <Input
                             type="file"
@@ -638,7 +640,7 @@ export default function InscriptionFinalePage() {
                           />
                         </FormControl>
                         <FormDescription>
-                          Carte d'identité, passeport ou autre document officiel avec photo
+                          Carte d&apos;identité, passeport ou autre document officiel avec photo
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -651,7 +653,7 @@ export default function InscriptionFinalePage() {
                     name="birthCertificate"
                     render={({ field: { onChange, value, ...rest } }) => (
                       <FormItem>
-                        <FormLabel>Extrait d'acte de naissance</FormLabel>
+                        <FormLabel>Extrait d&apos;acte de naissance</FormLabel>
                         <FormControl>
                           <Input
                             type="file"
@@ -676,7 +678,7 @@ export default function InscriptionFinalePage() {
                     name="regulations"
                     render={({ field: { onChange, value, ...rest } }) => (
                       <FormItem>
-                        <FormLabel>Règlement signé par l'élève et le tuteur légal</FormLabel>
+                        <FormLabel>Règlement signé par l&apos;élève et le tuteur légal</FormLabel>
                         <FormControl>
                           <Input
                             type="file"
@@ -691,7 +693,7 @@ export default function InscriptionFinalePage() {
                           />
                         </FormControl>
                         <FormDescription>
-                          Il faut l'<strong>imprimer</strong>, le <strong>signer</strong> à la main puis le <strong>scanner</strong>. Il n'y a <strong>pas besoin de le légaliser</strong>.
+                          Il faut l&apos;<strong>imprimer</strong>, le <strong>signer</strong> à la main puis le <strong>scanner</strong>. Il n&apos;y a <strong>pas besoin de le légaliser</strong>.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -719,7 +721,7 @@ export default function InscriptionFinalePage() {
                           />
                         </FormControl>
                         <FormDescription>
-                          Il faut l'<strong>imprimer</strong>, la <strong>signer</strong> à la main, la <strong>légaliser</strong>, puis la <strong>scanner</strong>. <strong>La légalisation est obligatoire</strong>.
+                          Il faut l&apos;<strong>imprimer</strong>, la <strong>signer</strong> à la main, la <strong>légaliser</strong>, puis la <strong>scanner</strong>. <strong>La légalisation est obligatoire</strong>.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -732,14 +734,14 @@ export default function InscriptionFinalePage() {
                     name="imageRights"
                     render={({ field: { onChange, value, ...rest } }) => (
                       <FormItem>
-                        <FormLabel>Droit de l'image signé</FormLabel>
+                        <FormLabel>Droit de l&apos;image signé</FormLabel>
                         <FormControl>
                           <Input
                             type="file"
                             accept=".pdf,.jpg,.jpeg,.png"
                             onChange={(e) => {
                               const files = e.target.files;
-                              if (files?.length) {
+                              if (files?.length) {  
                                 onChange(files);
                               }
                             }}
@@ -769,7 +771,7 @@ export default function InscriptionFinalePage() {
                 <CardDescription>
                   Sélectionnez les documents que vous souhaitez mettre à jour, puis téléchargez les nouvelles versions.
                   <br />
-                  <strong>Note:</strong> Chaque document mis à jour sera automatiquement placé en statut "En attente" de validation.
+                  <strong>Note:</strong> Chaque document mis à jour sera automatiquement placé en statut &quot;En attente&quot; de validation.
                   <br />
                   <strong>Important:</strong> Les documents déjà validés ne peuvent plus être modifiés.
                 </CardDescription>
@@ -794,7 +796,7 @@ export default function InscriptionFinalePage() {
                           htmlFor="parentId-checkbox" 
                           className="font-medium cursor-pointer"
                         >
-                          Justificatif d'identité des parents
+                          Justificatif d&apos;identité des parents
                         </label>
                         <span className={`text-xs px-2 py-1 rounded ${
                           userData.application.status?.parentIdStatus === 'VALID' 
@@ -860,7 +862,7 @@ export default function InscriptionFinalePage() {
                           htmlFor="birthCertificate-checkbox" 
                           className="font-medium cursor-pointer"
                         >
-                          Extrait d'acte de naissance
+                          Extrait d&apos;acte de naissance
                         </label>
                         <span className={`text-xs px-2 py-1 rounded ${
                           userData.application.status?.birthCertificateStatus === 'VALID' 
@@ -1058,7 +1060,7 @@ export default function InscriptionFinalePage() {
                           htmlFor="imageRights-checkbox" 
                           className="font-medium cursor-pointer"
                         >
-                          Droit à l'image signé
+                          Droit à l&apos;image signé
                         </label>
                         <span className={`text-xs px-2 py-1 rounded ${
                           userData.application.status?.imageRightsStatus === 'VALID' 

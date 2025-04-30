@@ -42,16 +42,12 @@ export const getUploadFolderName = (firstName: string, lastName: string) => {
 export const generateFileName = (bytes = 6) => c.randomBytes(bytes).toString("hex")
 
 export const getSlideshowImages = () => ([
-  {src: '/slideshow/1.jpg', key: 'photo-1'},
-  {src: '/slideshow/2.jpg', key: 'photo-2'},
-  {src: '/slideshow/3.jpg', key: 'photo-3'},
+  {src: '/slideshow/2.jpg', key: 'photo-1'},
+  {src: '/slideshow/6.jpg', key: 'photo-2'},
+  {src: '/slideshow/1.jpg', key: 'photo-3'},
   {src: '/slideshow/4.jpg', key: 'photo-4'},
   {src: '/slideshow/5.jpg', key: 'photo-5'},
-  {src: '/slideshow/6.jpg', key: 'photo-6'},
-  {src: '/slideshow/7.jpg', key: 'photo-7'},
-  {src: '/slideshow/8.jpg', key: 'photo-8'},
-  {src: '/slideshow/9.jpg', key: 'photo-9'},
-  {src: '/slideshow/10.jpg', key: 'photo-10'},
+  {src: '/slideshow/3.jpg', key: 'photo-6'},
 ])
 
 export const getToken = () => {

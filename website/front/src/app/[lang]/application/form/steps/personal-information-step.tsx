@@ -69,7 +69,7 @@ export const PersonalInformationStep = ({
     >
       <div className="bg-blue-50 p-4 rounded-md mb-6 border border-blue-200">
         <p className="text-sm text-blue-800">
-          La lecture attentive et entière du <Link href="#" className="text-blue-600 underline font-medium">règlement</Link> est obligatoire
+          La lecture attentive et entière du <Link href="https://drive.google.com/file/d/1aHmNIZb3Funq9Mqr_UE2La17Dkrmnm-t/view?usp=sharing" className="text-blue-600 underline font-medium">règlement</Link> est obligatoire
         </p>
       </div>
       

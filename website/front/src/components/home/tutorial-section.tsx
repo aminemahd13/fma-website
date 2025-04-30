@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { useRouter } from 'next/navigation';
 import { userState } from '@/store/userState';
 import { useAuthModal } from '../layout/auth-modal';
+import CtaButton from "../cta_button"; 
 
 const TutorialSection = () => {
   const userData = useRecoilValue(userState);
@@ -21,26 +22,33 @@ const TutorialSection = () => {
 
   return (
     <div className="">
-      <AuthModal />
+  <AuthModal />
 
-      <div className="drop-shadow-sm space-y-6 md:space-y-0 md:flex md:justify-around mb-12 text-center text-lg">
-        Êtes-vous intéressé à nous rejoindre dans cette aventure ?<br />
-        Il suffit de consulter le test de sélection et de nous envoyer votre candidature directement depuis votre profil !
-      </div>
+  <div className="text-center text-lg space-y-4 drop-shadow-sm mb-12 max-w-2xl mx-auto">
+  <p>
+    Êtes-vous intéressé à nous rejoindre dans cette aventure ?
+    Il vous suffit de compléter le formulaire de pré-enregistrement et de déposer votre rapport (votre travail) depuis votre profil.
+  </p>
+  <p className="text-red-600 font-semibold">
+    Attention : tout doit être soumis avant le 25 mai.
+  </p>
+</div>
 
-      <div
-        className="flex justify-center p-8 rounded-lg animate-fade-up opacity-0"
-        style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}
-      >
-        <button className="p-[3px] relative" onClick={handleApplyClick}>
-          <div className="absolute inset-0 bg-gradient-to-r from-sky-500 to-[#272162] rounded-lg" />
-          <div className="px-16 py-8 bg-blue rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent hover:text-white">
-            Envoyer ma candidature
-          </div>
-        </button>
-      </div>
-    </div>
+
+  <div
+    className="flex justify-center p-8 rounded-lg animate-fade-up opacity-0"
+    style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}
+  >
+<CtaButton
+  onClick={handleApplyClick}
+  label="Envoyer ma candidature"
+  className="text-lg"
+/>
+
+
+  </div>
+</div>
   );
-};
+}
 
 export default TutorialSection;
