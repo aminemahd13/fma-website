@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
@@ -9,11 +9,12 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription }
 import { Badge } from "@/components/shared/badge";
 import { Separator } from "@/components/shared";
 import ProfileSkeleton from "../profile-skeleton";
-import { formatDate, computeSHA256, getUploadFolderName, generateFileName } from "@/lib/utils";
+import { LoadingDots } from "@/components/shared/icons";
+import { getUploadFolderName, generateFileName, computeSHA256, formatDate } from "@/lib/utils";
 import { getSignedURL, uploadFile } from "@/api/MediaApi";
+import { putApplication } from "@/api/ApplicationApi"; // Ensure putApplication is imported
+import { getApplicationsOpenStatus } from "@/api/SettingsApi"; // Added import
 import { toast } from "@/components/hooks/use-toast";
-import LoadingDots from "@/components/shared/icons/loading-dots";
-import { putApplication } from "@/api/ApplicationApi"; // Add this import
 
 const getBadgeClassname = (status: string) => {
   switch (status) {
@@ -34,7 +35,32 @@ export default function ReportPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [isApplicationsOpen, setIsApplicationsOpen] = useState<boolean>(true); // Add state for application status
+  const [isCheckingStatus, setIsCheckingStatus] = useState<boolean>(true); // Add state for checking status
   const router = useRouter();
+
+  // Fetch application open status
+  useEffect(() => {
+    const checkApplicationStatus = async () => {
+      setIsCheckingStatus(true);
+      try {
+        const response = await getApplicationsOpenStatus() as any;
+        if (response?.statusCode === 200) {
+          setIsApplicationsOpen(response.isOpen);
+        } else {
+          // Default to closed if there's an error or unexpected response
+          setIsApplicationsOpen(false);
+        }
+      } catch (error) {
+        console.error("Failed to check application status", error);
+        setIsApplicationsOpen(false); // Default to closed on error
+      } finally {
+        setIsCheckingStatus(false);
+      }
+    };
+    
+    checkApplicationStatus();
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -69,6 +95,15 @@ export default function ReportPage() {
   };
 
   const handleUpload = async () => {
+    if (!isApplicationsOpen) { // Add check for application status
+      toast({
+        title: "Soumissions fermées",
+        description: "Les candidatures sont actuellement fermées. Vous ne pouvez pas soumettre de rapport.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!selectedFile) {
       toast({
         title: "Aucun fichier sélectionné",
@@ -140,7 +175,8 @@ export default function ReportPage() {
   };  
 
   useEffect(() => {
-    if (userData !== undefined) {
+    // If userData is loaded and status check is done, set isLoading to false
+    if (userData !== undefined && !isCheckingStatus) {
       setIsLoading(false);
     }
 
@@ -166,39 +202,71 @@ export default function ReportPage() {
     const hasReport = Boolean(application?.reportUrl);
 
     if (!hasReport) {
-      setContent({
-        title: "Vous n'avez pas encore envoyé de rapport",
-        subtitle: "Veuillez envoyer votre rapport en cliquant sur le bouton ci-dessous.",
-        ctaLabel: "Envoyer votre rapport",
-      });
+      if (!isApplicationsOpen) { // Check if applications are closed
+        setContent({
+          title: "Les soumissions de rapports sont fermées",
+          subtitle: "Les candidatures sont actuellement fermées, vous ne pouvez donc pas soumettre de rapport pour le moment.",
+          ctaLabel: "Soumission fermée",
+          redirectToApplication: false, // Keep user on this page, but disable upload
+        });
+      } else {
+        setContent({
+          title: "Vous n'avez pas encore envoyé de rapport",
+          subtitle: "Veuillez envoyer votre rapport en cliquant sur le bouton ci-dessous.",
+          ctaLabel: "Envoyer votre rapport",
+        });
+      }
     } else {
       if (reportStatus === "VALID") {
         setContent({
           title: "Votre rapport a été approuvé",
           subtitle: "Votre rapport a été validé. Merci pour votre contribution.",
-          ctaLabel: "Mettre à jour votre rapport",
+          ctaLabel: "Mettre à jour votre rapport", // Or maybe "Voir le rapport" if updates aren't allowed after validation
         });
       } else if (reportStatus === "NOT_VALID") {
-        setContent({
-          title: "Votre rapport n'a pas été approuvé",
-          subtitle: "Votre rapport n'a pas été validé. Veuillez le mettre à jour et le soumettre à nouveau.",
-          ctaLabel: "Mettre à jour votre rapport",
-        });
-      } else {
-        setContent({
-          title: "Votre rapport est en cours d'examen",
-          subtitle: "Votre rapport a été envoyé et est en cours d'examen par notre équipe.",
-          ctaLabel: "Mettre à jour votre rapport",
-        });
+        if (!isApplicationsOpen) { // Also check here if applications are closed
+           setContent({
+            title: "Votre rapport n'a pas été approuvé",
+            subtitle: "Votre rapport n'a pas été validé. Les soumissions sont actuellement fermées, vous ne pouvez pas le mettre à jour.",
+            ctaLabel: "Soumission fermée",
+          });
+        } else {
+          setContent({
+            title: "Votre rapport n'a pas été approuvé",
+            subtitle: "Votre rapport n'a pas été validé. Veuillez le mettre à jour et le soumettre à nouveau.",
+            ctaLabel: "Mettre à jour votre rapport",
+          });
+        }
+      } else { // PENDING
+        if (!isApplicationsOpen) { // Also check here if applications are closed
+           setContent({
+            title: "Votre rapport est en cours d'examen",
+            subtitle: "Votre rapport a été envoyé et est en cours d'examen. Les soumissions sont actuellement fermées, vous ne pouvez pas le mettre à jour.",
+            ctaLabel: "Soumission fermée",
+          });
+        } else {
+          setContent({
+            title: "Votre rapport est en cours d'examen",
+            subtitle: "Votre rapport a été envoyé et est en cours d'examen par notre équipe.",
+            ctaLabel: "Mettre à jour votre rapport",
+          });
+        }
       }
     }
-  }, [userData]);
+  }, [userData, isApplicationsOpen, isCheckingStatus]); // Add dependencies
 
   const handleButtonClick = () => {
     if (content?.redirectToApplication) {
       router.push(`/${userData?.locale || 'fr'}/profile/application`);
-    } else {
+    } else if (isApplicationsOpen) { // Only call handleUpload if applications are open
       handleUpload();
+    } else {
+      // Optionally show a toast if the button is somehow clicked when closed
+       toast({
+        title: "Soumissions fermées",
+        description: "Les candidatures sont actuellement fermées.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -243,6 +311,11 @@ export default function ReportPage() {
     </Card>
   );
 
+  // Display loading skeleton while checking auth, data, or application status
+  if (isLoading || userData === undefined || isCheckingStatus) {
+    return <ProfileSkeleton />;
+  }
+
   const reportCard = (
     <Card>
       <CardHeader>
@@ -266,7 +339,8 @@ export default function ReportPage() {
       </CardContent>
       <CardFooter>
         <div className="flex flex-col space-y-4 w-full">
-          {!content?.redirectToApplication && (
+          {/* Only show upload elements if applications are open and not redirecting */}
+          {!content?.redirectToApplication && isApplicationsOpen && ( 
             <div className="flex flex-col w-full">
               <div className="relative">
                 <Button 
@@ -274,6 +348,8 @@ export default function ReportPage() {
                   className="w-full flex items-center justify-center border-dashed border-2 py-6"
                   onClick={() => document.getElementById('file-upload')?.click()}
                   type="button"
+                  // Disable file picker if report is VALID or NOT_VALID (and apps open)
+                  disabled={userData?.application?.status?.reportStatus === 'VALID' || (userData?.application?.status?.reportStatus === 'NOT_VALID' && !isApplicationsOpen)}
                 >
                   {selectedFile ? (
                     <span className="text-sm font-medium">{selectedFile.name}</span>
@@ -305,6 +381,8 @@ export default function ReportPage() {
                   accept="application/pdf,image/png,image/jpeg,image/jpg" 
                   onChange={handleFileChange}
                   className="sr-only"
+                  // Also disable input if needed
+                  disabled={userData?.application?.status?.reportStatus === 'VALID' || (userData?.application?.status?.reportStatus === 'NOT_VALID' && !isApplicationsOpen)}
                 />
               </div>
               {selectedFile && (
@@ -321,7 +399,12 @@ export default function ReportPage() {
               )}
             </div>
           )}
-          <Button onClick={handleButtonClick} disabled={!content?.redirectToApplication && (uploading || !selectedFile)} className="w-full">
+          {/* Disable button if applications are closed OR if redirecting OR if uploading OR (no file selected AND not redirecting) */}
+          <Button 
+            onClick={handleButtonClick} 
+            disabled={!isApplicationsOpen || content?.redirectToApplication || uploading || (!selectedFile && !content?.redirectToApplication)} 
+            className="w-full"
+          >
             {uploading ? <LoadingDots color="#808080" /> : content?.ctaLabel}
           </Button>
         </div>
@@ -340,12 +423,11 @@ export default function ReportPage() {
 
       <Separator />
 
-      {!userData ? <ProfileSkeleton /> : (
-        <>
-          {subjectsCard}
-          {reportCard}
-        </>
-      )}
+      {/* No need for separate skeleton check here, handled by the main check */}
+      <>
+        {subjectsCard}
+        {reportCard}
+      </>
     </div>
   );
 }
