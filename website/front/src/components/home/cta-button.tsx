@@ -28,21 +28,6 @@ const CtaButton = () => {
     >
       <AuthModal />
 
-      <MeteorCard className="w-full flex flex-col space-y-6 items-center bg-transparent border-gray-400 py-6">
-        <div className="w-full flex flex-col space-y-4 md:flex-row md:justify-center md:space-y-0 md:space-x-6">
-          <Link href="/organizing-team" target="_blank">
-            <Button className="border border-white text-white w-[11rem] bg-[#2C2C62]">
-              Équipe organisatrice
-            </Button>
-          </Link>
-          <Link href="/partners">
-            <Button className="border border-white text-white w-[11rem] bg-[#2C2C62]">
-              Partenaires
-            </Button>
-          </Link>
-        </div>
-      </MeteorCard>
-
       <div className="flex flex-col space-y-6 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-6">
         {!isMobile && <DottedLine1 className="w-1/6" />}
 
@@ -78,8 +63,23 @@ const CtaButton = () => {
         {!isMobile && <DottedLine3 className="w-1/6" />}
       </div>
 
+      <MeteorCard className="w-full flex flex-col space-y-6 items-center bg-transparent border-gray-400 py-6">
+        <div className="w-full flex flex-col space-y-4 md:flex-row md:justify-center md:space-y-0 md:space-x-6">
+          <Link href="/organizing-team" target="_blank">
+            <Button className="border border-white text-white w-[11rem] bg-[#2C2C62]">
+              Équipe organisatrice
+            </Button>
+          </Link>
+          <Link href="/partners">
+            <Button className="border border-white text-white w-[11rem] bg-[#2C2C62]">
+              Partenaires
+            </Button>
+          </Link>
+        </div>
+      </MeteorCard>
+
       <p>
-        Merci pour l&apos;intérêt que vous portez à {" "}
+        Merci pour l&apos;intérêt que vous portez à{" "}
         <span className="font-semibold text-[#272162]">FMA</span>!
       </p>
     </div>
