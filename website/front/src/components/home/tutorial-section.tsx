@@ -26,9 +26,16 @@ const TutorialSection = () => {
 
   <div className="text-center text-lg space-y-4 drop-shadow-sm mb-12 max-w-2xl mx-auto">
   <p>
-    Êtes-vous intéressé à nous rejoindre dans cette aventure ?
-    Il vous suffit de compléter le formulaire de pré-enregistrement et de déposer votre rapport (votre travail) depuis votre profil.
-  </p>
+  Il vous suffit de compléter le formulaire de pré-enregistrement et de passer la{" "}
+  <a href="/selection" className="underline text-muted-foreground hover:text-foreground transition-colors">
+    sélection
+  </a>{" "}
+  en déposant votre rapport depuis votre{" "}
+  <a href="/profile/account" className="underline text-muted-foreground hover:text-foreground transition-colors">
+    profil
+  </a>.
+</p>
+
   <p className="text-red-600 font-semibold">
     Attention : tout doit être soumis avant le 25 mai.
   </p>
