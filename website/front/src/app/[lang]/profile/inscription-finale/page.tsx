@@ -332,11 +332,13 @@ export default function InscriptionFinalePage() {
       const updatedStatuses: Record<string, string> = {};
       
       // Traiter chaque document sélectionné
-      for (const [field, isSelected] of Object.entries(selectedDocuments)) {
-        if (isSelected && data[field].file?.length > 0) {
-          const fileData = data[field].file[0];
-          const prefixMap = {
-            parentId: 'parent_id',
+for (const [field, isSelected] of Object.entries(selectedDocuments)) {
+  const typedField = field as keyof typeof data;
+
+  if (isSelected && data[typedField]?.file?.length > 0) {
+    const fileData = data[typedField].file[0];
+    const prefixMap = {
+      parentId: 'parent_id',
             birthCertificate: 'birth_certificate',
             regulations: 'regulations',
             parentalAuthorization: 'parental_authorization',
