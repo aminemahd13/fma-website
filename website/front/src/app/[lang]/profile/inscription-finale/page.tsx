@@ -691,7 +691,7 @@ export default function InscriptionFinalePage() {
                           />
                         </FormControl>
                         <FormDescription>
-                          Il faut l'<strong>imprimer</strong>, le <strong>signer</strong> à la main puis le <strong>scanner</strong>. Il n&apos;y a <strong>pas besoin de le légaliser</strong>.
+                          Il faut l&apos;<strong>imprimer</strong>, le <strong>signer</strong> à la main puis le <strong>scanner</strong>. Il n&apos;y a <strong>pas besoin de le légaliser</strong>.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -769,7 +769,7 @@ export default function InscriptionFinalePage() {
                 <CardDescription>
                   Sélectionnez les documents que vous souhaitez mettre à jour, puis téléchargez les nouvelles versions.
                   <br />
-                  <strong>Note:</strong> Chaque document mis à jour sera automatiquement placé en statut "En attente" de validation.
+                  <strong>Note:</strong> Chaque document mis à jour sera automatiquement placé en statut &quot;En attente&quot; de validation.
                   <br />
                   <strong>Important:</strong> Les documents déjà validés ne peuvent plus être modifiés.
                 </CardDescription>

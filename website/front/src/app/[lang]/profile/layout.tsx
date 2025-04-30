@@ -27,7 +27,6 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
     }
   ];
   
-  // Add inscription-finale item only if application is accepted
   const sidebarNavItems = isAccepted 
     ? [...baseItems, { title: "Inscription finale", href: "/profile/inscription-finale" }]
     : baseItems;
