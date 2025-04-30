@@ -8,7 +8,7 @@ export default function ApiTestPage() {
   const [testResponse, setTestResponse] = useState<string>("No test run yet");
   const [isLoading, setIsLoading] = useState(false);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5000/mtym-api/';
+  const apiUrl = process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://fma-api.aminemahdane.com/mtym-api/';
   const fullApiUrl = apiUrl.endsWith('/') ? `${apiUrl}faq` : `${apiUrl}/faq`;
 
   const runFetchTest = async () => {

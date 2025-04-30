@@ -9,7 +9,7 @@ export default function ApiTestPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Properly handle base URL with trailing slash
-  const baseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5000/mtym-api';
+  const baseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://fma-api.aminemahdane.com/mtym-api';
   const apiUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
   const fullApiUrl = `${apiUrl}/faq`;
 
