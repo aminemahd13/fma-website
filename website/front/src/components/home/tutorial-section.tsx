@@ -39,12 +39,12 @@ const TutorialSection = () => {
     className="flex justify-center p-8 rounded-lg animate-fade-up opacity-0"
     style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}
   >
-    <CtaButton
-  href="/profile/application"
+<CtaButton
+  onClick={handleApplyClick}
   label="Envoyer ma candidature"
   className="text-lg"
-  target="_self"
 />
+
 
   </div>
 </div>

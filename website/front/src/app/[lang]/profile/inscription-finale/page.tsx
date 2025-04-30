@@ -741,7 +741,7 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
                             accept=".pdf,.jpg,.jpeg,.png"
                             onChange={(e) => {
                               const files = e.target.files;
-                              if (files?.length) {
+                              if (files?.length) {  
                                 onChange(files);
                               }
                             }}
