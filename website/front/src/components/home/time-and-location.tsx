@@ -11,7 +11,7 @@ const TimeAndLocation = () => {
         <Calendar />
         <div className="text-sm text-gray-500 font-semibold py-6">
           Du lundi <span className="text-[#272162]">14</span> au <br />
-          Dimanche <span className="text-[#272162]">20 Juillet</span>
+          Dimanche <span className="text-[#272162]">20 juillet</span>
         </div>
       </div>
 

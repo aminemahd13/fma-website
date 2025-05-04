@@ -18,7 +18,7 @@ const Informations = () => {
             différents domaines de la physique à travers des cours animés par des étudiants
              issus des plus grandes écoles internationales. Le programme inclut aussi des
               discussions en petits groupes, des ateliers pratiques et des conférences données
-               par des chercheurs maroc ains de renom.{" "}
+               par des chercheurs marocains de renom.{" "}
 
           </p>
           <p className="md:w-3/4">

@@ -97,7 +97,7 @@ export default function SelectionPage() {
           <div className="flex flex-col md:flex-row justify-center gap-8">
             {/* Refroidissement Laser */}
             <Link
-              href="https://drive.google.com/file/d/13OfY6lj-gnpoeGwJXQNPraipxILEXZos/view?usp=sharing"
+              href="https://drive.google.com/file/d/14f_Lcx96bRqQPdYFsnXfNXzqrJJELW0w/view?usp=sharing"
               target="_blank"
             >
               <div className="relative h-40 w-40 rounded-full bg-gradient-to-br from-sky-600 via-blue-600 to-indigo-700 shadow-[0_0_40px_rgba(59,130,246,0.7)] hover:scale-105 transition-transform duration-500 animate-float flex items-center justify-center text-center backdrop-blur-sm ring-2 ring-white/20">
@@ -112,13 +112,13 @@ export default function SelectionPage() {
 
             {/* Expansion de l'univers */}
             <Link
-              href="https://drive.google.com/file/d/13OfY6lj-gnpoeGwJXQNPraipxILEXZos/view?usp=sharing"
+              href="https://drive.google.com/file/d/1MAEKRK6CVG8DVxfvysQxN0Hbz4Nbichg/view?usp=sharing"
               target="_blank"
             >
               <div className="relative h-40 w-40 rounded-full bg-gradient-to-br from-purple-700 via-violet-600 to-pink-600 shadow-[0_0_40px_rgba(168,85,247,0.7)] hover:scale-105 transition-transform duration-500 animate-float flex items-center justify-center text-center backdrop-blur-sm ring-2 ring-white/20">
                 <span className="text-white font-semibold text-sm text-center leading-tight z-10 pointer-events-none select-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]">
                   🌌 Tronc commun<br />
-                  <span className="text-base font-bold">Expansion de l&apos;univers</span>
+                  <span className="text-base font-bold">Lumière et univers</span>
                 </span>
                 <div className="absolute w-[170%] h-[170%] border border-purple-300/20 rounded-full animate-spin-slow pointer-events-none" />
                 <div className="absolute h-3.5 w-3.5 bg-white rounded-full right-0 top-2 shadow-[0_0_10px_rgba(255,255,255,0.8)] animate-moon" />
