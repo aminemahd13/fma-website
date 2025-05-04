@@ -57,7 +57,7 @@ export default function SelectionPage() {
               <li>Téléchargez le document du thème, et répondez aux questions dans un rapport structuré.</li>
               <li>
                 Connectez-vous à la plateforme pour soumettre votre candidature via votre espace personnel {" "}
-                <span className="text-red-600 font-semibold">avant le 08 juin 2025 à 23h59.</span>.
+                <span className="text-red-600 font-semibold">avant le 08 juin 2025 à 23h59</span>.
               </li>
             </ul>
 

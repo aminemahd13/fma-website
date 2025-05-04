@@ -52,7 +52,7 @@ export default function Home() {
       <div className="flex flex-col items-center pr-[15rem]">
         <div className="mt-20">
           <Image
-            src="/mtym.png"
+            src="/fma.png"
             alt="FMA logo"
             width='400'
             height='200'
