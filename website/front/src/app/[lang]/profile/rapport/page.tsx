@@ -275,7 +275,7 @@ export default function ReportPage() {
       <CardHeader>
         <CardTitle>Sujets disponibles</CardTitle>
         <CardDescription>
-          Téléchargez le sujet qui correspond à votre niveau scolaire actuel (de l'année scolaire 2024/2025) pour préparer votre rapport
+          Téléchargez le sujet qui correspond à votre niveau scolaire actuel (de l&apos;année scolaire 2024/2025) pour préparer votre rapport
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -302,7 +302,7 @@ export default function ReportPage() {
           
           <div className="mt-4 p-3 bg-blue-50 rounded-md border border-blue-200">
             <p className="text-sm text-blue-800">
-              <strong>Important :</strong> Veuillez télécharger et traiter le sujet correspondant à votre niveau actuel (de l'année scolaire 2024/2025). 
+              <strong>Important :</strong> Veuillez télécharger et traiter le sujet correspondant à votre niveau actuel (de l&apos;année scolaire 2024/2025). 
               Votre rapport sera évalué en fonction des critères spécifiques à votre niveau.
             </p>
           </div>

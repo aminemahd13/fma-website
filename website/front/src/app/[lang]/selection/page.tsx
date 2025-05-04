@@ -53,7 +53,7 @@ export default function SelectionPage() {
 
             <p className="font-bold mb-2">📝 Phase 1 – Rapport écrit :</p>
             <ul className="list-disc list-inside space-y-1">
-              <li>Faites le sujet correspondant à votre niveau actuel (de l'année scolaire 2024/2025).</li>
+              <li>Faites le sujet correspondant à votre niveau actuel (de l&apos;année scolaire 2024/2025).</li>
               <li>Téléchargez le document du thème, et répondez aux questions dans un rapport structuré.</li>
               <li>
                 Connectez-vous à la plateforme pour soumettre votre candidature via votre espace personnel {" "}
