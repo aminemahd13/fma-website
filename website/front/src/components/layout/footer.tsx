@@ -26,6 +26,11 @@ const Footer = () => {
           alt="LM6E"
           style={{height: isMobile ? 'auto' : '70px', width: 'auto'}}
         />
+        <img
+          src="/cdg_capital_logo.jpg"
+          alt="cdg capital logo"
+          style={{height: isMobile ? 'auto' : '60px', width: 'auto'}}
+          />
       </div>
       <div className='z-10'>
         <SocialMediaLinks />

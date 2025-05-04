@@ -8,6 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/shared/form"
+import Link from 'next/link'
 import { Checkbox, Separator } from '@/components/shared'
 
 const RequiredAsterisk = () => <span className="text-red-500"> * </span>;
@@ -28,6 +29,12 @@ export const ValidationStep = ({
       <h2 className='text-base font-semibold leading-7 text-[#0284C7]'>
         Validation
       </h2>
+      <div className="bg-blue-50 p-4 rounded-md mb-6 border border-blue-200">
+        <p className="text-sm text-blue-800">
+          La lecture attentive et entière du <Link href="https://drive.google.com/file/d/1aHmNIZb3Funq9Mqr_UE2La17Dkrmnm-t/view?usp=sharing" className="text-blue-600 underline font-medium">règlement</Link> est obligatoire
+        </p>
+      </div>
+      
       <p className='mt-1 text-sm leading-6 text-gray-600'>
         Lisez attentivement nos Conditions Générales et validez votre candidature
       </p>

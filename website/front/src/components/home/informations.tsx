@@ -14,7 +14,7 @@ const Informations = () => {
         <div className="w-full md:text-xl py-4 space-y-4">
           <p className="md:w-3/4">
           FMA est un camp d&apos;été de physique destiné aux lycéens
-           à orientation scientifique. Pendant six jours, les participants découvrent
+           du tronc commun et 1ère année bac. Pendant six jours, les participants découvrent
             différents domaines de la physique à travers des cours animés par des étudiants
              issus des plus grandes écoles internationales. Le programme inclut aussi des
               discussions en petits groupes, des ateliers pratiques et des conférences données

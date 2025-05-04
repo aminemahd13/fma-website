@@ -48,16 +48,16 @@ export default function SelectionPage() {
 
           <div className="mt-8 text-left md:text-center">
             <p className="text-red-600 font-bold text-lg mb-2">
-              Phase 1 – Date limite de soumission : 25 mai
+              Phase 1 – Date limite de soumission : 08 juin 2025 à 23h59.
             </p>
 
             <p className="font-bold mb-2">📝 Phase 1 – Rapport écrit :</p>
             <ul className="list-disc list-inside space-y-1">
-              <li>Faites le sujet correspondant à votre niveau scolaire.</li>
+              <li>Faites le sujet correspondant à votre niveau actuel (de l'année scolaire 2024/2025).</li>
               <li>Téléchargez le document du thème, et répondez aux questions dans un rapport structuré.</li>
               <li>
                 Connectez-vous à la plateforme pour soumettre votre candidature via votre espace personnel {" "}
-                <span className="text-red-600 font-semibold">avant le 25 mai</span>.
+                <span className="text-red-600 font-semibold">avant le 08 juin 2025 à 23h59.</span>.
               </li>
             </ul>
 
@@ -87,7 +87,7 @@ export default function SelectionPage() {
             <span className="text-white font-semibold text-base text-center z-10 pointer-events-none select-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]">
               🔐<br />
               Candidater<br />
-              <span className="text-sm text-red-200 font-normal">Deadline : 25 mai</span>
+              <span className="text-sm text-red-200 font-normal">Deadline : 08 juin 2025 à 23h59.</span>
             </span>
             <div className="absolute w-[170%] h-[170%] border border-green-300/20 rounded-full animate-spin-slow pointer-events-none" />
             <div className="absolute h-3.5 w-3.5 bg-white rounded-full right-0 top-2 shadow-[0_0_10px_rgba(255,255,255,0.8)] animate-moon" />
