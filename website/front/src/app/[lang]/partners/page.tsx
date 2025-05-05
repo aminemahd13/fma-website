@@ -18,7 +18,7 @@ const partners = [
   {
     key: "cdg-capital",
     label: "CDG Capital",
-    imageHref: "/cdg_capital_logo.jpg",
+    imageHref: "/cdg_capital_logo.png",
     imageHeight: "90px",
   },
   {

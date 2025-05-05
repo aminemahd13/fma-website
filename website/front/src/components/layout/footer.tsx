@@ -27,7 +27,7 @@ const Footer = () => {
           style={{height: isMobile ? 'auto' : '70px', width: 'auto'}}
         />
         <img
-          src="/cdg_capital_logo.jpg"
+          src="/cdg_capital_logo.png"
           alt="cdg capital logo"
           style={{height: isMobile ? 'auto' : '60px', width: 'auto'}}
           />
