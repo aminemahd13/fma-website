@@ -60,10 +60,14 @@ export default function OrganizingTeamPage() {
         const webDevMembers = await fetchTeamMembersByCategory('webDevelopment' as TeamMemberCategory);
         const designMembers = await fetchTeamMembersByCategory('brandDesign' as TeamMemberCategory);
         
-        setOrganizingCommittee(committeeMembers);
-        setStaff(staffMembers);
-        setWebDevelopment(webDevMembers);
-        setBrandDesign(designMembers);
+        // Sort team members by the order property
+        const sortByOrder = (a: TeamMember, b: TeamMember) => 
+          (a.order !== undefined && b.order !== undefined) ? a.order - b.order : 0;
+        
+        setOrganizingCommittee(committeeMembers.sort(sortByOrder));
+        setStaff(staffMembers.sort(sortByOrder));
+        setWebDevelopment(webDevMembers.sort(sortByOrder));
+        setBrandDesign(designMembers.sort(sortByOrder));
       } catch (error) {
         console.error('Error fetching team members:', error);
       } finally {
