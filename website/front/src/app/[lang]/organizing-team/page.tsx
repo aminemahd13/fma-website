@@ -74,8 +74,6 @@ export default function OrganizingTeamPage() {
     fetchTeamMembers();
   }, []);
 
-  const shuffledOrganizingCommittee = shuffle(organizingCommittee);
-
   if (loading) {
     return (
       <div className="w-full max-w-sm md:max-w-[85rem] px-5 xl:px-0 mt-10 text-center">
@@ -106,8 +104,8 @@ export default function OrganizingTeamPage() {
           className="flex justify-around flex-wrap gap-6 shadow-md p-8 rounded-lg animate-fade-up opacity-0"
           style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
         >
-          {shuffledOrganizingCommittee.length > 0 ? (
-            shuffledOrganizingCommittee.map(person => (
+          {organizingCommittee.length > 0 ? (
+            organizingCommittee.map(person => (
               <Card
                 key={`${person.id}_${person.name.toLowerCase().replace(' ', '_')}`}
                 name={person.name}
