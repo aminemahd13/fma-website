@@ -97,7 +97,7 @@ export default function SelectionPage() {
           <div className="flex flex-col md:flex-row justify-center gap-8">
             {/* Refroidissement Laser */}
             <Link
-              href="https://drive.google.com/file/d/14f_Lcx96bRqQPdYFsnXfNXzqrJJELW0w/view?usp=sharing"
+              href="/documents/sujet_1ere_bac.pdf"
               target="_blank"
             >
               <div className="relative h-40 w-40 rounded-full bg-gradient-to-br from-sky-600 via-blue-600 to-indigo-700 shadow-[0_0_40px_rgba(59,130,246,0.7)] hover:scale-105 transition-transform duration-500 animate-float flex items-center justify-center text-center backdrop-blur-sm ring-2 ring-white/20">
@@ -112,7 +112,7 @@ export default function SelectionPage() {
 
             {/* Expansion de l'univers */}
             <Link
-              href="https://drive.google.com/file/d/1MAEKRK6CVG8DVxfvysQxN0Hbz4Nbichg/view?usp=sharing"
+              href="/documents/sujet_tronc_commun.pdf"
               target="_blank"
             >
               <div className="relative h-40 w-40 rounded-full bg-gradient-to-br from-purple-700 via-violet-600 to-pink-600 shadow-[0_0_40px_rgba(168,85,247,0.7)] hover:scale-105 transition-transform duration-500 animate-float flex items-center justify-center text-center backdrop-blur-sm ring-2 ring-white/20">
