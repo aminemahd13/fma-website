@@ -17,24 +17,37 @@ export class ApplicationService {
   ) {}
 
   async create(createApplicationDto: CreateApplicationDto, userId: number) {
-    // create application
-    const application = await this.applicationRepository.create(
-      createApplicationDto,
-    );
+    // Find user first
+    const user = await this.userService.findOneById(userId);
+    if (!user) {
+      throw new Error(`User with id ${userId} not found`);
+    }
+
+    // Check if user already has an application
+    if (user.application) {
+      throw new Error(`User with id ${userId} already has an application`);
+    }
+
+    // Create application
+    const application = this.applicationRepository.create(createApplicationDto);
+    
+    // Set user relationship properly
+    application.user = user;
+    
+    // Save application with user relationship
     await this.applicationRepository.save(application);
 
-    // update user
-    const user = await this.userService.findOneById(userId);
-    await this.userService.update(user?.id, { application });
-
-    // create application status
-    const applicationStatus = await this.applicationStatusService.create(
-      application,
-    );
-
-    application.user = user;
+    // Create application status
+    const applicationStatus = await this.applicationStatusService.create(application);
     application.status = applicationStatus;
-    return this.applicationRepository.save(application);
+    
+    // Save application with status
+    await this.applicationRepository.save(application);
+    
+    // Update user to reference this application
+    await this.userService.update(user.id, { application });
+
+    return application;
   }
 
   findAll() {
