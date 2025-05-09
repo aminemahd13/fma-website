@@ -169,7 +169,7 @@ export default function ApplicationPage() {
 ) : (
   <>
     <div className="border border-yellow-400 bg-yellow-100 text-yellow-800 p-4 rounded-lg">
-      <p className="font-semibold">⚠️ N'oubliez pas !</p>
+      <p className="font-semibold">⚠️ N&apos;oubliez pas !</p>
       <p>
         Une fois votre candidature créée, vous devez également <strong>nous envoyer votre rapport avant le 8 juin 2025</strong>. 
         La création de la candidature seule <strong>ne suffit pas</strong> pour être accepté.
