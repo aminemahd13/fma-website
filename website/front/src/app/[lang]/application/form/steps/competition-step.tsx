@@ -110,7 +110,7 @@ export const CompetitionStep = ({
           name="physicsOlympiadsParticipation"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel>Êtes-vous participant aux olympiades de physique cette année? <RequiredAsterisk /></FormLabel>
+              <FormLabel>Avez-vous passé le test de sélection pour olympiades de physique cette année ?<RequiredAsterisk /></FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -147,7 +147,7 @@ export const CompetitionStep = ({
             name="olympiadsTrainingSelection"
             render={({ field }) => (
               <FormItem className="space-y-3">
-                <FormLabel>Êtes-vous sélectionné au stage de formation de juillet ?</FormLabel>
+                <FormLabel>Êtes-vous en attente des résultats pour le stage de formation de juillet ?</FormLabel>
                 <FormDescription className="text-xs mt-0 mb-2">
                   (Question pour les élèves de 1ere Bac)
                 </FormDescription>
@@ -189,7 +189,7 @@ export const CompetitionStep = ({
           name="comments"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Remarques / Commentaires</FormLabel>
+              <FormLabel>Remarques / Commentaires / Motivation</FormLabel>
               <FormControl>
               <Textarea
                 placeholder="Avez-vous quelque chose à ajouter ?"

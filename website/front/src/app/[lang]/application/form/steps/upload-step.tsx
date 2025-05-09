@@ -61,6 +61,9 @@ export const UploadStep = ({
                     type="file"                      
                   />
                 </FormControl>
+                <FormDescription>
+                  <span className="text-blue-500">Remarque</span>: Ce document doit être fourni par votre école et pour l&aposannée scolaire 2024/2025.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )
