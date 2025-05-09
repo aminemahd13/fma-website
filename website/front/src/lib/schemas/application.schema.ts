@@ -8,6 +8,9 @@ const zodFileValidation = z.any()
   .refine(files => files ? ACCEPTED_FILE_TYPES.includes(files[0]?.type) : true, { message: 'Please choose PNG, JPEG or PDF format files only' })
   .refine(files => files ? files[0]?.size <= MAX_UPLOAD_SIZE : true, 'File size must be less than 3MB')
 
+// Optional file validation for fields that will be required only in final registration
+const zodOptionalFileValidation = z.any().optional();
+
 export const applicationSchema: ZodSchema = z.object({
   /* Personal Informations */
   firstName: z.string().min(1).max(50),
@@ -33,13 +36,13 @@ export const applicationSchema: ZodSchema = z.object({
   averageGrade: z.string().min(1).max(50),
   physicsAverageGrade: z.string().min(1).max(50),
   ranking: z.string().min(1).max(50),
-  physicsRanking: z.string().min(1).max(50),
+  physicsRanking: z.string().optional(),
 
   /* Competition */
   hasPreviouslyParticipated: z.enum(["yes", "no"], { required_error: "Please select an option." }),
   previousCompetitions: z.string().optional(),
   physicsOlympiadsParticipation: z.enum(["yes", "no"], { required_error: "Please select an option." }),
-  olympiadsTrainingSelection: z.enum(["yes", "no"], { required_error: "Please select an option." }),
+  olympiadsTrainingSelection: z.enum(["yes", "no"]).optional(),
   comments: z.string().optional().refine((val) => {
     if (val) {
       return val.split(' ').length <= 100
@@ -48,17 +51,23 @@ export const applicationSchema: ZodSchema = z.object({
   } , { message: "Text can't be more than 100 words"}),
 
   /* Uploads */
-  parentId: zodFileValidation,
-  birthCertificate: zodFileValidation,
+  parentId: zodOptionalFileValidation,
+  birthCertificate: zodOptionalFileValidation,
   schoolCertificate: zodFileValidation,
   grades: zodFileValidation,
-  regulations: zodFileValidation,
-  parentalAuthorization: zodFileValidation,
-  imageRights: zodFileValidation,
+  regulations: zodOptionalFileValidation,
+  parentalAuthorization: zodOptionalFileValidation,
+  imageRights: zodOptionalFileValidation,
 
   /* Terms of agreement */
   termsAgreement: z.boolean().default(false).refine(value => value === true, { message: "Vous devez accepter les Conditions Générales."}),
-})
+}).refine(
+  (data) => true, // Remove the validation that makes olympiadsTrainingSelection required
+  {
+    message: "Please select whether you are selected for July training",
+    path: ["olympiadsTrainingSelection"]
+  }
+);
 
 export const getApplicationDefaultValues = (userData: any) => ({
   firstName: userData?.firstName || "",
@@ -83,7 +92,7 @@ export const getApplicationDefaultValues = (userData: any) => ({
   hasPreviouslyParticipated: "",
   previousCompetitions: "",
   physicsOlympiadsParticipation: "",
-  olympiadsTrainingSelection: "",
+  olympiadsTrainingSelection: undefined,
   comments: "",
 
   parentId: undefined,

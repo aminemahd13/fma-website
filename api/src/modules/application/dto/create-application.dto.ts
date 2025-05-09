@@ -121,4 +121,8 @@ export class CreateApplicationDto {
   @IsString()
   @IsOptional()
   imageRightsUrl: string;
+  
+  @IsString()
+  @IsOptional()
+  reportUrl: string;
 }

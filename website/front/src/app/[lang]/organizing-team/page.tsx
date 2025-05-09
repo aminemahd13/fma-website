@@ -60,10 +60,14 @@ export default function OrganizingTeamPage() {
         const webDevMembers = await fetchTeamMembersByCategory('webDevelopment' as TeamMemberCategory);
         const designMembers = await fetchTeamMembersByCategory('brandDesign' as TeamMemberCategory);
         
-        setOrganizingCommittee(committeeMembers);
-        setStaff(staffMembers);
-        setWebDevelopment(webDevMembers);
-        setBrandDesign(designMembers);
+        // Sort team members by the order property
+        const sortByOrder = (a: TeamMember, b: TeamMember) => 
+          (a.order !== undefined && b.order !== undefined) ? a.order - b.order : 0;
+        
+        setOrganizingCommittee(committeeMembers.sort(sortByOrder));
+        setStaff(staffMembers.sort(sortByOrder));
+        setWebDevelopment(webDevMembers.sort(sortByOrder));
+        setBrandDesign(designMembers.sort(sortByOrder));
       } catch (error) {
         console.error('Error fetching team members:', error);
       } finally {
@@ -73,8 +77,6 @@ export default function OrganizingTeamPage() {
 
     fetchTeamMembers();
   }, []);
-
-  const shuffledOrganizingCommittee = shuffle(organizingCommittee);
 
   if (loading) {
     return (
@@ -106,8 +108,8 @@ export default function OrganizingTeamPage() {
           className="flex justify-around flex-wrap gap-6 shadow-md p-8 rounded-lg animate-fade-up opacity-0"
           style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
         >
-          {shuffledOrganizingCommittee.length > 0 ? (
-            shuffledOrganizingCommittee.map(person => (
+          {organizingCommittee.length > 0 ? (
+            organizingCommittee.map(person => (
               <Card
                 key={`${person.id}_${person.name.toLowerCase().replace(' ', '_')}`}
                 name={person.name}

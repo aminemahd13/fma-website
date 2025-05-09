@@ -60,6 +60,9 @@ export class ApplicationStatus {
   
   @Column({ type: 'varchar', default: 'PENDING' })
   imageRightsStatus: FileStatus;
+  
+  @Column({ type: 'varchar', default: 'PENDING' })
+  reportStatus: FileStatus;
 
   /* createAt & updatedAt */
   @CreateDateColumn({

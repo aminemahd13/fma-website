@@ -86,19 +86,16 @@ export default function NavBar({ lang }: { lang: string }) {
           </div>
 
           {/* Right Side (UserNav or Connect Button) */}
-          <div className="space-x-4 flex items-center">
-            {(isMobile || isTablet) && (
+          <div className="space-x-4 flex items-center z-40 relative">
+          {(isMobile || isTablet) && (
               <>
                 <HamburgerMenuIcon
                   className="h-8 w-8"
                   onClick={() => setShowMenu(true)}
                 />
 
-                <div
-                  className={`absolute min-h-screen w-full top-14 -left-4 bg-white ${
-                    !showMenu ? "hidden" : ""
-                  } transition-all`}
-                >
+<div className={`fixed inset-0 bg-white z-50 ${!showMenu ? "hidden" : ""} transition-all`}>
+
                   <div className="flex justify-between">
                     <div>{""}</div>
                     <Cross1Icon
@@ -121,8 +118,8 @@ export default function NavBar({ lang }: { lang: string }) {
             )}
 
             {!isLoading && (
-              <div className="flex-shrink-0 max-w-[10rem] w-full">
-                {userData ? (
+              <div className="flex-shrink-0 w-fit">
+              {userData ? (
                   <UserNav
                     firstName={userData.firstName}
                     lastName={userData.lastName}

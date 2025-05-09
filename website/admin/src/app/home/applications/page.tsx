@@ -23,6 +23,8 @@ export default function ApplicationsPage() {
           city: application?.city,
           highschool: application?.highschool,
           status: application?.status?.status,
+          // Include full application object for advanced filtering
+          application: application,
         }))
       )
     }

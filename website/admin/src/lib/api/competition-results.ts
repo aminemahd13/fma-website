@@ -1,7 +1,7 @@
 import { getToken } from '../utils';
 
 // API URL fallback with proper slash handling
-const baseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:5000/mtym-api';
+const baseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://fma-api.aminemahdane.com/mtym-api';
 // Remove trailing slash if present
 const API_URL = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
 

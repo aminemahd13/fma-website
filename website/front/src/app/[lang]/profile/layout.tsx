@@ -1,26 +1,36 @@
+"use client";
+
 import { Separator } from "@/components/shared"
 import { SidebarNav } from "./sidebar-nav"
+import { useRecoilValue } from "recoil"
+import { userState } from "@/store/userState"
 
-const sidebarNavItems = [
-  {
-    title: "Compte",
-    href: "/profile/account",
-  },
-  {
-    title: "Candidature",
-    href: "/profile/application",
-  },
-  {
-    title: "Envoyer mon rapport",
-    href: "/profile/rapport",
-  }
-]
+export default function ProfileLayout({ children }: { children: React.ReactNode }) {
+  const userData = useRecoilValue<any>(userState);
+  
+  // Check if user has an accepted application
+  const isAccepted = userData?.application?.status?.status === 'ACCEPTED';
+  
+  // Base sidebar items
+  const baseItems = [
+    {
+      title: "Compte",
+      href: "/profile/account",
+    },
+    {
+      title: "Candidature",
+      href: "/profile/application",
+    },
+    {
+      title: "Envoyer mon rapport",
+      href: "/profile/rapport",
+    }
+  ];
+  
+  const sidebarNavItems = isAccepted 
+    ? [...baseItems, { title: "Inscription finale", href: "/profile/inscription-finale" }]
+    : baseItems;
 
-interface ProfileLayoutProps {
-  children: React.ReactNode
-}
-
-export default function ProfileLayout({ children }: ProfileLayoutProps) {
   return (
     <div className="z-10 w-full px-5 max-w-screen-xl xl:px-0">
       <div className="space-y-6 p-10 pb-16">

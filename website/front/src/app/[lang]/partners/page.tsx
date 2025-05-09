@@ -1,4 +1,4 @@
-
+'use client';
 
 const organizers = [
   {
@@ -13,6 +13,12 @@ const partners = [
     key: "CDG",
     label: "CDG",
     imageHref: "/CDG_logo.png",
+    imageHeight: "90px",
+  },
+  {
+    key: "cdg-capital",
+    label: "CDG Capital",
+    imageHref: "/cdg_capital_logo.png",
     imageHeight: "90px",
   },
   {
@@ -40,7 +46,6 @@ export default function PartnersPage() {
     <div className="w-full max-w-sm md:max-w-7xl px-5 xl:px-0 mt-10">
       <div className="space-y-6">
 
-        {/* ORGANISATEUR */}
         <SectionTitle text="Organisateur" />
         <div className="flex justify-around flex-wrap gap-6 p-8 rounded-lg animate-fade-up opacity-0" style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}>
           <Card
@@ -60,11 +65,9 @@ export default function PartnersPage() {
               </>
             ]}
           />
-
         </div>
 
-        {/* SPONSOR */}
-        <SectionTitle text="Sponsor" />
+        <SectionTitle text="Sponsors" />
         <div className="flex justify-around flex-wrap gap-6 p-8 rounded-lg animate-fade-up opacity-0" style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}>
           <Card
             key={partners[0].key}
@@ -80,16 +83,31 @@ export default function PartnersPage() {
               </>
             ]}
           />
-        </div>
-
-        {/* Organisme d’accueil */}
-        <SectionTitle text="Organisme d&apos;accueil" />
-        <div className="flex justify-around flex-wrap gap-6 p-8 rounded-lg animate-fade-up opacity-0" style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}>
           <Card
             key={partners[1].key}
             imageHref={partners[1].imageHref}
             imageAlt={partners[1].label}
             imageHeight={partners[1].imageHeight}
+            content={[
+              <>
+<HighlightText text="CDG Capital " colors="from-stone-500 to-[#628c11]" /> 
+ est la filiale du Groupe CDG spécialisée dans la banque d&apos;investissement et la gestion d&apos;actifs. 
+Elle intervient dans le cadre de cette édition en tant que <span className="font-semibold">vecteur du soutien financier</span> de la <HighlightText text="CDG" colors="from-stone-500 to-[#628c11]" />.
+              </>,
+              <>
+                Elle accompagne les institutions publiques et privées dans leurs projets financiers et contribue activement au financement de l&apos;économie nationale.
+              </>
+            ]}
+          />
+        </div>
+
+        <SectionTitle text="Organisme d&apos;accueil" />
+        <div className="flex justify-around flex-wrap gap-6 p-8 rounded-lg animate-fade-up opacity-0" style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}>
+          <Card
+            key={partners[2].key}
+            imageHref={partners[2].imageHref}
+            imageAlt={partners[2].label}
+            imageHeight={partners[2].imageHeight}
             content={[
               <>
                 <HighlightText text="Lycée d'Excellence Mohammed VI (LM6E)" colors="from-[#937868] to-[#f44434]" /> est un établissement scientifique et technologique situé à Benguérir, intégré à l&apos;écosystème de l&apos;Université Mohammed VI Polytechnique (UM6P). Il a comme objectif de former les leaders africains de demain dans un cadre résidentiel moderne et multiculturel.

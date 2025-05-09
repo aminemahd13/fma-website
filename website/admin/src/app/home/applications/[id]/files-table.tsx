@@ -86,11 +86,7 @@ const FileCard = ({
   )
 }
 
-const FilesTable = ({
-  application
-}:{
-  application: any
-}) => {
+export default function FilesTable({ application }: { application: any }) {
   return (
     <Table>
       <TableHeader>
@@ -143,9 +139,13 @@ const FilesTable = ({
           <TableCell><FileCard href={application?.imageRightsUrl} /></TableCell>
           <TableCell><FileStatus slug='imageRights' application={application} /></TableCell>
         </TableRow>
+
+        <TableRow key='report'>
+          <TableCell>Report</TableCell>
+          <TableCell><FileCard href={application?.reportUrl} /></TableCell>
+          <TableCell><FileStatus slug='report' application={application} /></TableCell>
+        </TableRow>
       </TableBody>
     </Table>
-  )
+  );
 }
-
-export default FilesTable

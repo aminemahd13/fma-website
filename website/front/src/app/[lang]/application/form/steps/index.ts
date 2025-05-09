@@ -19,7 +19,7 @@ export const steps: Step[] = [
   {
     id: 'Étape 4',
     name: 'Documents',
-    fields: ['parentId', 'birthCertificate', 'schoolCertificate', 'grades', 'regulations', 'parentalAuthorization', 'imageRights']
+    fields: ['schoolCertificate', 'grades'] // Simplified to only require the necessary documents
   },
   { 
     id: 'Étape 5', 

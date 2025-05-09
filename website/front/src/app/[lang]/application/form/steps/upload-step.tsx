@@ -35,70 +35,6 @@ export const UploadStep = ({
       </p>
 
       <div className='mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 justify-between'>
-        {/* Parent ID */}
-        <FormField
-          control={form.control}
-          name="parentId"
-          render={({ field }) => {
-            if (field?.value && field?.value.length) {
-              const dataTransfer = new DataTransfer();
-              dataTransfer.items.add(field?.value[0]);
-              setTimeout(() => {
-                const fileInputElement = document.querySelector('#parentId') as HTMLInputElement;
-                fileInputElement.files = dataTransfer.files;
-              }, 300)
-            }
-
-            return (
-              <FormItem>
-                <FormLabel>Justificatif d&apos;identité des parents avec photo (carte d&apos;identité, passeport…) <RequiredAsterisk /></FormLabel>
-                <FormControl>
-                <Input
-                  {...form.register("parentId", {
-                    required: "Ce document est obligatoire",
-                  })}
-                  id="parentId"
-                  type="file"
-                />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )
-          }}
-        />
-
-        {/* Birth Certificate */}
-        <FormField
-          control={form.control}
-          name="birthCertificate"
-          render={({ field }) => {
-            if (field?.value && field?.value.length) {
-              const dataTransfer = new DataTransfer();
-              dataTransfer.items.add(field?.value[0]);
-              setTimeout(() => {
-                const fileInputElement = document.querySelector('#birthCertificate') as HTMLInputElement;
-                fileInputElement.files = dataTransfer.files;
-              }, 300)
-            }
-
-            return (
-              <FormItem>
-                <FormLabel>Extrait d&apos;acte de naissance <RequiredAsterisk /></FormLabel>
-                <FormControl>
-                <Input
-                  {...form.register("birthCertificate", {
-                    required: "Ce document est obligatoire",
-                  })}
-                  id="birthCertificate"
-                  type="file"
-                />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )
-          }}
-        />
-
         {/* School Certificate */}
         <FormField
           control={form.control}
@@ -165,108 +101,12 @@ export const UploadStep = ({
             )
           }}
         />
-
-        {/* Regulations File */}
-        <FormField
-          control={form.control}
-          name="regulations"
-          render={({ field }) => {
-            if (field?.value && field?.value.length) {
-              const dataTransfer = new DataTransfer();
-              dataTransfer.items.add(field?.value[0]);
-              setTimeout(() => {
-                const fileInputElement = document.querySelector('#regulations') as HTMLInputElement;
-                fileInputElement.files = dataTransfer.files;
-              }, 300)
-            }
-
-            return (
-              <FormItem>
-                <FormLabel>Règlement signé par l&apos;élève et le tuteur légal <RequiredAsterisk /></FormLabel>
-                <FormControl>
-                  <Input
-                    {...form.register("regulations", {
-                      required: "Ce document est obligatoire",
-                    })}
-                    id="regulations"
-                    type="file"                    
-                  />
-                </FormControl>
-                <FormDescription>
-                  <span className="text-blue-500">Remarque</span>: Il faut l&apos;imprimer, le signer à la main puis le scanner. <span className="font-bold">Il n&apos;y a pas besoin de le légaliser</span>.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )
-          }}
-        />
-
-        {/* Parental Authorization */}
-        <FormField
-          control={form.control}
-          name="parentalAuthorization"
-          render={({ field }) => {
-            if (field?.value && field?.value.length) {
-              const dataTransfer = new DataTransfer();
-              dataTransfer.items.add(field?.value[0]);
-              setTimeout(() => {
-                const fileInputElement = document.querySelector('#parentalAuthorization') as HTMLInputElement;
-                fileInputElement.files = dataTransfer.files;
-              }, 300)
-            }
-
-            return (
-              <FormItem>
-                <FormLabel>Autorisation parentale signée et légalisée par le tuteur légal <RequiredAsterisk /></FormLabel>
-                <FormControl>
-                  <Input
-                    {...form.register("parentalAuthorization", {
-                      required: "Ce document est obligatoire",
-                    })}
-                    id="parentalAuthorization"
-                    type="file"                    
-                  />
-                </FormControl>
-                <FormDescription>
-                    <span className="text-blue-500">Remarque</span>: il faut l&apos;imprimer, la signer à la main, la légaliser, puis le scanner; <span className="font-bold">la légalisation est obligatoire</span>.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )
-          }}
-        />
-
-        {/* Image Rights */}
-        <FormField
-          control={form.control}
-          name="imageRights"
-          render={({ field }) => {
-            if (field?.value && field?.value.length) {
-              const dataTransfer = new DataTransfer();
-              dataTransfer.items.add(field?.value[0]);
-              setTimeout(() => {
-                const fileInputElement = document.querySelector('#imageRights') as HTMLInputElement;
-                fileInputElement.files = dataTransfer.files;
-              }, 300)
-            }
-
-            return (
-              <FormItem>
-                <FormLabel>Droit de l&apos;image signé <RequiredAsterisk /></FormLabel>
-                <FormControl>
-                  <Input
-                    {...form.register("imageRights", {
-                      required: "Ce document est obligatoire",
-                    })}
-                    id="imageRights"
-                    type="file"                    
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )
-          }}
-        />
+      </div>
+      
+      <div className="mt-6 p-4 bg-blue-50 rounded-md border border-blue-200">
+        <p className="text-sm text-blue-800">
+         <span className="font-semibold">Note importante:</span> Les documents supplémentaires comme le justificatif d&apos;identité des parents, l&apos;extrait d&apos;acte de naissance, et les autorisations vous seront demandés uniquement si votre candidature est acceptée, dans la section &quot;Inscription Finale&quot; de votre profil.
+        </p>
       </div>
     </motion.div>
   )

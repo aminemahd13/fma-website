@@ -132,7 +132,7 @@ export default function PastEditionPage() {
           style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
         >
           <ul className="space-y-4 text-gray-800 list-disc list-inside dark:text-gray-400">
-            <li>Read thoroughly the <Link href='https://drive.google.com/file/d/1V-rH1auINT_M4ceYV8bLYS2g6CJWdDYj/view' target='_blank' className="text-blue-500 underline">competition regulations</Link></li>
+            <li>Read thoroughly the <Link href='/documents/reglement.pdf' target='_blank' className="text-blue-500 underline">competition regulations</Link></li>
             <li>Fill out the <Link href='https://docs.google.com/forms/d/e/1FAIpQLScG-VhZLXyOMcGfLt7ZRBrxMTVbxiSL8jsDJgS9f7Xcc0E3XA/viewform' target='_blank' className="text-blue-500 underline">registration form</Link>.</li>
             <li>N.B.: The form requires you to upload your 2022-2023 school certificate, your CINE, your first trimester/semester 2022-2023 transcript, and the signed regulations.</li>
             <li>Please do not fill out the form until you are sure you can be present on-site.</li>

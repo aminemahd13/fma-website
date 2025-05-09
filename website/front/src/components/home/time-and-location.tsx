@@ -11,7 +11,7 @@ const TimeAndLocation = () => {
         <Calendar />
         <div className="text-sm text-gray-500 font-semibold py-6">
           Du lundi <span className="text-[#272162]">14</span> au <br />
-          Dimanche <span className="text-[#272162]">20 Juillet</span>
+          Dimanche <span className="text-[#272162]">20 juillet</span>
         </div>
       </div>
 
@@ -22,8 +22,8 @@ const TimeAndLocation = () => {
         <Book className="h-16" />
 
         <div className="text-sm text-gray-500 font-semibold py-4">
-          Élèves du <span className="text-[#272162]">lycée</span> <br />
-          d&apos;orientation scientifique
+          Élèves du <span className="text-[#272162]">tronc commun</span> <br />
+          et <span className="text-[#272162]">1ère année bac</span>.
         </div>
       </div>
 

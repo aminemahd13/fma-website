@@ -48,16 +48,16 @@ export const ApplicationForm = ({
 
   const onSubmit = async (formData: z.infer<typeof applicationSchema>) => {
     setIsFormLoading(true);
-    const { parentId, birthCertificate, schoolCertificate, grades, regulations, parentalAuthorization, imageRights } = formData;
+    const { schoolCertificate, grades } = formData;
     const uploadFolderName = getUploadFolderName(userData.firstName, userData.lastName);
-    const uploadFileNames = ['parent_id', 'birth_certificate', 'school_certificate', 'grades', 'regulations', 'parental_authorization', 'image_rights']
-      .map(name => `${name}_${generateFileName()}`)
-    const files = [parentId, birthCertificate, schoolCertificate, grades, regulations, parentalAuthorization, imageRights]
-      .map((files, index) => new File(
+    const uploadFileNames = ['school_certificate', 'grades'].map(name => `${name}_${generateFileName()}`);
+    const files = [schoolCertificate, grades].map((files, index) => 
+      new File(
         [files[0]], 
         uploadFileNames[index] + '.' + files[0].name.split('.').pop(),
         { type: files[0].type },
-      ))
+      )
+    );
     
     try {
       // Post application
@@ -78,13 +78,8 @@ export const ApplicationForm = ({
 
       // Update Application upload links
       await putApplication(applicationId, {
-        parentIdUrl: `upload_mtym/${uploadFolderName}/${files[0].name}`,
-        birthCertificateUrl: `upload_mtym/${uploadFolderName}/${files[1].name}`,
-        schoolCertificateUrl: `upload_mtym/${uploadFolderName}/${files[2].name}`,
-        gradesUrl: `upload_mtym/${uploadFolderName}/${files[3].name}`,
-        regulationsUrl: `upload_mtym/${uploadFolderName}/${files[4].name}`,
-        parentalAuthorizationUrl: `upload_mtym/${uploadFolderName}/${files[5].name}`,
-        imageRightsUrl: `upload_mtym/${uploadFolderName}/${files[6].name}`,
+        schoolCertificateUrl: `upload_mtym/${uploadFolderName}/${files[0].name}`,
+        gradesUrl: `upload_mtym/${uploadFolderName}/${files[1].name}`,
       }) as any
 
       // Update Application status

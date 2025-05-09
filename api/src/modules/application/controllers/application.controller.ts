@@ -135,6 +135,13 @@ export class ApplicationController {
       );
     }
 
+    // Prevent updates if application status is ACCEPTED
+//    if (application?.status?.status === 'ACCEPTED') {
+//      throw new ForbiddenException(
+//        'You cannot modify your application after it has been accepted'
+//      );
+//    }
+
     const update = await this.applicationService.update(
       id,
       updateApplicationDto,
@@ -202,6 +209,13 @@ export class ApplicationController {
         `This user 'id: ${userId}') can not submit this application (id: ${application?.id})`,
       );
     }
+
+    // Prevent submission if application status is ACCEPTED
+//    if (application?.status?.status === 'ACCEPTED') {
+//      throw new ForbiddenException(
+//        'You cannot modify your application after it has been accepted'
+//      );
+//    }
 
     const applicationStatus = application?.status;
     await this.applicationStatusService.update(applicationStatus?.id, {
