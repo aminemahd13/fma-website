@@ -279,7 +279,7 @@ const selectionReminder = (
       pour bien comprendre toutes les étapes à suivre.
     </p>
     <p>
-      📄 <strong>Lisez attentivement les consignes dans le PDF</strong> correspondant à votre niveau. Il contient des instructions détaillées sur ce qu'on attend dans votre devoir maison.
+      📄 <strong>Lisez attentivement les consignes dans le PDF</strong> correspondant à votre niveau. Il contient des instructions détaillées sur ce qu&apos;on attend dans votre devoir maison.
     </p>
     <p>
       ❓ Une question ou un doute ? Écrivez-nous à{" "}
@@ -289,7 +289,7 @@ const selectionReminder = (
       >
         math.maroc.fma@gmail.com
       </a>{" "}
-      — nous sommes là pour vous aider !
+      , nous sommes là pour vous aider !
     </p>
   </div>
 );
