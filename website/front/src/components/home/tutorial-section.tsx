@@ -37,7 +37,7 @@ const TutorialSection = () => {
 </p>
 
   <p className="text-red-600 font-semibold">
-    Attention : tout doit être soumis avant le 08 juin 2025 à 23h59.
+    Attention : Votre tentative au devoir maison correspondant à votre niveau ainsi que vos documents administratifs doivent être envoyés avant le 8 juin à 23h59.
   </p>
 </div>
 

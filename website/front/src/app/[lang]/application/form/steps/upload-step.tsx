@@ -91,7 +91,7 @@ export const UploadStep = ({
               <FormItem>
 <FormLabel>
   Bulletin du 1er semestre de l&apos;année 2024-2025 <RequiredAsterisk />{" "}
-  (si vous avez déjà mis le bulletin au-dessus, vous pouvez le remettre ici)
+  (si vous avez déjà mis le bulletin à la place de votre certificat de scolarité, vous pouvez le remettre ici)
 </FormLabel>
                 <FormControl>
                   <Input
