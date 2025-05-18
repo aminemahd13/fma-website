@@ -98,7 +98,7 @@ export default function ReportPage() {
     if (!isApplicationsOpen) { // Add check for application status
       toast({
         title: "Soumissions fermées",
-        description: "Les candidatures sont actuellement fermées. Vous ne pouvez pas soumettre de rapport.",
+        description: "Les candidatures sont actuellement fermées. Vous ne pouvez pas soumettre de devoir maison.",
         variant: "destructive",
       });
       return;
@@ -151,8 +151,8 @@ export default function ReportPage() {
       
       if (response?.statusCode === 200) {
         toast({
-          title: "Rapport envoyé avec succès",
-          description: "Votre rapport a été téléchargé et sera examiné par notre équipe",
+          title: "Travail envoyé avec succès",
+          description: "Votre travail a été téléchargé et sera examiné par notre équipe",
         });
         
         // Refresh the page to show updated status
@@ -190,7 +190,7 @@ export default function ReportPage() {
     if (!hasSubmittedApplication) {
       setContent({
         title: "Vous devez d'abord soumettre votre candidature",
-        subtitle: "Veuillez compléter et soumettre votre candidature avant de pouvoir envoyer un rapport.",
+        subtitle: "Veuillez compléter et soumettre votre candidature avant de pouvoir envoyer votre travail.",
         ctaLabel: "Accéder à ma candidature",
         redirectToApplication: true
       });
@@ -204,51 +204,51 @@ export default function ReportPage() {
     if (!hasReport) {
       if (!isApplicationsOpen) { // Check if applications are closed
         setContent({
-          title: "Les soumissions de rapports sont fermées",
-          subtitle: "Les candidatures sont actuellement fermées, vous ne pouvez donc pas soumettre de rapport pour le moment.",
+          title: "Les soumissions des devoirs sont fermés",
+          subtitle: "Les candidatures sont actuellement fermées, vous ne pouvez donc pas soumettre votre travailt pour le moment.",
           ctaLabel: "Soumission fermée",
           redirectToApplication: false, // Keep user on this page, but disable upload
         });
       } else {
         setContent({
-          title: "Vous n'avez pas encore envoyé de rapport",
-          subtitle: "Veuillez envoyer votre rapport en cliquant sur le bouton ci-dessous.",
-          ctaLabel: "Envoyer votre rapport",
+          title: "Vous n'avez pas encore envoyé de devoir maison",
+          subtitle: "Veuillez envoyer votre devoir maison en cliquant sur le bouton ci-dessous.",
+          ctaLabel: "Envoyer votre devoir maison",
         });
       }
     } else {
       if (reportStatus === "VALID") {
         setContent({
-          title: "Votre rapport a été approuvé",
-          subtitle: "Votre rapport a été validé. Merci pour votre contribution.",
-          ctaLabel: "Mettre à jour votre rapport", // Or maybe "Voir le rapport" if updates aren't allowed after validation
+          title: "Votre travail a été approuvé",
+          subtitle: "Votre travail a été validé. Merci pour votre contribution.",
+          ctaLabel: "Mettre à jour votre devoir maison", // Or maybe "Voir le rapport" if updates aren't allowed after validation
         });
       } else if (reportStatus === "NOT_VALID") {
         if (!isApplicationsOpen) { // Also check here if applications are closed
            setContent({
-            title: "Votre rapport n'a pas été approuvé",
-            subtitle: "Votre rapport n'a pas été validé. Les soumissions sont actuellement fermées, vous ne pouvez pas le mettre à jour.",
+            title: "Votre travail n'a pas été approuvé",
+            subtitle: "Votre travail n'a pas été validé. Les soumissions sont actuellement fermées, vous ne pouvez pas le mettre à jour.",
             ctaLabel: "Soumission fermée",
           });
         } else {
           setContent({
-            title: "Votre rapport n'a pas été approuvé",
-            subtitle: "Votre rapport n'a pas été validé. Veuillez le mettre à jour et le soumettre à nouveau.",
-            ctaLabel: "Mettre à jour votre rapport",
+            title: "Votre travail n'a pas été approuvé",
+            subtitle: "Votre travail n'a pas été validé. Veuillez le mettre à jour et le soumettre à nouveau.",
+            ctaLabel: "Mettre à jour votre devoir maison",
           });
         }
       } else { // PENDING
         if (!isApplicationsOpen) { // Also check here if applications are closed
-           setContent({
-            title: "Votre rapport est en cours d'examen",
-            subtitle: "Votre rapport a été envoyé et est en cours d'examen. Les soumissions sont actuellement fermées, vous ne pouvez pas le mettre à jour.",
+           setContent({ 
+            title: "Votre devoir maison est en cours d'examen",
+            subtitle: "Votre devoir maison a été envoyé et est en cours d'examen. Les soumissions sont actuellement fermées, vous ne pouvez pas le mettre à jour.",
             ctaLabel: "Soumission fermée",
           });
         } else {
           setContent({
-            title: "Votre rapport est en cours d'examen",
-            subtitle: "Votre rapport a été envoyé et est en cours d'examen par notre équipe.",
-            ctaLabel: "Mettre à jour votre rapport",
+            title: "Votre devoir maison est en cours d'examen",
+            subtitle: "Votre devoir maison a été envoyé et est en cours d'examen par notre équipe.",
+            ctaLabel: "Mettre à jour votre devoir maison",
           });
         }
       }
@@ -269,13 +269,38 @@ export default function ReportPage() {
       });
     }
   };
+const selectionReminder = (
+  <div className="p-4 bg-blue-100 border border-blue-300 text-blue-900 rounded-md mb-4 text-sm space-y-2">
+    <p>
+      📋 <strong>Consultez le processus de sélection</strong>{" "}
+      <a href="/selection" className="underline hover:text-blue-700">
+        en cliquant ici
+      </a>{" "}
+      pour bien comprendre toutes les étapes à suivre.
+    </p>
+    <p>
+      📄 <strong>Lisez attentivement les consignes dans le PDF</strong> correspondant à votre niveau. Il contient des instructions détaillées sur ce qu'on attend dans votre devoir maison.
+    </p>
+    <p>
+      ❓ Une question ou un doute ? Écrivez-nous à{" "}
+      <a
+        href="mailto:math.maroc.fma@gmail.com"
+        className="underline hover:text-blue-700"
+      >
+        math.maroc.fma@gmail.com
+      </a>{" "}
+      — nous sommes là pour vous aider !
+    </p>
+  </div>
+);
+
 
   const subjectsCard = (
     <Card className="mb-6">
       <CardHeader>
         <CardTitle>Sujets disponibles</CardTitle>
         <CardDescription>
-          Téléchargez le sujet qui correspond à votre niveau scolaire actuel (de l&apos;année scolaire 2024/2025) pour préparer votre rapport
+          Téléchargez le sujet qui correspond à votre niveau scolaire actuel (de l&apos;année scolaire 2024/2025) pour préparer votre devoir maison
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -303,7 +328,7 @@ export default function ReportPage() {
           <div className="mt-4 p-3 bg-blue-50 rounded-md border border-blue-200">
             <p className="text-sm text-blue-800">
               <strong>Important :</strong> Veuillez télécharger et traiter le sujet correspondant à votre niveau actuel (de l&apos;année scolaire 2024/2025). 
-              Votre rapport sera évalué en fonction des critères spécifiques à votre niveau.
+              Votre devoir maison sera évalué en fonction des critères spécifiques à votre niveau.
             </p>
           </div>
         </div>
@@ -415,9 +440,9 @@ export default function ReportPage() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="text-lg font-medium">Rapport</div>
+        <div className="text-lg font-medium">Devoir maison</div>
         <p className="text-sm text-muted-foreground">
-          Retrouvez ici l&apos;état de votre rapport et téléchargez votre document.
+          Retrouvez ici l&apos;état de votre devoir maison et téléchargez votre document.
         </p>
       </div>
 
@@ -425,6 +450,7 @@ export default function ReportPage() {
 
       {/* No need for separate skeleton check here, handled by the main check */}
       <>
+        {selectionReminder}
         {subjectsCard}
         {reportCard}
       </>

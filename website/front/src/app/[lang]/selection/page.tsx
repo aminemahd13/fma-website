@@ -51,10 +51,10 @@ export default function SelectionPage() {
               Phase 1 – Date limite de soumission : 08 juin 2025 à 23h59.
             </p>
 
-            <p className="font-bold mb-2">📝 Phase 1 – Rapport écrit :</p>
+            <p className="font-bold mb-2">📝 Phase 1 – Devoir maison écrit :</p>
             <ul className="list-disc list-inside space-y-1">
               <li>Faites le sujet correspondant à votre niveau actuel (de l&apos;année scolaire 2024/2025).</li>
-              <li>Téléchargez le document du thème, et répondez aux questions dans un rapport structuré.</li>
+              <li>Téléchargez le document du thème, et répondez aux questions dans un devoir maison structuré.</li>
               <li>
                 Connectez-vous à la plateforme pour soumettre votre candidature via votre espace personnel {" "}
                 <span className="text-red-600 font-semibold">avant le 08 juin 2025 à 23h59</span>.
@@ -63,7 +63,7 @@ export default function SelectionPage() {
 
             <p className="font-bold mt-6 mb-2">🎙️ Phase 2 – Entretien (si nécessaire) :</p>
             <ul className="list-disc list-inside space-y-1">
-              <li>Les rapports seront examinés par notre jury scientifique.</li>
+              <li>Les devoirs maison seront examinés par notre jury scientifique.</li>
               <li>Certains candidats pourront être conviés à un entretien oral.</li>
               <li>Les résultats finaux seront annoncés après cette étape.</li>
             </ul>

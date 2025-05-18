@@ -30,7 +30,7 @@ const TutorialSection = () => {
   <a href="/selection" className="underline text-muted-foreground hover:text-foreground transition-colors">
     sélection
   </a>{" "}
-  en déposant votre rapport depuis votre{" "}
+  en déposant votre devoir maison depuis votre{" "}
   <a href="/profile/account" className="underline text-muted-foreground hover:text-foreground transition-colors">
     profil
   </a>.
