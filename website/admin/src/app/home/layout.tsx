@@ -45,6 +45,10 @@ export default function HomeLayout({
                 <UsersIcon className="h-4 w-4" />
                 Applications
               </NavItem>
+              <NavItem href="/home/reports" className="h-12">
+                <FileIcon className="h-4 w-4" />
+                Reports
+              </NavItem>
               <NavItem href="/home/users" className="h-12">
                 <UsersIcon className="h-4 w-4" />
                 Users
