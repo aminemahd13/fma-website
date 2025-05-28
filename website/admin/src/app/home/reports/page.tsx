@@ -100,7 +100,8 @@ export default function ReportsAdminPage() {
 
 	useEffect(() => {
 		if (!applications) return;
-		const filteredApps = (applications as any[]).filter((app: any) => app.reportUrl)
+		const filteredApps = (applications as any[])
+			.filter((app: any) => app.reportUrl)
 			.filter((app: any) => !statusFilter || app.status?.reportStatus === statusFilter)
 			.filter((app: any) => {
 				if (!search) return true;
@@ -109,7 +110,8 @@ export default function ReportsAdminPage() {
 					app.user?.lastName?.toLowerCase().includes(search.toLowerCase()) ||
 					app.user?.email?.toLowerCase().includes(search.toLowerCase())
 				);
-			});
+			})
+			.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()); // Sort by date desc
 		setFiltered(filteredApps);
 	}, [applications, statusFilter, search]);
 
@@ -162,7 +164,7 @@ export default function ReportsAdminPage() {
 												{app.status?.reportStatus || 'N/A'}
 											</Badge>
 										</td>
-										<td className="p-3">{app.updatedAt ? new Date(app.updatedAt).toLocaleDateString() : ''}</td>
+										<td className="p-3">{app.updatedAt ? new Date(app.updatedAt).toLocaleDateString('fr-FR') : ''}</td>
 										<td className="p-3 flex gap-2 items-center">
 											<Button size="sm" variant="outline" onClick={() => router.push(`/home/applications/${app.id}`)}>
 												Voir la candidature
