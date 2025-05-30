@@ -198,33 +198,35 @@ export default function InscriptionFinalePage() {
           parentalAuthorization: false,
           imageRights: false
         });
-      } else {
-        // Disable selection of validated documents
+      } else {        // Disable selection of validated documents
         if (userData?.application) {
           const { status } = userData.application;
-          const updatedSelection = { ...selectedDocuments };
           
-          if (status?.parentIdStatus === 'VALID') {
-            updatedSelection.parentId = false;
-          }
-          if (status?.birthCertificateStatus === 'VALID') {
-            updatedSelection.birthCertificate = false;
-          }
-          if (status?.regulationsStatus === 'VALID') {
-            updatedSelection.regulations = false;
-          }
-          if (status?.parentalAuthorizationStatus === 'VALID') {
-            updatedSelection.parentalAuthorization = false;
-          }
-          if (status?.imageRightsStatus === 'VALID') {
-            updatedSelection.imageRights = false;
-          }
-          
-          setSelectedDocuments(updatedSelection);
+          setSelectedDocuments(prevState => {
+            const updatedSelection = { ...prevState };
+            
+            if (status?.parentIdStatus === 'VALID') {
+              updatedSelection.parentId = false;
+            }
+            if (status?.birthCertificateStatus === 'VALID') {
+              updatedSelection.birthCertificate = false;
+            }
+            if (status?.regulationsStatus === 'VALID') {
+              updatedSelection.regulations = false;
+            }
+            if (status?.parentalAuthorizationStatus === 'VALID') {
+              updatedSelection.parentalAuthorization = false;
+            }
+            if (status?.imageRightsStatus === 'VALID') {
+              updatedSelection.imageRights = false;
+            }
+            
+            return updatedSelection;
+          });
         }
       }
     }
-  }, [userData, router]); // Removed selectedDocuments from dependencies
+  }, [userData, router]);
 
   const onSubmit = async (data: z.infer<typeof finalRegistrationSchema>) => {
     if (!userData?.application?.id) {
@@ -260,21 +262,34 @@ export default function InscriptionFinalePage() {
         
         const checksum = await computeSHA256(file);
         const path = `upload_mtym/${uploadFolderName}/${fileName}`;
-        
-        // Get signed URL for S3 upload
+          // Get signed URL for S3 upload with proper validation
         const signedURLResponse = await getSignedURL(path, file.type, file.size, checksum) as any;
         
-        // Upload file to S3
-        await uploadFile(signedURLResponse?.url, file);
+        if (!signedURLResponse?.url) {
+          throw new Error(`Failed to get signed URL for ${doc.field} - server error`);
+        }
+          console.log(`Starting S3 upload for final registration file: ${fileName}`);
         
-        // Store the path for database update
+        // Upload file to S3 with comprehensive validation
+        const uploadResponse = await uploadFile(signedURLResponse.url, file) as any;
+        
+        console.log('Upload response received for:', doc.field, uploadResponse);
+        
+        // CRITICAL: Enhanced validation for S3 upload - the function either resolves with success or rejects with error
+        // If we reach this point, the upload was successful because uploadFile would have thrown an error otherwise
+        if (!uploadResponse || !uploadResponse.success) {
+          throw new Error(`S3 upload validation failed for ${doc.field} - unexpected response format`);
+        }
+        
+        console.log(`✅ S3 upload verified successful for final registration file: ${fileName}`);
+        
+        // CRITICAL: Only store for database update if S3 upload was 100% successful
         uploadedFiles[`${doc.field}Url`] = path;
-      }
-      
-      // Update application with document URLs
-      const response = await putApplication(userData.application.id, uploadedFiles);
+      }        // CRITICAL: Only update database after all S3 uploads are successful
+      const response = await putApplication(userData.application.id, uploadedFiles) as any;
 
-      if (response) {
+      if (response?.statusCode === 200) {
+        console.log("Database update successful for final registration documents");
         toast({
           title: "Documents envoyés avec succès",
           description: "Votre inscription finale a été complétée avec succès.",
@@ -285,13 +300,14 @@ export default function InscriptionFinalePage() {
           window.location.reload();
         }, 1500);
       } else {
-        throw new Error("Erreur lors de la mise à jour de l'application");
+        // If database update fails, files are already uploaded to S3, 
+        // but we need to inform the user to contact support        throw new Error(`Database update failed - Status: ${response?.statusCode || 'unknown'}. Files uploaded to S3 but not recorded. Contact support with your name and this error.`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erreur:", error);
       toast({
         title: "Erreur lors de l'envoi",
-        description: "Une erreur est survenue lors de l'envoi des documents. Veuillez réessayer.",
+        description: error.message || "Une erreur est survenue lors de l'envoi des documents. Veuillez réessayer.",
         variant: "destructive",
       });
     } finally {
@@ -351,24 +367,37 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
           
           const checksum = await computeSHA256(file);
           const path = `upload_mtym/${uploadFolderName}/${fileName}`;
-          
-          // Obtenir l'URL signée pour le téléchargement S3
+            // Get signed URL for S3 upload with proper validation
           const signedURLResponse = await getSignedURL(path, file.type, file.size, checksum) as any;
           
-          // Télécharger le fichier sur S3
-          await uploadFile(signedURLResponse?.url, file);
+          if (!signedURLResponse?.url) {
+            throw new Error(`Failed to get signed URL for ${field} - server error`);
+          }
+            console.log(`Starting S3 upload for individual file update: ${fileName}`);
           
-          // Stocker le chemin pour la mise à jour de la base de données
+          // Upload file to S3 with comprehensive validation
+          const uploadResponse = await uploadFile(signedURLResponse.url, file) as any;
+          
+          console.log('Upload response received for individual update:', field, uploadResponse);
+          
+          // CRITICAL: Enhanced validation for S3 upload - the function either resolves with success or rejects with error
+          // If we reach this point, the upload was successful because uploadFile would have thrown an error otherwise
+          if (!uploadResponse || !uploadResponse.success) {
+            throw new Error(`S3 upload validation failed for ${field} - unexpected response format`);
+          }
+          
+          console.log(`✅ S3 upload verified successful for individual file update: ${fileName}`);
+          
+          // CRITICAL: Only store for database update if S3 upload was 100% successful
           uploadedFiles[`${field}Url`] = path;
           
           // Réinitialiser le statut du document à "PENDING"
           updatedStatuses[`${field}Status`] = 'PENDING';
         }
       }
-      
-      // Mettre à jour l'application avec les URLs des documents
+        // Mettre à jour l'application avec les URLs des documents
       if (Object.keys(uploadedFiles).length > 0) {
-        const applicationResponse = await putApplication(userData.application.id, uploadedFiles);
+        const applicationResponse = await putApplication(userData.application.id, uploadedFiles) as any;
         
         // Mettre à jour les statuts des documents
         if (Object.keys(updatedStatuses).length > 0) {

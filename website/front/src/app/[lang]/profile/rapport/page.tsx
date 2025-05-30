@@ -93,7 +93,6 @@ export default function ReportPage() {
       setSelectedFile(file);
     }
   };
-
   const handleUpload = async () => {
     if (!isApplicationsOpen) { // Add check for application status
       toast({
@@ -129,8 +128,9 @@ export default function ReportPage() {
       
       // Calculate checksum
       const checksum = await computeSHA256(file);
+        // Get signed URL for S3 upload with proper validation
+      console.log(`Requesting signed URL for: upload_mtym/${uploadFolderName}/${file.name}`);
       
-      // Get signed URL for S3 upload
       const signedURLResponse = await getSignedURL(
         `upload_mtym/${uploadFolderName}/${file.name}`, 
         file.type, 
@@ -138,18 +138,41 @@ export default function ReportPage() {
         checksum
       ) as any;
       
-      // Upload the file to S3
-      await uploadFile(signedURLResponse?.url, file) as any;
+      console.log('Signed URL response:', signedURLResponse);
       
-      // Update the application record with the report URL
+      if (!signedURLResponse || !signedURLResponse.url) {
+        const errorMsg = `Failed to get signed URL - Response: ${JSON.stringify(signedURLResponse)}`;
+        console.error(errorMsg);
+        throw new Error("Impossible d'obtenir une URL de téléchargement. Veuillez réessayer ou contacter le support.");
+      }
+        console.log(`Starting S3 upload for file: ${file.name}`);
+      
+      // Upload the file to S3 with comprehensive validation
+      const uploadResponse = await uploadFile(signedURLResponse.url, file) as any;
+      
+      console.log('Upload response received:', uploadResponse);
+      
+      // CRITICAL: Enhanced validation for S3 upload - the function either resolves with success or rejects with error
+      // If we reach this point, the upload was successful because uploadFile would have thrown an error otherwise
+      if (!uploadResponse || !uploadResponse.success) {
+        throw new Error(`S3 upload validation failed - unexpected response format`);
+      }
+      
+      console.log(`✅ S3 upload verified successful for file: ${file.name}`);
+      
+      // CRITICAL: Only update the database if S3 upload was 100% successful
       const reportUrl = `upload_mtym/${uploadFolderName}/${file.name}`;
       
-      // Update application with the report URL using the ApplicationApi
+      console.log(`Updating database with reportUrl: ${reportUrl}`);
+        // Update application with the report URL using the ApplicationApi
       const response = await putApplication(userData?.application?.id, {
         reportUrl: reportUrl
       }) as any;
       
+      console.log('Database update response:', response);
+      
       if (response?.statusCode === 200) {
+        console.log("✅ Database update successful - Report URL saved");
         toast({
           title: "Travail envoyé avec succès",
           description: "Votre travail a été téléchargé et sera examiné par notre équipe",
@@ -160,19 +183,53 @@ export default function ReportPage() {
           window.location.reload();
         }, 1500);
       } else {
-        throw new Error("Erreur lors de la mise à jour de l'application");
-      }
-    } catch (error) {
-      console.error("Erreur:", error);
+        // CRITICAL: If database update fails, the file is already uploaded to S3
+        // We need to inform the user and log the details for manual recovery
+        const errorDetails = {
+          fileName: file.name,
+          reportUrl: reportUrl,
+          applicationId: userData?.application?.id,
+          userId: userData?.id,
+          userName: `${userData?.firstName} ${userData?.lastName}`,
+          userEmail: userData?.email,
+          timestamp: new Date().toISOString(),
+          responseStatus: response?.statusCode
+        };
+        
+        console.error("❌ DATABASE UPDATE FAILED - FILE IS IN S3 BUT NOT RECORDED:", errorDetails);
+        
+        throw new Error(`URGENT: File uploaded successfully to S3 but database update failed (Status: ${response?.statusCode}). Your file is safe in S3. Please contact support immediately with your name: ${userData?.firstName} ${userData?.lastName} and this timestamp: ${errorDetails.timestamp}`);
+      }    } catch (error: any) {
+      // CRITICAL: Comprehensive error logging for debugging and recovery
+      const errorDetails = {
+        errorMessage: error.message,
+        errorType: error.name,
+        fileName: selectedFile?.name,
+        fileSize: selectedFile?.size,
+        fileType: selectedFile?.type,
+        userId: userData?.id,
+        applicationId: userData?.application?.id,
+        userName: `${userData?.firstName} ${userData?.lastName}`,
+        userEmail: userData?.email,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        stackTrace: error.stack
+      };
+      
+      console.error("❌ UPLOAD PROCESS FAILED - Complete error details:", errorDetails);
+      
+      // Log to a global error handler or external service if available
+      // window.reportError?.(errorDetails);
+      
       toast({
         title: "Erreur lors de l'envoi",
-        description: "Une erreur est survenue lors de l'envoi du fichier. Veuillez réessayer.",
+        description: error.message || "Une erreur est survenue lors de l'envoi du fichier. Veuillez réessayer ou contacter le support si le problème persiste.",
         variant: "destructive",
       });
     } finally {
       setUploading(false);
     }
-  };  
+  };
 
   useEffect(() => {
     // If userData is loaded and status check is done, set isLoading to false
