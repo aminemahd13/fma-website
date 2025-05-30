@@ -30,14 +30,14 @@ const TutorialSection = () => {
   <a href="/selection" className="underline text-muted-foreground hover:text-foreground transition-colors">
     sélection
   </a>{" "}
-  en déposant votre rapport depuis votre{" "}
+  en déposant votre devoir maison depuis votre{" "}
   <a href="/profile/account" className="underline text-muted-foreground hover:text-foreground transition-colors">
     profil
   </a>.
 </p>
 
   <p className="text-red-600 font-semibold">
-    Attention : tout doit être soumis avant le 08 juin 2025 à 23h59.
+    Attention : Votre tentative au devoir maison correspondant à votre niveau ainsi que vos documents administratifs doivent être envoyés avant le 8 juin à 23h59.
   </p>
 </div>
 
