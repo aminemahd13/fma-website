@@ -22,7 +22,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
       href: "/profile/application",
     },
     {
-      title: "Envoyer mon rapport",
+      title: "Envoyer mon devoir maison",
       href: "/profile/rapport",
     }
   ];
