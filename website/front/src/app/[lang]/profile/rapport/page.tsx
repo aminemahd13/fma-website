@@ -129,7 +129,7 @@ export default function ReportPage() {
       // Calculate checksum
       const checksum = await computeSHA256(file);
         // Get signed URL for S3 upload with proper validation
-      console.log(`Requesting signed URL for: upload_mtym/${uploadFolderName}/${file.name}`);
+      
       
       const signedURLResponse = await getSignedURL(
         `upload_mtym/${uploadFolderName}/${file.name}`, 
@@ -150,7 +150,7 @@ export default function ReportPage() {
       // Upload the file to S3 with comprehensive validation
       const uploadResponse = await uploadFile(signedURLResponse.url, file) as any;
       
-      console.log('Upload response received:', uploadResponse);
+      
       
       // CRITICAL: Enhanced validation for S3 upload - the function either resolves with success or rejects with error
       // If we reach this point, the upload was successful because uploadFile would have thrown an error otherwise
