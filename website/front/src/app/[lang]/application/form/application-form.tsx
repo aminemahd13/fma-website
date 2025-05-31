@@ -79,7 +79,7 @@ export const ApplicationForm = ({
         
         const uploadResponse = await uploadFile(signedURLResponse.url, file) as any;
         
-        console.log('Upload response received for application file:', file.name, uploadResponse);
+        
         
         // CRITICAL: Enhanced validation for S3 upload - the function either resolves with success or rejects with error
         // If we reach this point, the upload was successful because uploadFile would have thrown an error otherwise

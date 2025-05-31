@@ -34,11 +34,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 // Define the validation schema for final registration documents
-const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_FILE_TYPES = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
 
-const finalRegistrationSchema = z.object({
-  parentId: z.any()
+const finalRegistrationSchema = z.object({  parentId: z.any()
     .refine(file => file?.length === 1, "Le justificatif d'identité des parents est requis")
     .refine(
       file => file?.[0]?.size <= MAX_FILE_SIZE,
@@ -47,8 +46,7 @@ const finalRegistrationSchema = z.object({
     .refine(
       file => ACCEPTED_FILE_TYPES.includes(file?.[0]?.type),
       "Format de fichier non valide. Utilisez PDF, JPG ou PNG."
-    ),
-  birthCertificate: z.any()
+    ),  birthCertificate: z.any()
     .refine(file => file?.length === 1, "L'extrait d'acte de naissance est requis")
     .refine(
       file => file?.[0]?.size <= MAX_FILE_SIZE,
@@ -57,8 +55,7 @@ const finalRegistrationSchema = z.object({
     .refine(
       file => ACCEPTED_FILE_TYPES.includes(file?.[0]?.type),
       "Format de fichier non valide. Utilisez PDF, JPG ou PNG."
-    ),
-  regulations: z.any()
+    ),  regulations: z.any()
     .refine(file => file?.length === 1, "Le règlement signé est requis")
     .refine(
       file => file?.[0]?.size <= MAX_FILE_SIZE,
@@ -67,8 +64,7 @@ const finalRegistrationSchema = z.object({
     .refine(
       file => ACCEPTED_FILE_TYPES.includes(file?.[0]?.type),
       "Format de fichier non valide. Utilisez PDF, JPG ou PNG."
-    ),
-  parentalAuthorization: z.any()
+    ),  parentalAuthorization: z.any()
     .refine(file => file?.length === 1, "L'autorisation parentale est requise")
     .refine(
       file => file?.[0]?.size <= MAX_FILE_SIZE,
@@ -77,8 +73,7 @@ const finalRegistrationSchema = z.object({
     .refine(
       file => ACCEPTED_FILE_TYPES.includes(file?.[0]?.type),
       "Format de fichier non valide. Utilisez PDF, JPG ou PNG."
-    ),
-  imageRights: z.any()
+    ),  imageRights: z.any()
     .refine(file => file?.length === 1, "Le droit à l'image signé est requis")
     .refine(
       file => file?.[0]?.size <= MAX_FILE_SIZE,
@@ -273,7 +268,7 @@ export default function InscriptionFinalePage() {
         // Upload file to S3 with comprehensive validation
         const uploadResponse = await uploadFile(signedURLResponse.url, file) as any;
         
-        console.log('Upload response received for:', doc.field, uploadResponse);
+        
         
         // CRITICAL: Enhanced validation for S3 upload - the function either resolves with success or rejects with error
         // If we reach this point, the upload was successful because uploadFile would have thrown an error otherwise
@@ -378,7 +373,7 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
           // Upload file to S3 with comprehensive validation
           const uploadResponse = await uploadFile(signedURLResponse.url, file) as any;
           
-          console.log('Upload response received for individual update:', field, uploadResponse);
+          
           
           // CRITICAL: Enhanced validation for S3 upload - the function either resolves with success or rejects with error
           // If we reach this point, the upload was successful because uploadFile would have thrown an error otherwise

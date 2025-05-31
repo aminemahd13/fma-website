@@ -1,7 +1,7 @@
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { ZodSchema, z } from "zod";
 
-const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
+const MAX_UPLOAD_SIZE = 1024 * 1024 * 10; // 10MB
 const ACCEPTED_FILE_TYPES = ['image/png','image/jpeg','image/jpg', 'image/png','image/webp', 'application/pdf'];
 const zodFileValidation = z.any()
   .refine(files => files?.length == 1, 'Ce fichier est obligatoire.')
