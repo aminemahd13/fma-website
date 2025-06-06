@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { ExpandingArrow } from '@/components/shared/icons';
 import ApplicationStatus from '../components/application-status';
 import FilesTable from './files-table';
+import AdminReportUpload from '@/components/AdminReportUpload';
 
 const regionLabels = {
   'tanger-tetouan-al-houceima': "Tanger-Tétouan-Al Hoceïma",
@@ -97,12 +98,11 @@ export default function ApplicationDetailsPage({ params }: { params: { id: strin
   const [application, setApplication] = useState<any>(undefined);
   const id = parseInt(params.id);
   const router = useRouter();
-
   useEffect(() => {
     if (applications) {
       setApplication(applications.find((application: any) => application?.id === id))
     }
-  }, [applications])
+  }, [applications, id])
 
   return (
     <>
@@ -175,11 +175,22 @@ export default function ApplicationDetailsPage({ params }: { params: { id: strin
                 <Field label='Comments'>{renderText(application?.comments)}</Field>
               </div>
             </TabsContent>
-            
-            {/* UPLOADS */}
+              {/* UPLOADS */}
             <TabsContent value="uploads">
-              <div className='md:flex space-y-4 md:space-x-4 md:space-y-0 mt-8'>
-                <FilesTable application={application} />
+              <div className='space-y-6'>
+                <div className='md:flex space-y-4 md:space-x-4 md:space-y-0'>
+                  <FilesTable application={application} />
+                </div>
+                
+                {/* Admin Report Upload Section - only show if user has submitted a report */}
+                {application?.reportUrl && (
+                  <div className='mt-6'>
+                    <AdminReportUpload 
+                      applicationId={application?.id}
+                      currentReportUrl={application?.reportUrl}
+                    />
+                  </div>
+                )}
               </div>
             </TabsContent>
           </Tabs>
