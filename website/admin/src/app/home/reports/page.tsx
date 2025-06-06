@@ -90,18 +90,32 @@ function ReportLink({ reportUrl }: { reportUrl: string }) {
 		);
 	}
 
-export default function ReportsAdminPage() {
-	const applications = useRecoilValue(applicationsState);
+export default function ReportsAdminPage() {	const applications = useRecoilValue(applicationsState);
 	const [filtered, setFiltered] = useState<any[]>([]);
 	const [statusFilter, setStatusFilter] = useState('');
-	const [search, setSearch] = useState('');
-	const [loading, setLoading] = useState(false);
-	const router = useRouter();
-
-	useEffect(() => {
+	const [search, setSearch] = useState('');	const [loading, setLoading] = useState(false);
+	const [totalReports, setTotalReports] = useState(0);
+	const [reportStats, setReportStats] = useState({
+		valid: 0,
+		notValid: 0,
+		pending: 0,
+		noStatus: 0
+	});
+	const router = useRouter();	useEffect(() => {
 		if (!applications) return;
-		const filteredApps = (applications as any[])
-			.filter((app: any) => app.reportUrl)
+		const reportsWithFiles = (applications as any[]).filter((app: any) => app.reportUrl);
+		setTotalReports(reportsWithFiles.length);
+		
+		// Calculate stats
+		const stats = {
+			valid: reportsWithFiles.filter(app => app.status?.reportStatus === 'VALID').length,
+			notValid: reportsWithFiles.filter(app => app.status?.reportStatus === 'NOT_VALID').length,
+			pending: reportsWithFiles.filter(app => app.status?.reportStatus === 'PENDING').length,
+			noStatus: reportsWithFiles.filter(app => !app.status?.reportStatus).length
+		};
+		setReportStats(stats);
+		
+		const filteredApps = reportsWithFiles
 			.filter((app: any) => !statusFilter || app.status?.reportStatus === statusFilter)
 			.filter((app: any) => {
 				if (!search) return true;
@@ -114,11 +128,38 @@ export default function ReportsAdminPage() {
 			.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()); // Sort by date desc
 		setFiltered(filteredApps);
 	}, [applications, statusFilter, search]);
-
 	return (
-		<div className="space-y-8">
-			<div className="from-black to-stone-500 bg-clip-text text-4xl font-medium">
-				Rapports soumis
+		<div className="space-y-8">			<div className="flex items-center justify-between">
+				<div className="from-black to-stone-500 bg-clip-text text-4xl font-medium">
+					Rapports soumis
+				</div>
+				<div className="flex items-center gap-4">
+					<div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-2">
+						<span className="text-sm text-blue-600 font-medium">
+							{filtered.length} / {totalReports} rapports affichés
+						</span>
+					</div>
+				</div>
+			</div>
+			
+			{/* Statistics Cards */}
+			<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+				<div className="bg-green-50 border border-green-200 rounded-lg p-4">
+					<div className="text-2xl font-bold text-green-700">{reportStats.valid}</div>
+					<div className="text-sm text-green-600">Rapports validés</div>
+				</div>
+				<div className="bg-red-50 border border-red-200 rounded-lg p-4">
+					<div className="text-2xl font-bold text-red-700">{reportStats.notValid}</div>
+					<div className="text-sm text-red-600">Rapports non validés</div>
+				</div>
+				<div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+					<div className="text-2xl font-bold text-yellow-700">{reportStats.pending}</div>
+					<div className="text-sm text-yellow-600">Rapports en attente</div>
+				</div>
+				<div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+					<div className="text-2xl font-bold text-gray-700">{reportStats.noStatus}</div>
+					<div className="text-sm text-gray-600">Sans statut</div>
+				</div>
 			</div>
 			<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
 				<Input

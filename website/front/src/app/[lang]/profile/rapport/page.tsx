@@ -76,14 +76,12 @@ export default function ReportPage() {
         });
         event.target.value = ""; // Reset the file input
         return;
-      }
-  
-      // Check if the file size exceeds 5 MB
-      const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
+      }      // Check if the file size exceeds 15 MB
+      const maxSizeInBytes = 15 * 1024 * 1024; // 15 MB
       if (file.size > maxSizeInBytes) {
         toast({
           title: "Fichier trop volumineux",
-          description: "La taille du fichier ne doit pas dépasser 5 Mo",
+          description: "La taille du fichier ne doit pas dépasser 15 Mo",
           variant: "destructive",
         });
         event.target.value = ""; // Reset the file input

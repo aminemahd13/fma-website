@@ -20,7 +20,7 @@ export class MediaService {
     'application/pdf',
   ];
 
-  maxFileSize = 1024 * 1024 * 10; // 10MB
+  maxFileSize = 1024 * 1024 * 15; // 15MB
 
   async getSignedURL(
     userId: number,
