@@ -64,9 +64,11 @@ export default function AdminReportUpload({
       // Update the application with the new report URL
       const updateData = { reportUrl: filePath };
       await adminUpdateApplication(applicationId, updateData);
-      
-      setUploadStatus('success');
-      setStatusMessage('Report file uploaded and updated successfully! The page will refresh in 2 seconds.');
+        setUploadStatus('success');
+      setStatusMessage(currentReportUrl 
+        ? 'Report file uploaded and updated successfully! The page will refresh in 2 seconds.'
+        : 'Report file uploaded successfully! The page will refresh in 2 seconds.'
+      );
       setSelectedFile(null);
       
       // Reset file input
@@ -97,16 +99,18 @@ export default function AdminReportUpload({
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
-
   return (
-    <Card className="w-full border-orange-200 bg-orange-50">
+    <Card className={`w-full ${currentReportUrl ? 'border-orange-200 bg-orange-50' : 'border-blue-200 bg-blue-50'}`}>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-orange-800">
+        <CardTitle className={`flex items-center gap-2 ${currentReportUrl ? 'text-orange-800' : 'text-blue-800'}`}>
           <FileText className="h-5 w-5" />
-          Admin: Replace Report File
+          {currentReportUrl ? 'Admin: Replace Report File' : 'Admin: Upload Report File'}
         </CardTitle>
-        <CardDescription className="text-orange-700">
-          Upload a new report file to replace the current one. This action will overwrite the existing report.
+        <CardDescription className={currentReportUrl ? 'text-orange-700' : 'text-blue-700'}>
+          {currentReportUrl 
+            ? 'Upload a new report file to replace the current one. This action will overwrite the existing report.'
+            : 'Upload a report file for this application. The user has not submitted a report yet.'
+          }
           {currentReportUrl && (
             <span className="block mt-1 text-xs text-orange-600">
               Current report: {currentReportUrl.split('/').pop()}
@@ -116,27 +120,29 @@ export default function AdminReportUpload({
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="admin-report-file" className="text-orange-800">Select New Report File</Label>
+          <Label htmlFor="admin-report-file" className={currentReportUrl ? 'text-orange-800' : 'text-blue-800'}>
+            {currentReportUrl ? 'Select New Report File' : 'Select Report File'}
+          </Label>
           <Input
             id="admin-report-file"
             type="file"
             accept=".pdf,.png,.jpg,.jpeg"
             onChange={handleFileSelect}
             disabled={uploading}
-            className="cursor-pointer border-orange-300 focus:border-orange-500"
+            className={`cursor-pointer ${currentReportUrl ? 'border-orange-300 focus:border-orange-500' : 'border-blue-300 focus:border-blue-500'}`}
           />
-          <p className="text-xs text-orange-600">
+          <p className={`text-xs ${currentReportUrl ? 'text-orange-600' : 'text-blue-600'}`}>
             Accepted formats: PDF, PNG, JPG, JPEG • Max size: 15MB
           </p>
         </div>
 
         {selectedFile && (
-          <div className="flex items-center justify-between p-3 bg-orange-100 border border-orange-300 rounded-lg">
+          <div className={`flex items-center justify-between p-3 border rounded-lg ${currentReportUrl ? 'bg-orange-100 border-orange-300' : 'bg-blue-100 border-blue-300'}`}>
             <div className="flex items-center gap-2">
-              <FileIcon className="h-4 w-4 text-orange-700" />
+              <FileIcon className={`h-4 w-4 ${currentReportUrl ? 'text-orange-700' : 'text-blue-700'}`} />
               <div>
-                <p className="text-sm font-medium text-orange-800">{selectedFile.name}</p>
-                <p className="text-xs text-orange-600">
+                <p className={`text-sm font-medium ${currentReportUrl ? 'text-orange-800' : 'text-blue-800'}`}>{selectedFile.name}</p>
+                <p className={`text-xs ${currentReportUrl ? 'text-orange-600' : 'text-blue-600'}`}>
                   {formatFileSize(selectedFile.size)}
                 </p>
               </div>
@@ -145,9 +151,9 @@ export default function AdminReportUpload({
               onClick={handleUpload}
               disabled={uploading}
               size="sm"
-              className="bg-orange-600 hover:bg-orange-700 text-white"
+              className={currentReportUrl ? 'bg-orange-600 hover:bg-orange-700 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'}
             >
-              {uploading ? 'Uploading...' : 'Upload & Replace'}
+              {uploading ? 'Uploading...' : (currentReportUrl ? 'Upload & Replace' : 'Upload Report')}
             </Button>
           </div>
         )}
@@ -174,9 +180,11 @@ export default function AdminReportUpload({
           </Alert>
         )}
 
-        <div className="text-xs text-orange-600 bg-orange-100 p-2 rounded border border-orange-200">
-          <strong>⚠️ Admin Notice:</strong> This will permanently replace the user&apos;s report file. 
-          Make sure you have the correct file before uploading.
+        <div className={`text-xs p-2 rounded border ${currentReportUrl ? 'text-orange-600 bg-orange-100 border-orange-200' : 'text-blue-600 bg-blue-100 border-blue-200'}`}>
+          <strong>⚠️ Admin Notice:</strong> {currentReportUrl 
+            ? 'This will permanently replace the user\'s report file. Make sure you have the correct file before uploading.'
+            : 'You are uploading a report file on behalf of the user. This will be visible to the user in their profile.'
+          }
         </div>
       </CardContent>
     </Card>

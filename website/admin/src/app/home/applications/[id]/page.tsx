@@ -181,16 +181,13 @@ export default function ApplicationDetailsPage({ params }: { params: { id: strin
                 <div className='md:flex space-y-4 md:space-x-4 md:space-y-0'>
                   <FilesTable application={application} />
                 </div>
-                
-                {/* Admin Report Upload Section - only show if user has submitted a report */}
-                {application?.reportUrl && (
-                  <div className='mt-6'>
-                    <AdminReportUpload 
-                      applicationId={application?.id}
-                      currentReportUrl={application?.reportUrl}
-                    />
-                  </div>
-                )}
+                  {/* Admin Report Upload Section - always show for admins */}
+                <div className='mt-6'>
+                  <AdminReportUpload 
+                    applicationId={application?.id}
+                    currentReportUrl={application?.reportUrl}
+                  />
+                </div>
               </div>
             </TabsContent>
           </Tabs>
