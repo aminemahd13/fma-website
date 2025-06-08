@@ -451,7 +451,7 @@ const selectionReminder = (
                         <polyline points="17 8 12 3 7 8"/>
                         <line x1="12" y1="3" x2="12" y2="15"/>
                       </svg>
-                      <span className="text-sm font-medium">Choisir un fichier PDF, JPG ou PNG (max 5Mo)</span>
+                      <span className="text-sm font-medium">Choisir un fichier PDF, JPG ou PNG (max 15Mo)</span>
                     </>
                   )}
                 </Button>
