@@ -21,7 +21,7 @@ export class ExcelService {
 
     // rows
     const users = await this.userService.findAll();
-    const rows = rowFactory(users, this.configService);
+    const rows = rowFactory(users);
 
     sheet.addRows(rows);
 
