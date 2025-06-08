@@ -3,8 +3,6 @@ import { regionLabels, relationshipWithGuardianLabels } from '../labels';
 
 export const columns = [
   { header: 'Application Id', key: 'application-id', width: 10 },
-  { header: 'Team Id', key: 'team-id', width: 10 },
-  { header: 'Team Name', key: 'team-name', width: 20 },
   { header: 'First Name', key: 'first-name', width: 15 },
   { header: 'Last Name', key: 'last-name', width: 15 },
   { header: 'Email', key: 'email', width: 25 },
@@ -21,7 +19,7 @@ export const columns = [
     key: 'relationship-with-guardian',
     width: 20,
   },
-  { header: 'Special conditions', key: 'special conditions', width: 30 },
+  { header: 'Special conditions', key: 'special-conditions', width: 30 },
 
   { header: 'Highschool', key: 'highschool', width: 20 },
   { header: 'Average grade', key: 'average-grade', width: 15 },
@@ -47,41 +45,17 @@ export const columns = [
   },
   { header: 'Comments', key: 'comments', width: 30 },
 
-  { header: 'Parent ID', key: 'parent-id', width: 10 },
-  { header: 'Birth Certificate', key: 'birth-certificate', width: 10 },
-  { header: 'School certificate', key: 'school-certificate', width: 10 },
-  { header: 'Grades', key: 'grades', width: 10 },
-  { header: 'Regulations', key: 'regulations', width: 10 },
-  {
-    header: 'Parental authorization',
-    key: 'parental-authorization',
-    width: 10,
-  },
-  {
-    header: 'Image Rights',
-    key: 'image-rights',
-    width: 10,
-  },
-  {
-    header: 'Report',
-    key: 'report',
-    width: 10,
-  },
+  { header: 'View Application', key: 'view-application', width: 20 },
   { header: 'Status', key: 'status', width: 15 },
 ];
 
-export const rowFactory = (users: any[], configService) => {
-  const awsBucketName = configService.get('AWS_BUCKET_NAME');
-  const awsBucketRegion = configService.get('AWS_BUCKET_REGION');
-
+export const rowFactory = (users: any[]) => {
   const mapUser = (user: User) => {
     const application = user?.application;
     if (!application) return null;
 
     return {
       'application-id': application?.id,
-      'team-id': 'N/A', // Teams are no longer used
-      'team-name': 'Individual', // Teams are no longer used
       'first-name': user?.firstName,
       'last-name': user?.lastName,
       email: user?.email,
@@ -96,7 +70,7 @@ export const rowFactory = (users: any[], configService) => {
       'relationship-with-guardian':
         relationshipWithGuardianLabels[application?.relationshipWithGuardian] ||
         application?.relationshipWithGuardian,
-      'special conditions': application?.specialConditions,
+      'special-conditions': application?.specialConditions,
 
       highschool: application?.highschool,
       'average-grade': application?.averageGrade,
@@ -110,55 +84,10 @@ export const rowFactory = (users: any[], configService) => {
       'olympiads-training-selection': application?.olympiadsTrainingSelection,
       comments: application?.comments,
 
-      'parent-id': application?.parentIdUrl
-        ? {
-            text: 'View Document',
-            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.parentIdUrl}`,
-          }
-        : 'Not uploaded',
-      'birth-certificate': application?.birthCertificateUrl
-        ? {
-            text: 'View Document',
-            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.birthCertificateUrl}`,
-          }
-        : 'Not uploaded',
-      'school-certificate': application?.schoolCertificateUrl
-        ? {
-            text: 'View Document',
-            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.schoolCertificateUrl}`,
-          }
-        : 'Not uploaded',
-      grades: application?.gradesUrl
-        ? {
-            text: 'View Document',
-            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.gradesUrl}`,
-          }
-        : 'Not uploaded',
-      regulations: application?.regulationsUrl
-        ? {
-            text: 'View Document',
-            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.regulationsUrl}`,
-          }
-        : 'Not uploaded',
-      'parental-authorization': application?.parentalAuthorizationUrl
-        ? {
-            text: 'View Document',
-            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.parentalAuthorizationUrl}`,
-          }
-        : 'Not uploaded',
-      'image-rights': application?.imageRightsUrl
-        ? {
-            text: 'View Document',
-            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.imageRightsUrl}`,
-          }
-        : 'Not uploaded',
-      report: application?.reportUrl
-        ? {
-            text: 'View Report',
-            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.reportUrl}`,
-          }
-        : 'Not submitted',
-
+      'view-application': {
+        text: 'View Application',
+        hyperlink: `https://fma-website-vf-1-admin.vercel.app/home/applications/${application?.id}`,
+      },
       status: application?.status?.status || 'PENDING',
     };
   };
@@ -167,18 +96,8 @@ export const rowFactory = (users: any[], configService) => {
 };
 
 export const styleSheet = (sheet) => {
-  // team informations style
-  for (let i = 2; i <= 3; i++) {
-    sheet.getColumn(i).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      bgColor: { argb: '05FFFE' },
-      fgColor: { argb: '05FFFE' },
-    };
-  }
-
-  // personal informations style
-  for (let i = 4; i <= 16; i++) {
+  // personal informations style (columns 2-14, was 4-16 before removing team columns)
+  for (let i = 2; i <= 14; i++) {
     sheet.getColumn(i).fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -187,8 +106,8 @@ export const styleSheet = (sheet) => {
     };
   }
 
-  // education style
-  for (let i = 17; i <= 22; i++) {
+  // education style (columns 15-19, was 17-22 before)
+  for (let i = 15; i <= 19; i++) {
     sheet.getColumn(i).fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -197,8 +116,8 @@ export const styleSheet = (sheet) => {
     };
   }
 
-  // competition style
-  for (let i = 23; i <= 27; i++) {
+  // competition style (columns 20-24, was 23-27 before)
+  for (let i = 20; i <= 24; i++) {
     sheet.getColumn(i).fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -207,20 +126,26 @@ export const styleSheet = (sheet) => {
     };
   }
 
-  // uploads style
-  for (let i = 28; i <= 35; i++) {
-    sheet.getColumn(i).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      bgColor: { argb: 'DAEAF6' },
-      fgColor: { argb: 'DAEAF6' },
-    };
+  // view application style (column 25)
+  sheet.getColumn(25).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    bgColor: { argb: 'DAEAF6' },
+    fgColor: { argb: 'DAEAF6' },
+  };
 
-    sheet.getColumn(i).font = {
-      underline: true,
-      color: { argb: 'FF0000FF' },
-    };
-  }
+  sheet.getColumn(25).font = {
+    underline: true,
+    color: { argb: 'FF0000FF' },
+  };
+
+  // status style (column 26)
+  sheet.getColumn(26).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    bgColor: { argb: 'F0F0F0' },
+    fgColor: { argb: 'F0F0F0' },
+  };
 
   // header style
   sheet.getRow(1).height = 70;
