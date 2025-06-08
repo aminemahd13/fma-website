@@ -1,8 +1,5 @@
 import { User } from 'src/modules/user/entities/user.entity';
-import {
-  regionLabels,
-  relationshipWithGuardianLabels,
-} from '../labels';
+import { regionLabels, relationshipWithGuardianLabels } from '../labels';
 
 export const columns = [
   { header: 'Application Id', key: 'application-id', width: 10 },
@@ -32,7 +29,6 @@ export const columns = [
   { header: 'Ranking', key: 'ranking', width: 15 },
   { header: 'Physics Ranking', key: 'physics-ranking', width: 15 },
 
-
   {
     header: 'Have you participated in competitions before?',
     key: 'has-previously-participated',
@@ -44,10 +40,10 @@ export const columns = [
     key: 'physics-olympiads-participation',
     width: 15,
   },
-  { 
-    header: 'Olympiads training selection', 
-    key: 'olympiads-training-selection', 
-    width: 15 
+  {
+    header: 'Olympiads training selection',
+    key: 'olympiads-training-selection',
+    width: 15,
   },
   { header: 'Comments', key: 'comments', width: 30 },
 
@@ -77,73 +73,93 @@ export const columns = [
 export const rowFactory = (users: any[], configService) => {
   const awsBucketName = configService.get('AWS_BUCKET_NAME');
   const awsBucketRegion = configService.get('AWS_BUCKET_REGION');
-  
+
   const mapUser = (user: User) => {
     const application = user?.application;
-    if (!application) return;
+    if (!application) return null;
 
     return {
-      id: application?.id,
-      firstName: user?.firstName,
-      lastName: user?.lastName,
+      'application-id': application?.id,
+      'team-id': 'N/A', // Teams are no longer used
+      'team-name': 'Individual', // Teams are no longer used
+      'first-name': user?.firstName,
+      'last-name': user?.lastName,
       email: user?.email,
-      dateOfBirth: new Date(application?.dateOfBirth),
-      massarCode: application?.massarCode,
+      dob: application?.dateOfBirth ? new Date(application?.dateOfBirth) : '',
+      'massar-code': application?.massarCode,
       city: application?.city,
-      region: regionLabels[application?.region],
-      phoneNumber: application?.phoneNumber,
-      guardianFullName: application?.guardianFullName,
-      parentCNIE: application?.parentCNIE,
-      guardianPhoneNumber: application?.guardianPhoneNumber,
-      relationshipWithGuardian:
-        relationshipWithGuardianLabels[application?.relationshipWithGuardian],
-      specialConditions: application?.specialConditions,
+      region: regionLabels[application?.region] || application?.region,
+      'phone-number': application?.phoneNumber,
+      'guardian-full-name': application?.guardianFullName,
+      'parent-cnie': application?.parentCNIE,
+      'guardian-phone-number': application?.guardianPhoneNumber,
+      'relationship-with-guardian':
+        relationshipWithGuardianLabels[application?.relationshipWithGuardian] ||
+        application?.relationshipWithGuardian,
+      'special conditions': application?.specialConditions,
 
       highschool: application?.highschool,
-      averageGrade: application?.averageGrade,
-      physicsAverageGrade: application?.physicsAverageGrade,
+      'average-grade': application?.averageGrade,
+      'physics-average-grade': application?.physicsAverageGrade,
       ranking: application?.ranking,
-      physicsRanking: application?.physicsRanking,
-      hasPreviouslyParticipated: application?.hasPreviouslyParticipated,
-      previousCompetitions: application?.previousCompetitions,
-      physicsOlympiadsParticipation: application?.physicsOlympiadsParticipation,
-      olympiadsTrainingSelection: application?.olympiadsTrainingSelection,
+      'physics-ranking': application?.physicsRanking,
+      'has-previously-participated': application?.hasPreviouslyParticipated,
+      'previous-competitions': application?.previousCompetitions,
+      'physics-olympiads-participation':
+        application?.physicsOlympiadsParticipation,
+      'olympiads-training-selection': application?.olympiadsTrainingSelection,
       comments: application?.comments,
-      
-      parentIdUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.parentIdUrl}`,
-      },
-      birthCertificateUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.birthCertificateUrl}`,
-      },
-      schoolCertificateUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.schoolCertificateUrl}`,
-      },
-      gradesUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.gradesUrl}`,
-      },
-      regulationsUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.regulationsUrl}`,
-      },
-      parentalAuthorizationUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.parentalAuthorizationUrl}`,
-      },
-      imageRightsUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.imageRightsUrl}`,
-      },
-      reportUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.reportUrl}`,
-      },
-      
-      status: application?.status?.status,
+
+      'parent-id': application?.parentIdUrl
+        ? {
+            text: 'View Document',
+            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.parentIdUrl}`,
+          }
+        : 'Not uploaded',
+      'birth-certificate': application?.birthCertificateUrl
+        ? {
+            text: 'View Document',
+            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.birthCertificateUrl}`,
+          }
+        : 'Not uploaded',
+      'school-certificate': application?.schoolCertificateUrl
+        ? {
+            text: 'View Document',
+            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.schoolCertificateUrl}`,
+          }
+        : 'Not uploaded',
+      grades: application?.gradesUrl
+        ? {
+            text: 'View Document',
+            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.gradesUrl}`,
+          }
+        : 'Not uploaded',
+      regulations: application?.regulationsUrl
+        ? {
+            text: 'View Document',
+            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.regulationsUrl}`,
+          }
+        : 'Not uploaded',
+      'parental-authorization': application?.parentalAuthorizationUrl
+        ? {
+            text: 'View Document',
+            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.parentalAuthorizationUrl}`,
+          }
+        : 'Not uploaded',
+      'image-rights': application?.imageRightsUrl
+        ? {
+            text: 'View Document',
+            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.imageRightsUrl}`,
+          }
+        : 'Not uploaded',
+      report: application?.reportUrl
+        ? {
+            text: 'View Report',
+            hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.reportUrl}`,
+          }
+        : 'Not submitted',
+
+      status: application?.status?.status || 'PENDING',
     };
   };
 
