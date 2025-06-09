@@ -67,13 +67,27 @@ export const ApplicationForm = ({
         throw new Error(applicationResponse?.message ?? 'Post of application failed')
       }
 
-      const applicationId = applicationResponse?.id;
-
-      // Upload files
+      const applicationId = applicationResponse?.id;      // Upload files with enhanced validation
       for (const file of files) {
         const checksum = await computeSHA256(file);
         const signedURLResponse = await getSignedURL(`upload_mtym/${uploadFolderName}/${file.name}`, file.type, file.size, checksum) as any;
-        await uploadFile(signedURLResponse?.url, file) as any;
+        
+        if (!signedURLResponse?.url) {
+          throw new Error(`Failed to get signed URL for ${file.name}`);
+        }
+          console.log(`Starting S3 upload for application file: ${file.name}`);
+        
+        const uploadResponse = await uploadFile(signedURLResponse.url, file) as any;
+        
+        
+        
+        // CRITICAL: Enhanced validation for S3 upload - the function either resolves with success or rejects with error
+        // If we reach this point, the upload was successful because uploadFile would have thrown an error otherwise
+        if (!uploadResponse || !uploadResponse.success) {
+          throw new Error(`S3 upload validation failed for ${file.name} - unexpected response format`);
+        }
+        
+        console.log(`✅ S3 upload verified successful for application file: ${file.name}`);
       }
 
       // Update Application upload links

@@ -1,13 +1,8 @@
 import { User } from 'src/modules/user/entities/user.entity';
-import {
-  regionLabels,
-  relationshipWithGuardianLabels,
-} from '../labels';
+import { regionLabels, relationshipWithGuardianLabels } from '../labels';
 
 export const columns = [
   { header: 'Application Id', key: 'application-id', width: 10 },
-  { header: 'Team Id', key: 'team-id', width: 10 },
-  { header: 'Team Name', key: 'team-name', width: 20 },
   { header: 'First Name', key: 'first-name', width: 15 },
   { header: 'Last Name', key: 'last-name', width: 15 },
   { header: 'Email', key: 'email', width: 25 },
@@ -24,14 +19,13 @@ export const columns = [
     key: 'relationship-with-guardian',
     width: 20,
   },
-  { header: 'Special conditions', key: 'special conditions', width: 30 },
+  { header: 'Special conditions', key: 'special-conditions', width: 30 },
 
   { header: 'Highschool', key: 'highschool', width: 20 },
   { header: 'Average grade', key: 'average-grade', width: 15 },
   { header: 'Physics Average grade', key: 'physics-average-grade', width: 15 },
   { header: 'Ranking', key: 'ranking', width: 15 },
   { header: 'Physics Ranking', key: 'physics-ranking', width: 15 },
-
 
   {
     header: 'Have you participated in competitions before?',
@@ -44,106 +38,59 @@ export const columns = [
     key: 'physics-olympiads-participation',
     width: 15,
   },
-  { 
-    header: 'Olympiads training selection', 
-    key: 'olympiads-training-selection', 
-    width: 15 
+  {
+    header: 'Olympiads training selection',
+    key: 'olympiads-training-selection',
+    width: 15,
   },
   { header: 'Comments', key: 'comments', width: 30 },
 
-  { header: 'Parent ID', key: 'parent-id', width: 10 },
-  { header: 'Birth Certificate', key: 'birth-certificate', width: 10 },
-  { header: 'School certificate', key: 'school-certificate', width: 10 },
-  { header: 'Grades', key: 'grades', width: 10 },
-  { header: 'Regulations', key: 'regulations', width: 10 },
-  {
-    header: 'Parental authorization',
-    key: 'parental-authorization',
-    width: 10,
-  },
-  {
-    header: 'Image Rights',
-    key: 'image-rights',
-    width: 10,
-  },
-  {
-    header: 'Report',
-    key: 'report',
-    width: 10,
-  },
+  { header: 'Has Report', key: 'has-report', width: 15 },
+  { header: 'View Application', key: 'view-application', width: 20 },
   { header: 'Status', key: 'status', width: 15 },
 ];
 
-export const rowFactory = (users: any[], configService) => {
-  const awsBucketName = configService.get('AWS_BUCKET_NAME');
-  const awsBucketRegion = configService.get('AWS_BUCKET_REGION');
-  
+export const rowFactory = (users: any[]) => {
   const mapUser = (user: User) => {
     const application = user?.application;
-    if (!application) return;
+    if (!application) return null;
 
     return {
-      id: application?.id,
-      firstName: user?.firstName,
-      lastName: user?.lastName,
+      'application-id': application?.id,
+      'first-name': user?.firstName,
+      'last-name': user?.lastName,
       email: user?.email,
-      dateOfBirth: new Date(application?.dateOfBirth),
-      massarCode: application?.massarCode,
+      dob: application?.dateOfBirth ? new Date(application?.dateOfBirth) : '',
+      'massar-code': application?.massarCode,
       city: application?.city,
-      region: regionLabels[application?.region],
-      phoneNumber: application?.phoneNumber,
-      guardianFullName: application?.guardianFullName,
-      parentCNIE: application?.parentCNIE,
-      guardianPhoneNumber: application?.guardianPhoneNumber,
-      relationshipWithGuardian:
-        relationshipWithGuardianLabels[application?.relationshipWithGuardian],
-      specialConditions: application?.specialConditions,
+      region: regionLabels[application?.region] || application?.region,
+      'phone-number': application?.phoneNumber,
+      'guardian-full-name': application?.guardianFullName,
+      'parent-cnie': application?.parentCNIE,
+      'guardian-phone-number': application?.guardianPhoneNumber,
+      'relationship-with-guardian':
+        relationshipWithGuardianLabels[application?.relationshipWithGuardian] ||
+        application?.relationshipWithGuardian,
+      'special-conditions': application?.specialConditions,
 
       highschool: application?.highschool,
-      averageGrade: application?.averageGrade,
-      physicsAverageGrade: application?.physicsAverageGrade,
+      'average-grade': application?.averageGrade,
+      'physics-average-grade': application?.physicsAverageGrade,
       ranking: application?.ranking,
-      physicsRanking: application?.physicsRanking,
-      hasPreviouslyParticipated: application?.hasPreviouslyParticipated,
-      previousCompetitions: application?.previousCompetitions,
-      physicsOlympiadsParticipation: application?.physicsOlympiadsParticipation,
-      olympiadsTrainingSelection: application?.olympiadsTrainingSelection,
+      'physics-ranking': application?.physicsRanking,
+      'has-previously-participated': application?.hasPreviouslyParticipated,
+      'previous-competitions': application?.previousCompetitions,
+      'physics-olympiads-participation':
+        application?.physicsOlympiadsParticipation,
+      'olympiads-training-selection': application?.olympiadsTrainingSelection,
       comments: application?.comments,
-      
-      parentIdUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.parentIdUrl}`,
+
+      'has-report': application?.reportUrl ? 'Yes' : 'No',
+      'view-application': {
+        text: 'View Application',
+        hyperlink: `https://fma-website-vf-1-admin.vercel.app/home/applications/${application?.id}`,
       },
-      birthCertificateUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.birthCertificateUrl}`,
-      },
-      schoolCertificateUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.schoolCertificateUrl}`,
-      },
-      gradesUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.gradesUrl}`,
-      },
-      regulationsUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.regulationsUrl}`,
-      },
-      parentalAuthorizationUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.parentalAuthorizationUrl}`,
-      },
-      imageRightsUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.imageRightsUrl}`,
-      },
-      reportUrl: {
-        text: 'link',
-        hyperlink: `https://${awsBucketName}.s3.${awsBucketRegion}.amazonaws.com/${application?.reportUrl}`,
-      },
-      
-      status: application?.status?.status,
+      status: application?.status?.status || 'PENDING',
     };
   };
 
@@ -151,18 +98,8 @@ export const rowFactory = (users: any[], configService) => {
 };
 
 export const styleSheet = (sheet) => {
-  // team informations style
-  for (let i = 2; i <= 3; i++) {
-    sheet.getColumn(i).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      bgColor: { argb: '05FFFE' },
-      fgColor: { argb: '05FFFE' },
-    };
-  }
-
-  // personal informations style
-  for (let i = 4; i <= 16; i++) {
+  // personal informations style (columns 2-14, was 4-16 before removing team columns)
+  for (let i = 2; i <= 14; i++) {
     sheet.getColumn(i).fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -171,8 +108,8 @@ export const styleSheet = (sheet) => {
     };
   }
 
-  // education style
-  for (let i = 17; i <= 22; i++) {
+  // education style (columns 15-19, was 17-22 before)
+  for (let i = 15; i <= 19; i++) {
     sheet.getColumn(i).fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -180,9 +117,8 @@ export const styleSheet = (sheet) => {
       fgColor: { argb: 'E4FFDE' },
     };
   }
-
-  // competition style
-  for (let i = 23; i <= 27; i++) {
+  // competition style (columns 20-24, was 23-27 before)
+  for (let i = 20; i <= 24; i++) {
     sheet.getColumn(i).fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -191,20 +127,34 @@ export const styleSheet = (sheet) => {
     };
   }
 
-  // uploads style
-  for (let i = 28; i <= 35; i++) {
-    sheet.getColumn(i).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      bgColor: { argb: 'DAEAF6' },
-      fgColor: { argb: 'DAEAF6' },
-    };
+  // has report style (column 25)
+  sheet.getColumn(25).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    bgColor: { argb: 'FFF2CC' },
+    fgColor: { argb: 'FFF2CC' },
+  };
 
-    sheet.getColumn(i).font = {
-      underline: true,
-      color: { argb: 'FF0000FF' },
-    };
-  }
+  // view application style (column 26)
+  sheet.getColumn(26).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    bgColor: { argb: 'DAEAF6' },
+    fgColor: { argb: 'DAEAF6' },
+  };
+
+  sheet.getColumn(26).font = {
+    underline: true,
+    color: { argb: 'FF0000FF' },
+  };
+
+  // status style (column 27)
+  sheet.getColumn(27).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    bgColor: { argb: 'F0F0F0' },
+    fgColor: { argb: 'F0F0F0' },
+  };
 
   // header style
   sheet.getRow(1).height = 70;
