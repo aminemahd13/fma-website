@@ -291,8 +291,7 @@ export default function ReportPage() {
             subtitle: "Votre travail n'a pas été validé. Veuillez le mettre à jour et le soumettre à nouveau.",
             ctaLabel: "Mettre à jour votre devoir maison",
           });
-        }
-      } else { // PENDING
+        }      } else { // PENDING
         if (!isApplicationsOpen) { // Also check here if applications are closed
            setContent({ 
             title: "Votre devoir maison est en cours d'examen",
@@ -426,10 +425,9 @@ const selectionReminder = (
                 <Button 
                   variant="outline" 
                   className="w-full flex items-center justify-center border-dashed border-2 py-6"
-                  onClick={() => document.getElementById('file-upload')?.click()}
-                  type="button"
-                  // Disable file picker if report is VALID or NOT_VALID (and apps open)
-                  disabled={userData?.application?.status?.reportStatus === 'VALID' || (userData?.application?.status?.reportStatus === 'NOT_VALID' && !isApplicationsOpen)}
+                  onClick={() => document.getElementById('file-upload')?.click()}                  type="button"
+                  // Only disable file picker if applications are closed
+                  disabled={!isApplicationsOpen}
                 >
                   {selectedFile ? (
                     <span className="text-sm font-medium">{selectedFile.name}</span>
@@ -458,11 +456,10 @@ const selectionReminder = (
                 <input 
                   id="file-upload"
                   type="file" 
-                  accept="application/pdf,image/png,image/jpeg,image/jpg" 
-                  onChange={handleFileChange}
+                  accept="application/pdf,image/png,image/jpeg,image/jpg"                  onChange={handleFileChange}
                   className="sr-only"
-                  // Also disable input if needed
-                  disabled={userData?.application?.status?.reportStatus === 'VALID' || (userData?.application?.status?.reportStatus === 'NOT_VALID' && !isApplicationsOpen)}
+                  // Only disable input if applications are closed
+                  disabled={!isApplicationsOpen}
                 />
               </div>
               {selectedFile && (
@@ -478,8 +475,7 @@ const selectionReminder = (
                 </div>
               )}
             </div>
-          )}
-          {/* Disable button if applications are closed and not redirecting OR if uploading OR (no file selected AND not redirecting) */}
+          )}          {/* Only disable button if applications are closed and not redirecting OR if uploading OR (no file selected AND not redirecting) */}
           <Button 
             onClick={handleButtonClick} 
             disabled={(!isApplicationsOpen && !content?.redirectToApplication) || uploading || (!selectedFile && !content?.redirectToApplication)} 
