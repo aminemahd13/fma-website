@@ -1,8 +1,10 @@
 "use client"
 
 import { Cross2Icon, FileTextIcon, MixerHorizontalIcon } from "@radix-ui/react-icons"
+import { Search } from "lucide-react"
 import { Table } from "@tanstack/react-table"
 import { Button } from "@/components/shared/button"
+import { Input } from "@/components/shared/input"
 import { ApplicationsViewOptions } from "./applications-view-options"
 import { statuses } from "./statuses"
 import { advancedFilters } from "./advanced-filters"
@@ -66,6 +68,31 @@ export function ApplicationsToolbar<TData>({
 
   return (
     <div className="space-y-4">
+      {/* Search Input */}
+      <div className="flex items-center space-x-2">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by name, email, city, or school..."
+            value={(table.getColumn("globalFilter")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("globalFilter")?.setFilterValue(event.target.value)
+            }
+            className="pl-8"
+          />
+        </div>
+        {(table.getColumn("globalFilter")?.getFilterValue() as string) && (
+          <Button
+            variant="ghost"
+            onClick={() => table.getColumn("globalFilter")?.setFilterValue("")}
+            className="h-8 px-2 lg:px-3"
+          >
+            Clear search
+            <Cross2Icon className="ml-2 h-4 w-4" />
+          </Button>
+        )}
+      </div>
+
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="outline" className="h-8 gap-1.5 pl-3 pr-3.5 flex items-center" title="Number of active filters">
