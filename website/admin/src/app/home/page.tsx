@@ -5,36 +5,6 @@ import Image from "next/image";
 
 const links = [
   {
-    title: "Applications",
-    description:
-      "Manage candidate applications",
-    link: "/home/applications",
-  },
-  {
-    title: "Teams",
-    description:
-      "Manage teams",
-    link: "/home/teams",
-  },
-  {
-    title: "Users",
-    description:
-      "Manage user pofiles",
-    link: "/home/users",
-  },
-  {
-    title: "FAQ",
-    description:
-      "Manage FAQ entries",
-    link: "/faq",
-  },
-  {
-    title: "Team Members",
-    description:
-      "Manage organizing team members",
-    link: "/home/team-members",
-  },
-  {
     title: "Competition Results",
     description:
       "Manage competition results",
