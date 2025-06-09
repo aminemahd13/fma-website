@@ -6,8 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { applicationsState } from '@/store/applicationsState';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { putApplicationStatus } from '@/api/ApplicationApi';
+import { toast } from '@/components/hooks/use-toast';
 
 const statusOptions = [
 	{ label: 'Tous', value: '' },
@@ -27,6 +30,71 @@ function getBadgeClassname(status: string) {
 		default:
 			return 'bg-gray-300 text-black';
 	}
+}
+
+function ReportStatusSelector({ applicationId, currentStatus, onStatusChange }: { 
+	applicationId: number; 
+	currentStatus: string; 
+	onStatusChange: (status: string) => void; 
+}) {
+	const [isLoading, setIsLoading] = useState(false);
+
+	const handleStatusChange = async (newStatus: string) => {
+		setIsLoading(true);
+		try {
+			const response = await putApplicationStatus(applicationId, {
+				reportStatus: newStatus,
+			}) as any;
+
+			if (response?.statusCode === 200) {
+				onStatusChange(newStatus);
+				toast({
+					title: 'Statut mis à jour',
+					description: 'Le statut du rapport a été mis à jour avec succès',
+				});
+			} else {
+				toast({
+					title: 'Échec de la mise à jour',
+					description: 'La mise à jour du statut a échoué. Veuillez réessayer.',
+					variant: 'destructive',
+				});
+			}
+		} catch (error) {
+			console.error('Error updating report status:', error);
+			toast({
+				title: 'Erreur',
+				description: 'Une erreur est survenue lors de la mise à jour du statut.',
+				variant: 'destructive',
+			});
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	return (
+		<Select defaultValue={currentStatus || 'PENDING'} onValueChange={handleStatusChange} disabled={isLoading}>
+			<SelectTrigger className="w-full md:w-48">
+				<SelectValue />
+			</SelectTrigger>
+			<SelectContent>
+				<SelectItem value="PENDING">
+					<Badge className={getBadgeClassname('PENDING')}>
+						PENDING
+					</Badge>
+				</SelectItem>
+				<SelectItem value="VALID">
+					<Badge className={getBadgeClassname('VALID')}>
+						VALID
+					</Badge>
+				</SelectItem>
+				<SelectItem value="NOT_VALID">
+					<Badge className={getBadgeClassname('NOT_VALID')}>
+						NOT_VALID
+					</Badge>
+				</SelectItem>
+			</SelectContent>
+		</Select>
+	);
 }
 
 function ReportLink({ reportUrl }: { reportUrl: string }) {
@@ -90,10 +158,12 @@ function ReportLink({ reportUrl }: { reportUrl: string }) {
 		);
 	}
 
-export default function ReportsAdminPage() {	const applications = useRecoilValue(applicationsState);
+export default function ReportsAdminPage() {	
+	const [applications, setApplications] = useRecoilState(applicationsState);
 	const [filtered, setFiltered] = useState<any[]>([]);
 	const [statusFilter, setStatusFilter] = useState('');
-	const [search, setSearch] = useState('');	const [loading, setLoading] = useState(false);
+	const [search, setSearch] = useState('');	
+	const [loading, setLoading] = useState(false);
 	const [totalReports, setTotalReports] = useState(0);
 	const [reportStats, setReportStats] = useState({
 		valid: 0,
@@ -101,7 +171,24 @@ export default function ReportsAdminPage() {	const applications = useRecoilValue
 		pending: 0,
 		noStatus: 0
 	});
-	const router = useRouter();	useEffect(() => {
+	const router = useRouter();
+
+	const handleReportStatusChange = (applicationId: number, newStatus: string) => {
+		setApplications(
+			applications.map((app: any) => {
+				if (app.id === applicationId) {
+					return {
+						...app,
+						status: {
+							...app.status,
+							reportStatus: newStatus
+						}
+					};
+				}
+				return app;
+			})
+		);
+	};useEffect(() => {
 		if (!applications) return;
 		const reportsWithFiles = (applications as any[]).filter((app: any) => app.reportUrl);
 		setTotalReports(reportsWithFiles.length);
@@ -199,11 +286,12 @@ export default function ReportsAdminPage() {	const applications = useRecoilValue
 								filtered.map(app => (
 									<tr key={app.id} className="even:bg-muted/50 hover:bg-accent transition-colors">
 										<td className="p-3">{app.user?.firstName} {app.user?.lastName}</td>
-										<td className="p-3">{app.user?.email}</td>
-										<td className="p-3">
-											<Badge className={getBadgeClassname(app.status?.reportStatus)}>
-												{app.status?.reportStatus || 'N/A'}
-											</Badge>
+										<td className="p-3">{app.user?.email}</td>										<td className="p-3">
+											<ReportStatusSelector
+												applicationId={app.id}
+												currentStatus={app.status?.reportStatus}
+												onStatusChange={(newStatus) => handleReportStatusChange(app.id, newStatus)}
+											/>
 										</td>
 										<td className="p-3">{app.updatedAt ? new Date(app.updatedAt).toLocaleDateString('fr-FR') : ''}</td>
 										<td className="p-3 flex gap-2 items-center">

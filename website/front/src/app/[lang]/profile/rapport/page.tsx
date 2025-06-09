@@ -12,7 +12,7 @@ import ProfileSkeleton from "../profile-skeleton";
 import { LoadingDots } from "@/components/shared/icons";
 import { getUploadFolderName, generateFileName, computeSHA256, formatDate } from "@/lib/utils";
 import { getSignedURL, uploadFile } from "@/api/MediaApi";
-import { putApplication } from "@/api/ApplicationApi"; // Ensure putApplication is imported
+import { putApplication, updateApplicationStatus } from "@/api/ApplicationApi"; // Added updateApplicationStatus import
 import { getApplicationsOpenStatus } from "@/api/SettingsApi"; // Added import
 import { toast } from "@/components/hooks/use-toast";
 
@@ -157,12 +157,12 @@ export default function ReportPage() {
       }
       
       console.log(`✅ S3 upload verified successful for file: ${file.name}`);
-      
-      // CRITICAL: Only update the database if S3 upload was 100% successful
+        // CRITICAL: Only update the database if S3 upload was 100% successful
       const reportUrl = `upload_mtym/${uploadFolderName}/${file.name}`;
       
       console.log(`Updating database with reportUrl: ${reportUrl}`);
-        // Update application with the report URL using the ApplicationApi
+      
+      // Update application with the report URL using the ApplicationApi
       const response = await putApplication(userData?.application?.id, {
         reportUrl: reportUrl
       }) as any;
@@ -171,9 +171,34 @@ export default function ReportPage() {
       
       if (response?.statusCode === 200) {
         console.log("✅ Database update successful - Report URL saved");
+        
+        // Reset report status to 'PENDING' when user modifies their report
+        // This is especially important if the report was previously 'VALID'
+        const currentReportStatus = userData?.application?.status?.reportStatus;
+        console.log(`Current report status: ${currentReportStatus}`);
+        
+        try {
+          const statusResponse = await updateApplicationStatus(userData?.application?.id, {
+            reportStatus: 'PENDING'
+          }) as any;
+          
+          console.log('Status update response:', statusResponse);
+          
+          if (statusResponse?.statusCode === 200) {
+            console.log("✅ Report status reset to PENDING successfully");
+          } else {
+            console.warn("⚠️ Failed to reset report status, but file upload was successful");
+          }
+        } catch (statusError) {
+          console.error("❌ Error resetting report status:", statusError);
+          // Don't throw here as the main upload was successful
+        }
+        
         toast({
           title: "Travail envoyé avec succès",
-          description: "Votre travail a été téléchargé et sera examiné par notre équipe",
+          description: currentReportStatus === 'VALID' 
+            ? "Votre travail a été mis à jour et est maintenant en cours d'examen" 
+            : "Votre travail a été téléchargé et sera examiné par notre équipe",
         });
         
         // Refresh the page to show updated status
@@ -271,12 +296,11 @@ export default function ReportPage() {
           ctaLabel: "Envoyer votre devoir maison",
         });
       }
-    } else {
-      if (reportStatus === "VALID") {
+    } else {      if (reportStatus === "VALID") {
         setContent({
           title: "Votre travail a été approuvé",
-          subtitle: "Votre travail a été validé. Merci pour votre contribution.",
-          ctaLabel: "Mettre à jour votre devoir maison", // Or maybe "Voir le rapport" if updates aren't allowed after validation
+          subtitle: "Votre travail a été validé. Si vous soumettez un nouveau fichier, le statut sera remis à 'En attente' pour réévaluation.",
+          ctaLabel: "Mettre à jour votre devoir maison",
         });
       } else if (reportStatus === "NOT_VALID") {
         if (!isApplicationsOpen) { // Also check here if applications are closed
@@ -400,8 +424,7 @@ const selectionReminder = (
       <CardHeader>
         <CardTitle loading={isLoading}>{content?.title}</CardTitle>
         <CardDescription loading={isLoading}>{content?.subtitle}</CardDescription>
-      </CardHeader>
-      <CardContent>
+      </CardHeader>      <CardContent>
         {userData?.application?.reportUrl && (
           <>
             <div className="text-sm">
@@ -410,9 +433,12 @@ const selectionReminder = (
             <div className="text-sm">
               <span className="font-bold">Status</span>:{" "}
               <Badge className={`px-4 ${getBadgeClassname(userData?.application?.status?.reportStatus)}`}>
-                {userData?.application?.status?.reportStatus}
+                {userData?.application?.status?.reportStatus === 'VALID' ? 'VALIDÉ' : 
+                 userData?.application?.status?.reportStatus === 'NOT_VALID' ? 'NON VALIDÉ' : 'EN ATTENTE'}
               </Badge>
             </div>
+            
+
           </>
         )}
       </CardContent>
