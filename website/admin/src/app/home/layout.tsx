@@ -38,10 +38,9 @@ export default function HomeLayout({
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-[60px] items-center border-b px-5">
             <Logo />
-          </div>
-          <div className="flex-1 overflow-auto py-2">
+          </div>          <div className="flex-1 overflow-auto py-2">
             <nav className="grid items-start px-4 text-sm font-medium">
-              <NavItem href="/home/applications" className="h-12">
+              {/* <NavItem href="/home/applications" className="h-12">
                 <UsersIcon className="h-4 w-4" />
                 Applications
               </NavItem>
@@ -68,7 +67,7 @@ export default function HomeLayout({
               <NavItem href="/home/competition-results" className="h-12">
                 <UsersIcon className="h-4 w-4" />
                 Competition Results
-              </NavItem>
+              </NavItem> */}
             </nav>
           </div>
         </div>
