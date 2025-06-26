@@ -45,6 +45,7 @@ export const columns = [
   },
   { header: 'Comments', key: 'comments', width: 30 },
 
+  { header: 'Has Report', key: 'has-report', width: 15 },
   { header: 'View Application', key: 'view-application', width: 20 },
   { header: 'Status', key: 'status', width: 15 },
 ];
@@ -84,6 +85,7 @@ export const rowFactory = (users: any[]) => {
       'olympiads-training-selection': application?.olympiadsTrainingSelection,
       comments: application?.comments,
 
+      'has-report': application?.reportUrl ? 'Yes' : 'No',
       'view-application': {
         text: 'View Application',
         hyperlink: `https://fma-website-vf-1-admin.vercel.app/home/applications/${application?.id}`,
@@ -115,7 +117,6 @@ export const styleSheet = (sheet) => {
       fgColor: { argb: 'E4FFDE' },
     };
   }
-
   // competition style (columns 20-24, was 23-27 before)
   for (let i = 20; i <= 24; i++) {
     sheet.getColumn(i).fill = {
@@ -126,21 +127,29 @@ export const styleSheet = (sheet) => {
     };
   }
 
-  // view application style (column 25)
+  // has report style (column 25)
   sheet.getColumn(25).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    bgColor: { argb: 'FFF2CC' },
+    fgColor: { argb: 'FFF2CC' },
+  };
+
+  // view application style (column 26)
+  sheet.getColumn(26).fill = {
     type: 'pattern',
     pattern: 'solid',
     bgColor: { argb: 'DAEAF6' },
     fgColor: { argb: 'DAEAF6' },
   };
 
-  sheet.getColumn(25).font = {
+  sheet.getColumn(26).font = {
     underline: true,
     color: { argb: 'FF0000FF' },
   };
 
-  // status style (column 26)
-  sheet.getColumn(26).fill = {
+  // status style (column 27)
+  sheet.getColumn(27).fill = {
     type: 'pattern',
     pattern: 'solid',
     bgColor: { argb: 'F0F0F0' },
