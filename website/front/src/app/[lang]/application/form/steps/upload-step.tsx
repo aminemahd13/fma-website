@@ -105,7 +105,7 @@ export const UploadStep = ({
       
       <div className="mt-6 p-4 bg-blue-50 rounded-md border border-blue-200">
         <p className="text-sm text-blue-800">
-         <span className="font-semibold">Note importante:</span> Les documents supplémentaires comme le justificatif d&apos;identité des parents, l&apos;extrait d&apos;acte de naissance, et les autorisations vous seront demandés uniquement si votre candidature est acceptée, dans la section &quot;Inscription Finale&quot; de votre profil.
+         <span className="font-semibold">Note importante:</span> Les documents supplémentaires comme le justificatif d&apos;identité des parents, l&apos;extrait d&apos;acte de naissance, et les autorisations vous seront demandés uniquement si votre candidature est acceptée ou mise sur liste d&apos;attente, dans la section &quot;Inscription Finale&quot; de votre profil.
         </p>
       </div>
     </motion.div>

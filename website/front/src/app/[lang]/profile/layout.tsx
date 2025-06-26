@@ -8,8 +8,8 @@ import { userState } from "@/store/userState"
 export default function ProfileLayout({ children }: { children: React.ReactNode }) {
   const userData = useRecoilValue<any>(userState);
   
-  // Check if user has an accepted application
-  const isAccepted = userData?.application?.status?.status === 'ACCEPTED';
+  // Check if user has an accepted or waitlisted application
+  const isAcceptedOrWaitlisted = userData?.application?.status?.status === 'ACCEPTED' || userData?.application?.status?.status === 'WAITLIST';
   
   // Base sidebar items
   const baseItems = [
@@ -27,7 +27,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
     }
   ];
   
-  const sidebarNavItems = isAccepted 
+  const sidebarNavItems = isAcceptedOrWaitlisted 
     ? [...baseItems, { title: "Inscription finale", href: "/profile/inscription-finale" }]
     : baseItems;
 
