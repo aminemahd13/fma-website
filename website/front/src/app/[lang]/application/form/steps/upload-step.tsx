@@ -51,7 +51,10 @@ export const UploadStep = ({
 
             return (
               <FormItem>
-                <FormLabel>Certificat de scolarité pour l&apos;année 2024-2025 <RequiredAsterisk /></FormLabel>
+<FormLabel>
+  Certificat de scolarité pour l&apos;année 2024-2025 <RequiredAsterisk />{" "}
+  (si vous ne l&apos;avez pas, vous pouvez envoyer le bulletin du 1er semestre à la place)
+</FormLabel>
                 <FormControl>
                   <Input
                     {...form.register("schoolCertificate", {
@@ -61,6 +64,9 @@ export const UploadStep = ({
                     type="file"                      
                   />
                 </FormControl>
+                <FormDescription>
+                  <span className="text-blue-500">Remarque</span>: Ce document doit être fourni par votre école et pour l&apos;année scolaire 2024/2025.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )
@@ -83,7 +89,10 @@ export const UploadStep = ({
 
             return (
               <FormItem>
-                <FormLabel>Bulletin du 1er semestre (de l&apos;année en cours) <RequiredAsterisk /></FormLabel>
+<FormLabel>
+  Bulletin du 1er semestre de l&apos;année 2024-2025 <RequiredAsterisk />{" "}
+  (si vous avez déjà mis le bulletin à la place de votre certificat de scolarité, vous pouvez le remettre ici)
+</FormLabel>
                 <FormControl>
                   <Input
                     {...form.register("grades", {

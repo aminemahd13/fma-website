@@ -164,10 +164,22 @@ export default function ApplicationPage() {
 
       <Separator />
 
-      {!userData
-        ? <ProfileSkeleton />
-        : applicationCard
-      }
+      {!userData ? (
+  <ProfileSkeleton />
+) : (
+  <>
+<div className="border border-yellow-400 bg-yellow-100 text-yellow-800 p-4 rounded-lg">
+  <p className="font-semibold">⚠️ N&apos;oubliez pas !</p>
+  <p>
+    Une fois votre candidature créée, vous devez également <strong>nous envoyer votre devoir maison <a href="/profile/rapport" className="underline">en cliquant ici</a> avant le 8 juin 2025</strong>. 
+    La création de la candidature seule <strong>ne suffit pas</strong> pour être accepté.
+  </p>
+</div>
+
+    {applicationCard}
+  </>
+)}
+
     </div>
   )
 }

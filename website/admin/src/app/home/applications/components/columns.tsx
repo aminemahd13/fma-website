@@ -34,6 +34,28 @@ const ActionButton = ({
 
 export const columns: ColumnDef<ApplicationRow>[] = [
   {
+    // Global filter column for search functionality
+    accessorKey: "globalFilter",
+    enableHiding: true,
+    header: "Global Filter",
+    filterFn: (row, id, value: string) => {
+      if (!value) return true;
+      
+      const searchTerm = value.toLowerCase();
+      const firstName = (row.getValue("firstName") as string)?.toLowerCase() || "";
+      const lastName = (row.getValue("lastName") as string)?.toLowerCase() || "";
+      const email = (row.getValue("email") as string)?.toLowerCase() || "";
+      const city = (row.getValue("city") as string)?.toLowerCase() || "";
+      const highschool = (row.getValue("highschool") as string)?.toLowerCase() || "";
+      
+      return firstName.includes(searchTerm) ||
+             lastName.includes(searchTerm) ||
+             email.includes(searchTerm) ||
+             city.includes(searchTerm) ||
+             highschool.includes(searchTerm);
+    },
+  },
+  {
     accessorKey: "id",
     header: ({ column }) => {
       return (

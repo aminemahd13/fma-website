@@ -229,4 +229,29 @@ export class ApplicationController {
       statusCode: 200,
     };
   }
+
+  @Put('admin/:id')
+  @HttpCode(200)
+  @UseGuards(RolesGuard)
+  @Roles(ADMIN_ROLE)
+  async adminUpdate(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateApplicationDto: UpdateApplicationDto,
+  ) {
+    const application = await this.applicationService.findOneById(id);
+    if (!application) {
+      throw new NotFoundException();
+    }
+
+    const update = await this.applicationService.update(
+      id,
+      updateApplicationDto,
+    );
+
+    return {
+      id: id,
+      update: update,
+      statusCode: 200,
+    };
+  }
 }
