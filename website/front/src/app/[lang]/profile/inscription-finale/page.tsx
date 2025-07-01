@@ -147,23 +147,23 @@ export default function InscriptionFinalePage() {
   });
 
   useEffect(() => {
-    // If user is not authenticated or doesn't have an accepted application, redirect
+    // If user is not authenticated or doesn't have an accepted/waitlisted application, redirect
     if (userData) {
       setIsLoading(false);
       
-      const hasAcceptedApplication = Boolean(
+      const hasAcceptedOrWaitlistedApplication = Boolean(
         userData?.application && 
-        userData?.application?.status?.status === 'ACCEPTED'
+        (userData?.application?.status?.status === 'ACCEPTED' || userData?.application?.status?.status === 'WAITLIST')
       );
 
-      if (!hasAcceptedApplication) {
+      if (!hasAcceptedOrWaitlistedApplication) {
         router.push(`/${userData?.locale || 'fr'}/profile/application`);
         return;
       }
       
       // Check if the application is in a final state where edits are no longer allowed
       const applicationFinalized = Boolean(
-        userData?.application?.status?.status === 'ACCEPTED' && 
+        (userData?.application?.status?.status === 'ACCEPTED' || userData?.application?.status?.status === 'WAITLIST') && 
         userData?.application?.status?.parentIdStatus === 'VALID' &&
         userData?.application?.status?.birthCertificateStatus === 'VALID' &&
         userData?.application?.status?.regulationsStatus === 'VALID' &&
@@ -415,14 +415,14 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
     return <ProfileSkeleton />;
   }
 
-  // If not accepted, show message (fallback if router redirect fails)
-  if (userData?.application?.status?.status !== 'ACCEPTED') {
+  // If not accepted or waitlisted, show message (fallback if router redirect fails)
+  if (userData?.application?.status?.status !== 'ACCEPTED' && userData?.application?.status?.status !== 'WAITLIST') {
     return (
       <div className="space-y-6">
         <div>
           <div className="text-lg font-medium">Inscription Finale</div>
           <p className="text-sm text-muted-foreground">
-            Cette page est réservée aux candidats acceptés.
+            Cette page est réservée aux candidats acceptés ou sur liste d&apos;attente.
           </p>
         </div>
         <Separator />
@@ -430,7 +430,7 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
           <CardHeader>
             <CardTitle>Accès non autorisé</CardTitle>
             <CardDescription>
-              Cette page est uniquement accessible aux candidats dont la candidature a été acceptée.
+              Cette page est uniquement accessible aux candidats dont la candidature a été acceptée ou mise sur liste d&apos;attente.
             </CardDescription>
           </CardHeader>
           <CardFooter>
@@ -448,8 +448,9 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
       <div>
         <div className="text-lg font-medium">Inscription Finale</div>
         <p className="text-sm text-muted-foreground">
-          Félicitations ! Votre candidature a été acceptée. Pour finaliser votre inscription, 
-          veuillez fournir les documents requis ci-dessous.
+          {userData?.application?.status?.status === 'ACCEPTED' 
+            ? "Félicitations ! Votre candidature a été acceptée. Pour finaliser votre inscription, veuillez fournir les documents requis ci-dessous."
+            : "Votre candidature est sur liste d'attente. Vous pouvez déjà préparer vos documents d'inscription finale ci-dessous."}
         </p>
       </div>
       <Separator />
