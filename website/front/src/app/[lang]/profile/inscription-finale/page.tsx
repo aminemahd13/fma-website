@@ -73,15 +73,6 @@ const finalRegistrationSchema = z.object({  parentId: z.any()
     .refine(
       file => ACCEPTED_FILE_TYPES.includes(file?.[0]?.type),
       "Format de fichier non valide. Utilisez PDF, JPG ou PNG."
-    ),  imageRights: z.any()
-    .refine(file => file?.length === 1, "Le droit à l'image signé est requis")
-    .refine(
-      file => file?.[0]?.size <= MAX_FILE_SIZE,
-      "La taille du fichier ne doit pas dépasser 3MB"
-    )
-    .refine(
-      file => ACCEPTED_FILE_TYPES.includes(file?.[0]?.type),
-      "Format de fichier non valide. Utilisez PDF, JPG ou PNG."
     ),
 });
 
@@ -116,7 +107,6 @@ const updateFileSchema = z.object({
   birthCertificate: individualFileSchema,
   regulations: individualFileSchema,
   parentalAuthorization: individualFileSchema,
-  imageRights: individualFileSchema,
 });
 
 export default function InscriptionFinalePage() {
@@ -129,7 +119,6 @@ export default function InscriptionFinalePage() {
     birthCertificate: false,
     regulations: false,
     parentalAuthorization: false,
-    imageRights: false
   });
   
   // Formulaire pour la mise à jour individuelle des fichiers
@@ -140,7 +129,6 @@ export default function InscriptionFinalePage() {
       birthCertificate: { file: undefined },
       regulations: { file: undefined },
       parentalAuthorization: { file: undefined },
-      imageRights: { file: undefined },
     },
   });
   
@@ -155,7 +143,6 @@ export default function InscriptionFinalePage() {
       birthCertificate: undefined,
       regulations: undefined,
       parentalAuthorization: undefined,
-      imageRights: undefined,
     },
   });
 
@@ -180,8 +167,7 @@ export default function InscriptionFinalePage() {
         userData?.application?.status?.parentIdStatus === 'VALID' &&
         userData?.application?.status?.birthCertificateStatus === 'VALID' &&
         userData?.application?.status?.regulationsStatus === 'VALID' &&
-        userData?.application?.status?.parentalAuthorizationStatus === 'VALID' &&
-        userData?.application?.status?.imageRightsStatus === 'VALID'
+        userData?.application?.status?.parentalAuthorizationStatus === 'VALID'
       );
       
       // If application is finalized, disable all document selections
@@ -191,7 +177,6 @@ export default function InscriptionFinalePage() {
           birthCertificate: false,
           regulations: false,
           parentalAuthorization: false,
-          imageRights: false
         });
       } else {        // Disable selection of validated documents
         if (userData?.application) {
@@ -211,9 +196,6 @@ export default function InscriptionFinalePage() {
             }
             if (status?.parentalAuthorizationStatus === 'VALID') {
               updatedSelection.parentalAuthorization = false;
-            }
-            if (status?.imageRightsStatus === 'VALID') {
-              updatedSelection.imageRights = false;
             }
             
             return updatedSelection;
@@ -244,8 +226,7 @@ export default function InscriptionFinalePage() {
         { field: 'parentId', file: data.parentId[0], prefix: 'parent_id' },
         { field: 'birthCertificate', file: data.birthCertificate[0], prefix: 'birth_certificate' },
         { field: 'regulations', file: data.regulations[0], prefix: 'regulations' },
-        { field: 'parentalAuthorization', file: data.parentalAuthorization[0], prefix: 'parental_authorization' },
-        { field: 'imageRights', file: data.imageRights[0], prefix: 'image_rights' }
+        { field: 'parentalAuthorization', file: data.parentalAuthorization[0], prefix: 'parental_authorization' }
       ];
 
       // Process each document
@@ -347,13 +328,11 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
   const typedField = field as keyof typeof data;
 
   if (isSelected && data[typedField]?.file?.length > 0) {
-    const fileData = data[typedField].file[0];
-    const prefixMap = {
-      parentId: 'parent_id',
+    const fileData = data[typedField].file[0];          const prefixMap = {
+            parentId: 'parent_id',
             birthCertificate: 'birth_certificate',
             regulations: 'regulations',
-            parentalAuthorization: 'parental_authorization',
-            imageRights: 'image_rights'
+            parentalAuthorization: 'parental_authorization'
           };
           
           const prefix = prefixMap[field as keyof typeof prefixMap];
@@ -428,8 +407,7 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
     userData.application.parentIdUrl || 
     userData.application.birthCertificateUrl || 
     userData.application.regulationsUrl || 
-    userData.application.parentalAuthorizationUrl || 
-    userData.application.imageRightsUrl
+    userData.application.parentalAuthorizationUrl
   );
 
   // Display a loading skeleton while checking auth and data
@@ -559,24 +537,6 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
                   </span>
                 </li>
               )}
-              {userData.application.imageRightsUrl && (
-                <li className="text-sm flex items-center justify-between">
-                  <span>Droit à l&apos;image signé</span>
-                  <span className={`text-xs px-2 py-1 rounded ${
-                    userData.application.status?.imageRightsStatus === 'VALID' 
-                      ? 'bg-green-100 text-green-800' 
-                      : userData.application.status?.imageRightsStatus === 'NOT_VALID'
-                        ? 'bg-red-100 text-red-800'
-                        : 'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {userData.application.status?.imageRightsStatus === 'VALID' 
-                      ? 'Validé' 
-                      : userData.application.status?.imageRightsStatus === 'NOT_VALID'
-                        ? 'Non validé'
-                        : 'En attente'}
-                  </span>
-                </li>
-              )}
             </ul>
           </CardContent>
         </Card>
@@ -609,16 +569,6 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
               </div>
               <Button variant="outline" size="sm" className="shrink-0" asChild>
                 <a href="/documents/autorisation_parentale.pdf" target="_blank" download>Télécharger</a>
-              </Button>
-            </div>
-            
-            <div className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50">
-              <div>
-                <h4 className="font-medium">Droit à l&apos;image</h4>
-                <p className="text-sm text-muted-foreground">À signer par l&apos;élève et le tuteur légal</p>
-              </div>
-              <Button variant="outline" size="sm" className="shrink-0" asChild>
-                <a href="/documents/droit_image.pdf" target="_blank" download>Télécharger</a>
               </Button>
             </div>
           </div>
@@ -747,31 +697,6 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
                         <FormDescription>
                           Il faut l&apos;<strong>imprimer</strong>, la <strong>signer</strong> à la main, la <strong>légaliser</strong>, puis la <strong>scanner</strong>. <strong>La légalisation est obligatoire</strong>.
                         </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Image Rights */}
-                  <FormField
-                    control={form.control}
-                    name="imageRights"
-                    render={({ field: { onChange, value, ...rest } }) => (
-                      <FormItem>
-                        <FormLabel>Droit de l&apos;image signé</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="file"
-                            accept=".pdf,.jpg,.jpeg,.png"
-                            onChange={(e) => {
-                              const files = e.target.files;
-                              if (files?.length) {  
-                                onChange(files);
-                              }
-                            }}
-                            {...rest}
-                          />
-                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -1043,72 +968,6 @@ for (const [field, isSelected] of Object.entries(selectedDocuments)) {
                         <FormField
                           control={updateForm.control}
                           name="parentalAuthorization.file"
-                          render={({ field: { onChange, value, ...rest } }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  type="file"
-                                  accept=".pdf,.jpg,.jpeg,.png"
-                                  onChange={(e) => {
-                                    const files = e.target.files;
-                                    if (files?.length) {
-                                      onChange(files);
-                                    }
-                                  }}
-                                  {...rest}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      )}
-                    </div>
-                  )}
-
-                  {userData.application.imageRightsUrl && (
-                    <div className={`p-4 border rounded-md ${userData.application.status?.imageRightsStatus === 'VALID' ? 'bg-green-50' : ''}`}>
-                      <div className="flex items-center space-x-3 mb-2">
-                        <Checkbox 
-                          id="imageRights-checkbox" 
-                          checked={selectedDocuments.imageRights}
-                          disabled={userData.application.status?.imageRightsStatus === 'VALID'}
-                          onCheckedChange={(checked) => 
-                            setSelectedDocuments(prev => ({
-                              ...prev, 
-                              imageRights: Boolean(checked)
-                            }))
-                          }
-                        />
-                        <label 
-                          htmlFor="imageRights-checkbox" 
-                          className="font-medium cursor-pointer"
-                        >
-                          Droit à l&apos;image signé
-                        </label>
-                        <span className={`text-xs px-2 py-1 rounded ${
-                          userData.application.status?.imageRightsStatus === 'VALID' 
-                            ? 'bg-green-100 text-green-800' 
-                            : userData.application.status?.imageRightsStatus === 'NOT_VALID'
-                              ? 'bg-red-100 text-red-800'
-                              : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {userData.application.status?.imageRightsStatus === 'VALID' 
-                            ? 'Validé' 
-                            : userData.application.status?.imageRightsStatus === 'NOT_VALID'
-                              ? 'Non validé'
-                              : 'En attente'}
-                        </span>
-                      </div>
-                      {userData.application.status?.imageRightsStatus === 'VALID' && (
-                        <p className="text-xs text-green-700 mt-1 mb-2">
-                          Ce document a été validé et ne peut plus être modifié.
-                        </p>
-                      )}
-                      {selectedDocuments.imageRights && (
-                        <FormField
-                          control={updateForm.control}
-                          name="imageRights.file"
                           render={({ field: { onChange, value, ...rest } }) => (
                             <FormItem>
                               <FormControl>
