@@ -195,16 +195,14 @@ export const columns: ColumnDef<ApplicationRow>[] = [
               (!application.parentIdUrl || 
                !application.birthCertificateUrl || 
                !application.regulationsUrl || 
-               !application.parentalAuthorizationUrl || 
-               !application.imageRightsUrl);
+               !application.parentalAuthorizationUrl);
             
           case "DOCUMENTS_PENDING_VALIDATION":
             return application.status?.status === 'ACCEPTED' && 
               ((application.parentIdUrl && application.status?.parentIdStatus === 'PENDING') ||
                (application.birthCertificateUrl && application.status?.birthCertificateStatus === 'PENDING') ||
                (application.regulationsUrl && application.status?.regulationsStatus === 'PENDING') ||
-               (application.parentalAuthorizationUrl && application.status?.parentalAuthorizationStatus === 'PENDING') ||
-               (application.imageRightsUrl && application.status?.imageRightsStatus === 'PENDING'));
+               (application.parentalAuthorizationUrl && application.status?.parentalAuthorizationStatus === 'PENDING'));
 
           case "MISSING_PARENT_ID":
             return application.status?.status === 'ACCEPTED' && !application.parentIdUrl;
@@ -217,9 +215,6 @@ export const columns: ColumnDef<ApplicationRow>[] = [
 
           case "MISSING_PARENTAL_AUTH":
             return application.status?.status === 'ACCEPTED' && !application.parentalAuthorizationUrl;
-
-          case "MISSING_IMAGE_RIGHTS":
-            return application.status?.status === 'ACCEPTED' && !application.imageRightsUrl;
 
           case "MISSING_REPORT":
             return application.status?.status === 'ACCEPTED' && !application.reportUrl;

@@ -36,12 +36,6 @@ export const advancedFilters = [
     description: "Accepted users missing parental authorization"
   },
   {
-    value: "MISSING_IMAGE_RIGHTS",
-    label: "Missing Image Rights",
-    category: "Missing Documents",
-    description: "Accepted users missing image rights document"
-  },
-  {
     value: "MISSING_REPORT",
     label: "Missing Report",
     category: "Missing Documents",
