@@ -98,50 +98,78 @@ export default function FilesTable({ application }: { application: any }) {
       </TableHeader>
 
       <TableBody>
-        <TableRow key='parent-id'>
-          <TableCell>Parent ID</TableCell>
+        <TableRow key='parent-id' className="bg-blue-50">
+          <TableCell className="font-medium">
+            Parent ID 
+            <span className="text-red-500 ml-1">*</span>
+            <span className="text-xs text-blue-600 block">Required</span>
+          </TableCell>
           <TableCell><FileCard href={application?.parentIdUrl} /></TableCell>
           <TableCell><FileStatus slug='parentId' application={application} /></TableCell>
         </TableRow>
 
-        <TableRow key='birth-certificate'>
-          <TableCell>Birth Certificate</TableCell>
+        <TableRow key='birth-certificate' className="bg-blue-50">
+          <TableCell className="font-medium">
+            Birth Certificate
+            <span className="text-red-500 ml-1">*</span>
+            <span className="text-xs text-blue-600 block">Required</span>
+          </TableCell>
           <TableCell><FileCard href={application?.birthCertificateUrl} /></TableCell>
           <TableCell><FileStatus slug='birthCertificate' application={application} /></TableCell>
         </TableRow>
 
-        <TableRow key='school-certificate'>
-          <TableCell>School Certificate</TableCell>
+        <TableRow key='school-certificate' className="bg-gray-50">
+          <TableCell className="font-medium">
+            School Certificate
+            <span className="text-xs text-gray-600 block">Application Document</span>
+          </TableCell>
           <TableCell><FileCard href={application?.schoolCertificateUrl} /></TableCell>
           <TableCell><FileStatus slug='schoolCertificate' application={application} /></TableCell>
         </TableRow>
 
-        <TableRow key='grades'>
-          <TableCell>Grades</TableCell>
+        <TableRow key='grades' className="bg-gray-50">
+          <TableCell className="font-medium">
+            Grades
+            <span className="text-xs text-gray-600 block">Application Document</span>
+          </TableCell>
           <TableCell><FileCard href={application?.gradesUrl} /></TableCell>
           <TableCell><FileStatus slug='grades' application={application} /></TableCell>
         </TableRow>
 
-        <TableRow key='regulations'>
-          <TableCell>Regulations</TableCell>
+        <TableRow key='regulations' className="bg-blue-50">
+          <TableCell className="font-medium">
+            Regulations
+            <span className="text-red-500 ml-1">*</span>
+            <span className="text-xs text-blue-600 block">Required</span>
+          </TableCell>
           <TableCell><FileCard href={application?.regulationsUrl} /></TableCell>
           <TableCell><FileStatus slug='regulations' application={application} /></TableCell>
         </TableRow>
 
-        <TableRow key='parental-authorization'>
-          <TableCell>Parental Authorization</TableCell>
+        <TableRow key='parental-authorization' className="bg-blue-50">
+          <TableCell className="font-medium">
+            Parental Authorization
+            <span className="text-red-500 ml-1">*</span>
+            <span className="text-xs text-blue-600 block">Required</span>
+          </TableCell>
           <TableCell><FileCard href={application?.parentalAuthorizationUrl} /></TableCell>
           <TableCell><FileStatus slug='parentalAuthorization' application={application} /></TableCell>
         </TableRow>
 
-        <TableRow key='image-rights'>
-          <TableCell>Image Rights</TableCell>
+        <TableRow key='image-rights' className="bg-yellow-50">
+          <TableCell className="font-medium">
+            Image Rights
+            <span className="text-xs text-yellow-600 block">Optional (Legacy)</span>
+          </TableCell>
           <TableCell><FileCard href={application?.imageRightsUrl} /></TableCell>
           <TableCell><FileStatus slug='imageRights' application={application} /></TableCell>
         </TableRow>
 
-        <TableRow key='report'>
-          <TableCell>Report</TableCell>
+        <TableRow key='report' className="bg-green-50">
+          <TableCell className="font-medium">
+            Report
+            <span className="text-xs text-green-600 block">Final Submission</span>
+          </TableCell>
           <TableCell><FileCard href={application?.reportUrl} /></TableCell>
           <TableCell><FileStatus slug='report' application={application} /></TableCell>
         </TableRow>

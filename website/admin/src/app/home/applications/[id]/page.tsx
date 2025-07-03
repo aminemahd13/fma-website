@@ -126,6 +126,374 @@ export default function ApplicationDetailsPage({ params }: { params: { id: strin
               <ApplicationStatus applicationId={application?.id} status={application?.status?.status} />
             </div>
 
+            {/* Quick Summary Card */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Quick Summary</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <div className="text-sm text-blue-700 font-medium">Contact Info</div>
+                  <div className="text-sm">📧 {application?.email}</div>
+                  <div className="text-sm">📱 {application?.phoneNumber || 'No phone'}</div>
+                  <div className="text-sm">🏠 {application?.city}, {regionLabels[application?.region]}</div>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-sm text-blue-700 font-medium">Academic Info</div>
+                  <div className="text-sm">🏫 {application?.highschool}</div>
+                  <div className="text-sm">📊 Average: {application?.averageGrade || 'N/A'}</div>
+                  <div className="text-sm">⚗️ Physics: {application?.physicsAverageGrade || 'N/A'}</div>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-sm text-blue-700 font-medium">Document Status</div>
+                  <div className="space-y-1">
+                    {[
+                      { key: 'parentIdStatus', label: 'Parent ID', url: 'parentIdUrl' },
+                      { key: 'birthCertificateStatus', label: 'Birth Cert', url: 'birthCertificateUrl' },
+                      { key: 'regulationsStatus', label: 'Regulations', url: 'regulationsUrl' },
+                      { key: 'parentalAuthorizationStatus', label: 'Parental Auth', url: 'parentalAuthorizationUrl' }
+                    ].map(doc => {
+                      const status = application?.status?.[doc.key];
+                      const hasFile = !!application?.[doc.url];
+                      const statusColor = 
+                        status === 'VALID' ? 'text-green-600' :
+                        status === 'NOT_VALID' ? 'text-red-600' :
+                        status === 'PENDING' ? 'text-yellow-600' :
+                        'text-gray-400';
+                      const statusIcon = 
+                        status === 'VALID' ? '✅' :
+                        status === 'NOT_VALID' ? '❌' :
+                        status === 'PENDING' ? '⏳' :
+                        hasFile ? '📄' : '❌';
+                      
+                      return (
+                        <div key={doc.key} className={`text-xs flex items-center ${statusColor}`}>
+                          <span className="mr-1">{statusIcon}</span>
+                          {doc.label}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Admin Action Center */}
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">🛠️ Admin Action Center</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                {/* Quick Document Actions */}
+                <div className="bg-white p-4 rounded border">
+                  <h4 className="font-medium text-sm text-blue-700 mb-3">Quick Actions</h4>
+                  <div className="space-y-2">
+                    <button 
+                      className="w-full text-left px-3 py-2 text-xs bg-green-50 hover:bg-green-100 rounded border border-green-200 text-green-700"
+                      onClick={() => {
+                        // Implement bulk approve all valid documents
+                        console.log('Approve all valid documents');
+                      }}
+                    >
+                      ✅ Approve All Valid
+                    </button>
+                    <button 
+                      className="w-full text-left px-3 py-2 text-xs bg-yellow-50 hover:bg-yellow-100 rounded border border-yellow-200 text-yellow-700"
+                      onClick={() => {
+                        // Implement mark all as pending
+                        console.log('Mark all as pending review');
+                      }}
+                    >
+                      ⏳ Mark Pending Review
+                    </button>
+                    <button 
+                      className="w-full text-left px-3 py-2 text-xs bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 text-blue-700"
+                      onClick={() => {
+                        // Implement send reminder email
+                        console.log('Send reminder email');
+                      }}
+                    >
+                      📧 Send Reminder
+                    </button>
+                  </div>
+                </div>
+
+                {/* Application Timeline */}
+                <div className="bg-white p-4 rounded border">
+                  <h4 className="font-medium text-sm text-purple-700 mb-3">Timeline</h4>
+                  <div className="space-y-2 text-xs">
+                    <div className="flex items-center text-gray-600">
+                      <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
+                      Applied: {formatDate(application?.createdAt)}
+                    </div>
+                    {application?.status?.updatedAt && (
+                      <div className="flex items-center text-gray-600">
+                        <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                        Status: {formatDate(application?.status?.updatedAt)}
+                      </div>
+                    )}
+                    <div className="flex items-center text-gray-600">
+                      <span className="w-2 h-2 bg-purple-400 rounded-full mr-2"></span>
+                      Last Update: {formatDate(application?.updatedAt)}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Communication Log */}
+                <div className="bg-white p-4 rounded border">
+                  <h4 className="font-medium text-sm text-orange-700 mb-3">Communication</h4>
+                  <div className="space-y-2">
+                    <div className="text-xs text-gray-600">
+                      📱 Phone: {application?.phoneNumber || 'Not provided'}
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      📧 Email: {application?.email || application?.user?.email}
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      👤 Guardian: {application?.guardianPhoneNumber || 'Not provided'}
+                    </div>
+                    <button 
+                      className="w-full mt-2 px-2 py-1 text-xs bg-orange-50 hover:bg-orange-100 rounded border border-orange-200 text-orange-700"
+                      onClick={() => {
+                        // Copy contact info to clipboard
+                        navigator.clipboard.writeText(`Name: ${application?.firstName} ${application?.lastName}\nPhone: ${application?.phoneNumber}\nEmail: ${application?.email || application?.user?.email}\nGuardian: ${application?.guardianPhoneNumber}`);
+                      }}
+                    >
+                      📋 Copy Contact Info
+                    </button>
+                  </div>
+                </div>
+
+                {/* Application Metrics */}
+                <div className="bg-white p-4 rounded border">
+                  <h4 className="font-medium text-sm text-green-700 mb-3">Metrics</h4>
+                  <div className="space-y-2 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Academic Avg:</span>
+                      <span className="font-medium">{application?.averageGrade || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Physics Avg:</span>
+                      <span className="font-medium">{application?.physicsAverageGrade || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Ranking:</span>
+                      <span className="font-medium">{application?.ranking || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Physics Rank:</span>
+                      <span className="font-medium">{application?.physicsRanking || 'N/A'}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Application Analysis */}
+            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-indigo-900 mb-4">📊 Application Analysis</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                {/* Academic Performance */}
+                <div className="bg-white p-4 rounded-lg border border-indigo-100">
+                  <h4 className="font-medium text-indigo-700 mb-3">🎓 Academic Performance</h4>
+                  <div className="space-y-2">
+                    {(() => {
+                      const avgGrade = parseFloat(application?.averageGrade || '0');
+                      const physicsGrade = parseFloat(application?.physicsAverageGrade || '0');
+                      
+                      const getGradeColor = (grade: number) => {
+                        if (grade >= 16) return 'text-green-600 bg-green-50';
+                        if (grade >= 14) return 'text-blue-600 bg-blue-50';
+                        if (grade >= 12) return 'text-yellow-600 bg-yellow-50';
+                        return 'text-red-600 bg-red-50';
+                      };
+                      
+                      const getGradeLabel = (grade: number) => {
+                        if (grade >= 16) return 'Excellent';
+                        if (grade >= 14) return 'Good';
+                        if (grade >= 12) return 'Average';
+                        return 'Below Average';
+                      };
+                      
+                      return (
+                        <>
+                          <div className={`px-2 py-1 rounded text-xs ${getGradeColor(avgGrade)}`}>
+                            Overall: {avgGrade.toFixed(1)} - {getGradeLabel(avgGrade)}
+                          </div>
+                          <div className={`px-2 py-1 rounded text-xs ${getGradeColor(physicsGrade)}`}>
+                            Physics: {physicsGrade.toFixed(1)} - {getGradeLabel(physicsGrade)}
+                          </div>
+                        </>
+                      );
+                    })()}
+                  </div>
+                </div>
+
+                {/* Document Completion Status */}
+                <div className="bg-white p-4 rounded-lg border border-indigo-100">
+                  <h4 className="font-medium text-indigo-700 mb-3">📋 Document Status</h4>
+                  <div className="space-y-2">
+                    {(() => {
+                      const docs = [
+                        { key: 'parentIdStatus', label: 'Parent ID', url: 'parentIdUrl' },
+                        { key: 'birthCertificateStatus', label: 'Birth Cert', url: 'birthCertificateUrl' },
+                        { key: 'regulationsStatus', label: 'Regulations', url: 'regulationsUrl' },
+                        { key: 'parentalAuthorizationStatus', label: 'Parental Auth', url: 'parentalAuthorizationUrl' }
+                      ];
+                      
+                      const validCount = docs.filter(doc => application?.status?.[doc.key] === 'VALID').length;
+                      const pendingCount = docs.filter(doc => application?.status?.[doc.key] === 'PENDING').length;
+                      const rejectedCount = docs.filter(doc => application?.status?.[doc.key] === 'NOT_VALID').length;
+                      const missingCount = docs.filter(doc => !application?.[doc.url]).length;
+                      
+                      return (
+                        <div className="space-y-1 text-xs">
+                          <div className="flex justify-between">
+                            <span>✅ Validated:</span>
+                            <span className="font-medium text-green-600">{validCount}/4</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>⏳ Pending:</span>
+                            <span className="font-medium text-yellow-600">{pendingCount}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>❌ Rejected:</span>
+                            <span className="font-medium text-red-600">{rejectedCount}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>📄 Missing:</span>
+                            <span className="font-medium text-gray-600">{missingCount}</span>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </div>
+
+                {/* Risk Assessment */}
+                <div className="bg-white p-4 rounded-lg border border-indigo-100">
+                  <h4 className="font-medium text-indigo-700 mb-3">⚠️ Risk Assessment</h4>
+                  <div className="space-y-2">
+                    {(() => {
+                      const risks = [];
+                      
+                      // Check for academic risks
+                      const avgGrade = parseFloat(application?.averageGrade || '0');
+                      if (avgGrade < 12) risks.push({ level: 'high', message: 'Low academic performance' });
+                      
+                      // Check for document risks
+                      const rejectedDocs = [
+                        application?.status?.parentIdStatus,
+                        application?.status?.birthCertificateStatus,
+                        application?.status?.regulationsStatus,
+                        application?.status?.parentalAuthorizationStatus
+                      ].filter(status => status === 'NOT_VALID').length;
+                      
+                      if (rejectedDocs >= 2) risks.push({ level: 'critical', message: 'Multiple document rejections' });
+                      else if (rejectedDocs >= 1) risks.push({ level: 'medium', message: 'Document rejections' });
+                      
+                      // Check for communication risks
+                      if (!application?.phoneNumber) risks.push({ level: 'low', message: 'Missing phone number' });
+                      
+                      // Check for activity risks
+                      const lastActivity = new Date(application?.updatedAt || application?.createdAt);
+                      const daysSince = Math.floor((new Date().getTime() - lastActivity.getTime()) / (1000 * 3600 * 24));
+                      if (daysSince > 14) risks.push({ level: 'medium', message: 'Inactive for 14+ days' });
+                      
+                      if (risks.length === 0) {
+                        return <div className="text-xs text-green-600 bg-green-50 p-2 rounded">✅ No risks identified</div>;
+                      }
+                      
+                      return risks.map((risk, index) => {
+                        const colors = {
+                          critical: 'text-red-600 bg-red-50',
+                          high: 'text-orange-600 bg-orange-50',
+                          medium: 'text-yellow-600 bg-yellow-50',
+                          low: 'text-blue-600 bg-blue-50'
+                        };
+                        
+                        return (
+                          <div key={index} className={`text-xs p-2 rounded ${colors[risk.level as keyof typeof colors]}`}>
+                            {risk.message}
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Document Verification Alerts */}
+            {(() => {
+              const rejectedDocs = [
+                { key: 'parentIdStatus', label: 'Parent ID', url: 'parentIdUrl' },
+                { key: 'birthCertificateStatus', label: 'Birth Certificate', url: 'birthCertificateUrl' },
+                { key: 'regulationsStatus', label: 'Regulations', url: 'regulationsUrl' },
+                { key: 'parentalAuthorizationStatus', label: 'Parental Authorization', url: 'parentalAuthorizationUrl' }
+              ].filter(doc => application?.status?.[doc.key] === 'NOT_VALID');
+
+              const missingDocs = [
+                { key: 'parentIdStatus', label: 'Parent ID', url: 'parentIdUrl' },
+                { key: 'birthCertificateStatus', label: 'Birth Certificate', url: 'birthCertificateUrl' },
+                { key: 'regulationsStatus', label: 'Regulations', url: 'regulationsUrl' },
+                { key: 'parentalAuthorizationStatus', label: 'Parental Authorization', url: 'parentalAuthorizationUrl' }
+              ].filter(doc => !application?.[doc.url] && application?.status?.status === 'ACCEPTED');
+
+              const pendingDocs = [
+                { key: 'parentIdStatus', label: 'Parent ID', url: 'parentIdUrl' },
+                { key: 'birthCertificateStatus', label: 'Birth Certificate', url: 'birthCertificateUrl' },
+                { key: 'regulationsStatus', label: 'Regulations', url: 'regulationsUrl' },
+                { key: 'parentalAuthorizationStatus', label: 'Parental Authorization', url: 'parentalAuthorizationUrl' }
+              ].filter(doc => application?.status?.[doc.key] === 'PENDING');
+
+              return (
+                <>
+                  {rejectedDocs.length > 0 && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                      <h4 className="text-red-800 font-semibold mb-2 flex items-center">
+                        ❌ Rejected Documents ({rejectedDocs.length})
+                      </h4>
+                      <div className="text-sm text-red-700">
+                        The following documents need to be resubmitted: {rejectedDocs.map(doc => doc.label).join(', ')}
+                      </div>
+                    </div>
+                  )}
+
+                  {missingDocs.length > 0 && (
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                      <h4 className="text-orange-800 font-semibold mb-2 flex items-center">
+                        📋 Missing Required Documents ({missingDocs.length})
+                      </h4>
+                      <div className="text-sm text-orange-700">
+                        Missing documents: {missingDocs.map(doc => doc.label).join(', ')}
+                      </div>
+                    </div>
+                  )}
+
+                  {pendingDocs.length > 0 && (
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                      <h4 className="text-yellow-800 font-semibold mb-2 flex items-center">
+                        ⏳ Pending Validation ({pendingDocs.length})
+                      </h4>
+                      <div className="text-sm text-yellow-700">
+                        Documents awaiting review: {pendingDocs.map(doc => doc.label).join(', ')}
+                      </div>
+                    </div>
+                  )}
+
+                  {rejectedDocs.length === 0 && missingDocs.length === 0 && pendingDocs.length === 0 && application?.status?.status === 'ACCEPTED' && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <h4 className="text-green-800 font-semibold mb-2 flex items-center">
+                        ✅ All Required Documents Validated
+                      </h4>
+                      <div className="text-sm text-green-700">
+                        All required documents have been submitted and validated successfully.
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+
             <TabsList className="flex justify-start space-x-8 h-[4rem] bg-slate-200 text-black">
               <TabsTrigger value="personal-informations" className='text-base h-full'>Personal Informations</TabsTrigger>
               <TabsTrigger value="education" className='text-base h-full'>Education</TabsTrigger>
