@@ -331,76 +331,76 @@ export const columns: ColumnDef<ApplicationRow>[] = [
       return value.some(filterValue => {
         switch (filterValue) {
           case "ACCEPTED_NO_DOCUMENTS":
-            return application.status?.status === 'ACCEPTED' && 
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && 
               (!application.parentIdUrl || 
                !application.birthCertificateUrl || 
                !application.regulationsUrl || 
                !application.parentalAuthorizationUrl);
             
           case "DOCUMENTS_PENDING_VALIDATION":
-            return application.status?.status === 'ACCEPTED' && 
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && 
               ((application.parentIdUrl && application.status?.parentIdStatus === 'PENDING') ||
                (application.birthCertificateUrl && application.status?.birthCertificateStatus === 'PENDING') ||
                (application.regulationsUrl && application.status?.regulationsStatus === 'PENDING') ||
                (application.parentalAuthorizationUrl && application.status?.parentalAuthorizationStatus === 'PENDING'));
 
           case "DOCUMENTS_REJECTED":
-            return application.status?.status === 'ACCEPTED' && 
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && 
               (application.status?.parentIdStatus === 'NOT_VALID' ||
                application.status?.birthCertificateStatus === 'NOT_VALID' ||
                application.status?.regulationsStatus === 'NOT_VALID' ||
                application.status?.parentalAuthorizationStatus === 'NOT_VALID');
 
           case "DOCUMENTS_FULLY_VALIDATED":
-            return application.status?.status === 'ACCEPTED' && 
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && 
               application.parentIdUrl && application.status?.parentIdStatus === 'VALID' &&
               application.birthCertificateUrl && application.status?.birthCertificateStatus === 'VALID' &&
               application.regulationsUrl && application.status?.regulationsStatus === 'VALID' &&
               application.parentalAuthorizationUrl && application.status?.parentalAuthorizationStatus === 'VALID';
 
           case "MISSING_PARENT_ID":
-            return application.status?.status === 'ACCEPTED' && !application.parentIdUrl;
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && !application.parentIdUrl;
 
           case "MISSING_BIRTH_CERTIFICATE":
-            return application.status?.status === 'ACCEPTED' && !application.birthCertificateUrl;
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && !application.birthCertificateUrl;
 
           case "MISSING_REGULATIONS":
-            return application.status?.status === 'ACCEPTED' && !application.regulationsUrl;
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && !application.regulationsUrl;
 
           case "MISSING_PARENTAL_AUTH":
-            return application.status?.status === 'ACCEPTED' && !application.parentalAuthorizationUrl;
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && !application.parentalAuthorizationUrl;
 
           case "REJECTED_PARENT_ID":
-            return application.status?.status === 'ACCEPTED' && application.status?.parentIdStatus === 'NOT_VALID';
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && application.status?.parentIdStatus === 'NOT_VALID';
 
           case "REJECTED_BIRTH_CERTIFICATE":
-            return application.status?.status === 'ACCEPTED' && application.status?.birthCertificateStatus === 'NOT_VALID';
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && application.status?.birthCertificateStatus === 'NOT_VALID';
 
           case "REJECTED_REGULATIONS":
-            return application.status?.status === 'ACCEPTED' && application.status?.regulationsStatus === 'NOT_VALID';
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && application.status?.regulationsStatus === 'NOT_VALID';
 
           case "REJECTED_PARENTAL_AUTH":
-            return application.status?.status === 'ACCEPTED' && application.status?.parentalAuthorizationStatus === 'NOT_VALID';
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && application.status?.parentalAuthorizationStatus === 'NOT_VALID';
 
           case "HIGH_PRIORITY":
-            return application.status?.status === 'ACCEPTED' && 
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && 
               (row.original.urgencyLevel === 'high' || row.original.urgencyLevel === 'critical');
 
           case "CRITICAL_PRIORITY":
-            return application.status?.status === 'ACCEPTED' && row.original.urgencyLevel === 'critical';
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && row.original.urgencyLevel === 'critical';
 
           case "STALE_APPLICATIONS":
             const lastActivity = new Date(row.original.lastActivity);
             const daysSinceActivity = Math.floor((new Date().getTime() - lastActivity.getTime()) / (1000 * 3600 * 24));
-            return application.status?.status === 'ACCEPTED' && daysSinceActivity > 14;
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && daysSinceActivity > 14;
 
           case "RECENT_ACTIVITY":
             const recentActivity = new Date(row.original.lastActivity);
             const daysSinceRecent = Math.floor((new Date().getTime() - recentActivity.getTime()) / (1000 * 3600 * 24));
-            return application.status?.status === 'ACCEPTED' && daysSinceRecent <= 3;
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && daysSinceRecent <= 3;
 
           case "LOW_DOCUMENT_PROGRESS":
-            return application.status?.status === 'ACCEPTED' && row.original.documentProgress < 50;
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && row.original.documentProgress < 50;
 
           case "MULTIPLE_REJECTIONS":
             const rejectedCount = [
@@ -409,10 +409,10 @@ export const columns: ColumnDef<ApplicationRow>[] = [
               application.status?.regulationsStatus,
               application.status?.parentalAuthorizationStatus
             ].filter(status => status === 'NOT_VALID').length;
-            return application.status?.status === 'ACCEPTED' && rejectedCount >= 2;
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && rejectedCount >= 2;
 
           case "MISSING_REPORT":
-            return application.status?.status === 'ACCEPTED' && !application.reportUrl;
+            return (application.status?.status === 'ACCEPTED' || application.status?.status === 'WAITLIST') && !application.reportUrl;
 
           default:
             return false;
