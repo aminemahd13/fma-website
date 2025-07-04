@@ -10,11 +10,11 @@ import { useEffect, useState } from "react";
 export default function ApplicationsPage() {
   const applications = useRecoilValue(applicationsState);
   const [tableData, setTableData] = useState<ApplicationRow[]>([])
+  const [filteredData, setFilteredData] = useState<ApplicationRow[]>([])
 
   useEffect(() => {
     if (applications) {
-      setTableData(
-        applications.map((application: any) => {
+      const newTableData = applications.map((application: any) => {
           // Calculate document progress
           const requiredDocs = ['parentIdUrl', 'birthCertificateUrl', 'regulationsUrl', 'parentalAuthorizationUrl'];
           const validatedDocs = ['parentIdStatus', 'birthCertificateStatus', 'regulationsStatus', 'parentalAuthorizationStatus'];
@@ -30,7 +30,10 @@ export default function ApplicationsPage() {
           
           let urgencyLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
           
-          if (rejectedCount >= 2 || (rejectedCount >= 1 && missingCount >= 2)) {
+          // Rejected applications should always have low priority
+          if (application.status?.status === 'REJECTED') {
+            urgencyLevel = 'low';
+          } else if (rejectedCount >= 2 || (rejectedCount >= 1 && missingCount >= 2)) {
             urgencyLevel = 'critical';
           } else if (rejectedCount >= 1 || missingCount >= 3 || pendingCount >= 3) {
             urgencyLevel = 'high';
@@ -65,8 +68,10 @@ export default function ApplicationsPage() {
             // Include full application object for advanced filtering
             application: application,
           };
-        })
-      )
+        });
+      
+      setTableData(newTableData);
+      setFilteredData(newTableData); // Initialize filtered data with all data
     }
   }, [applications])
 
@@ -83,19 +88,19 @@ export default function ApplicationsPage() {
           <div className="flex space-x-4 text-sm">
             <div className="bg-blue-50 px-3 py-1 rounded">
               <span className="text-blue-700">Total: </span>
-              <span className="font-medium">{tableData.length}</span>
+              <span className="font-medium">{filteredData.length}</span>
             </div>
             <div className="bg-red-50 px-3 py-1 rounded">
               <span className="text-red-700">Critical: </span>
-              <span className="font-medium">{tableData.filter(app => app.urgencyLevel === 'critical').length}</span>
+              <span className="font-medium">{filteredData.filter(app => app.urgencyLevel === 'critical').length}</span>
             </div>
             <div className="bg-orange-50 px-3 py-1 rounded">
               <span className="text-orange-700">High Priority: </span>
-              <span className="font-medium">{tableData.filter(app => app.urgencyLevel === 'high').length}</span>
+              <span className="font-medium">{filteredData.filter(app => app.urgencyLevel === 'high').length}</span>
             </div>
             <div className="bg-green-50 px-3 py-1 rounded">
               <span className="text-green-700">Validated: </span>
-              <span className="font-medium">{tableData.filter(app => app.documentProgress === 100).length}</span>
+              <span className="font-medium">{filteredData.filter(app => app.documentProgress === 100).length}</span>
             </div>
           </div>
           
@@ -211,27 +216,16 @@ export default function ApplicationsPage() {
 
       {/* Alert Summary */}
       {(() => {
-        const criticalCount = tableData.filter(app => app.urgencyLevel === 'critical').length;
-        const staleCount = tableData.filter(app => {
-          const daysSince = Math.floor((new Date().getTime() - new Date(app.lastActivity).getTime()) / (1000 * 3600 * 24));
-          return daysSince > 14;
-        }).length;
+        const criticalCount = filteredData.filter(app => app.urgencyLevel === 'critical').length;
         
-        if (criticalCount > 0 || staleCount > 0) {
+        if (criticalCount > 0) {
           return (
             <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg p-4">
               <h3 className="text-red-800 font-semibold mb-2">⚠️ Admin Attention Required</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                {criticalCount > 0 && (
-                  <div className="text-red-700">
-                    🔴 <strong>{criticalCount}</strong> applications with critical issues requiring immediate action
-                  </div>
-                )}
-                {staleCount > 0 && (
-                  <div className="text-orange-700">
-                    ⏰ <strong>{staleCount}</strong> applications inactive for more than 14 days
-                  </div>
-                )}
+              <div className="text-sm">
+                <div className="text-red-700">
+                  🔴 <strong>{criticalCount}</strong> applications with critical issues requiring immediate action
+                </div>
               </div>
             </div>
           );
@@ -239,7 +233,11 @@ export default function ApplicationsPage() {
         return null;
       })()}
 
-      <ApplicationsTable columns={columns} data={tableData} />
+      <ApplicationsTable 
+        columns={columns} 
+        data={tableData} 
+        onFilteredDataChange={setFilteredData}
+      />
     </div>
   );
 }
