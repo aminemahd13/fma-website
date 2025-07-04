@@ -10,11 +10,11 @@ import { useEffect, useState } from "react";
 export default function ApplicationsPage() {
   const applications = useRecoilValue(applicationsState);
   const [tableData, setTableData] = useState<ApplicationRow[]>([])
+  const [filteredData, setFilteredData] = useState<ApplicationRow[]>([])
 
   useEffect(() => {
     if (applications) {
-      setTableData(
-        applications.map((application: any) => {
+      const newTableData = applications.map((application: any) => {
           // Calculate document progress
           const requiredDocs = ['parentIdUrl', 'birthCertificateUrl', 'regulationsUrl', 'parentalAuthorizationUrl'];
           const validatedDocs = ['parentIdStatus', 'birthCertificateStatus', 'regulationsStatus', 'parentalAuthorizationStatus'];
@@ -65,8 +65,10 @@ export default function ApplicationsPage() {
             // Include full application object for advanced filtering
             application: application,
           };
-        })
-      )
+        });
+      
+      setTableData(newTableData);
+      setFilteredData(newTableData); // Initialize filtered data with all data
     }
   }, [applications])
 
@@ -83,19 +85,19 @@ export default function ApplicationsPage() {
           <div className="flex space-x-4 text-sm">
             <div className="bg-blue-50 px-3 py-1 rounded">
               <span className="text-blue-700">Total: </span>
-              <span className="font-medium">{tableData.length}</span>
+              <span className="font-medium">{filteredData.length}</span>
             </div>
             <div className="bg-red-50 px-3 py-1 rounded">
               <span className="text-red-700">Critical: </span>
-              <span className="font-medium">{tableData.filter(app => app.urgencyLevel === 'critical').length}</span>
+              <span className="font-medium">{filteredData.filter(app => app.urgencyLevel === 'critical').length}</span>
             </div>
             <div className="bg-orange-50 px-3 py-1 rounded">
               <span className="text-orange-700">High Priority: </span>
-              <span className="font-medium">{tableData.filter(app => app.urgencyLevel === 'high').length}</span>
+              <span className="font-medium">{filteredData.filter(app => app.urgencyLevel === 'high').length}</span>
             </div>
             <div className="bg-green-50 px-3 py-1 rounded">
               <span className="text-green-700">Validated: </span>
-              <span className="font-medium">{tableData.filter(app => app.documentProgress === 100).length}</span>
+              <span className="font-medium">{filteredData.filter(app => app.documentProgress === 100).length}</span>
             </div>
           </div>
           
@@ -211,7 +213,7 @@ export default function ApplicationsPage() {
 
       {/* Alert Summary */}
       {(() => {
-        const criticalCount = tableData.filter(app => app.urgencyLevel === 'critical').length;
+        const criticalCount = filteredData.filter(app => app.urgencyLevel === 'critical').length;
         
         if (criticalCount > 0) {
           return (
@@ -228,7 +230,11 @@ export default function ApplicationsPage() {
         return null;
       })()}
 
-      <ApplicationsTable columns={columns} data={tableData} />
+      <ApplicationsTable 
+        columns={columns} 
+        data={tableData} 
+        onFilteredDataChange={setFilteredData}
+      />
     </div>
   );
 }

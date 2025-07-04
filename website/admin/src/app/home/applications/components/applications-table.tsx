@@ -34,6 +34,7 @@ const ApplicationsToolbar = dynamic<ApplicationsToolbarProps<any>>(
 interface ApplicationsTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  onFilteredDataChange?: (filteredData: TData[]) => void
 }
 
 // Keys for localStorage
@@ -44,6 +45,7 @@ const VISIBILITY_STORAGE_KEY = 'applications-table-visibility'
 export function ApplicationsTable<TData, TValue>({
   columns,
   data,
+  onFilteredDataChange,
 }: ApplicationsTableProps<TData, TValue>) {
   // Load saved state from localStorage
   const [sorting, setSorting] = useState<SortingState>(() => {
@@ -107,6 +109,15 @@ export function ApplicationsTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
+
+  // Notify parent of filtered data changes
+  useEffect(() => {
+    if (onFilteredDataChange) {
+      const filteredRows = table.getFilteredRowModel().rows;
+      const filteredData = filteredRows.map(row => row.original);
+      onFilteredDataChange(filteredData);
+    }
+  }, [columnFilters, data, onFilteredDataChange, table]);
 
   return (
     <div className='space-y-4'>
