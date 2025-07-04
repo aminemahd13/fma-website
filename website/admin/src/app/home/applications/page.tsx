@@ -30,7 +30,10 @@ export default function ApplicationsPage() {
           
           let urgencyLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
           
-          if (rejectedCount >= 2 || (rejectedCount >= 1 && missingCount >= 2)) {
+          // Rejected applications should always have low priority
+          if (application.status?.status === 'REJECTED') {
+            urgencyLevel = 'low';
+          } else if (rejectedCount >= 2 || (rejectedCount >= 1 && missingCount >= 2)) {
             urgencyLevel = 'critical';
           } else if (rejectedCount >= 1 || missingCount >= 3 || pendingCount >= 3) {
             urgencyLevel = 'high';
