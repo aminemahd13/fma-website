@@ -1,7 +1,7 @@
 "use client"
 
 import dynamic from 'next/dynamic'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -36,13 +36,59 @@ interface ApplicationsTableProps<TData, TValue> {
   data: TData[]
 }
 
+// Keys for localStorage
+const FILTER_STORAGE_KEY = 'applications-table-filters'
+const SORTING_STORAGE_KEY = 'applications-table-sorting'
+const VISIBILITY_STORAGE_KEY = 'applications-table-visibility'
+
 export function ApplicationsTable<TData, TValue>({
   columns,
   data,
 }: ApplicationsTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  // Load saved state from localStorage
+  const [sorting, setSorting] = useState<SortingState>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(SORTING_STORAGE_KEY)
+      return saved ? JSON.parse(saved) : []
+    }
+    return []
+  })
+  
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(FILTER_STORAGE_KEY)
+      return saved ? JSON.parse(saved) : []
+    }
+    return []
+  })
+  
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(VISIBILITY_STORAGE_KEY)
+      return saved ? JSON.parse(saved) : {}
+    }
+    return {}
+  })
+
+  // Save state to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(columnFilters))
+    }
+  }, [columnFilters])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(SORTING_STORAGE_KEY, JSON.stringify(sorting))
+    }
+  }, [sorting])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(VISIBILITY_STORAGE_KEY, JSON.stringify(columnVisibility))
+    }
+  }, [columnVisibility])
+
   const table = useReactTable({
     data,
     columns,
