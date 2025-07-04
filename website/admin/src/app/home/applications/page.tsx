@@ -212,26 +212,15 @@ export default function ApplicationsPage() {
       {/* Alert Summary */}
       {(() => {
         const criticalCount = tableData.filter(app => app.urgencyLevel === 'critical').length;
-        const staleCount = tableData.filter(app => {
-          const daysSince = Math.floor((new Date().getTime() - new Date(app.lastActivity).getTime()) / (1000 * 3600 * 24));
-          return daysSince > 14;
-        }).length;
         
-        if (criticalCount > 0 || staleCount > 0) {
+        if (criticalCount > 0) {
           return (
             <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg p-4">
               <h3 className="text-red-800 font-semibold mb-2">⚠️ Admin Attention Required</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                {criticalCount > 0 && (
-                  <div className="text-red-700">
-                    🔴 <strong>{criticalCount}</strong> applications with critical issues requiring immediate action
-                  </div>
-                )}
-                {staleCount > 0 && (
-                  <div className="text-orange-700">
-                    ⏰ <strong>{staleCount}</strong> applications inactive for more than 14 days
-                  </div>
-                )}
+              <div className="text-sm">
+                <div className="text-red-700">
+                  🔴 <strong>{criticalCount}</strong> applications with critical issues requiring immediate action
+                </div>
               </div>
             </div>
           );
