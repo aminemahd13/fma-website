@@ -19,6 +19,8 @@ import { userState } from "@/store/userState";
 import { useAuthGuard } from "@/components/hooks/use-auth-guard";
 import { useRouter } from "next/navigation";
 import { getApplicationsOpenStatus } from "@/api/SettingsApi";
+import { downloadConvocation } from "@/api/ConvocationApi";
+import { toast } from "@/components/hooks/use-toast";
 
 const getBadgeClassname = (status: string) => {
   switch(status) {
@@ -120,6 +122,42 @@ export default function ApplicationPage() {
     }
   }, [userData, isApplicationsOpen]);
 
+  const handleDownloadConvocation = async () => {
+    try {
+      const response = await downloadConvocation();
+
+      if (response?.status === 200) {
+        // Create a link element, set its href to the blob URL, and click it programmatically
+        const url = window.URL.createObjectURL(response.data);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `convocation_${userData?.firstName}_${userData?.lastName}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+
+        toast({
+          title: "Téléchargement réussi",
+          description: "Votre convocation a été téléchargée avec succès.",
+        });
+      } else {
+        toast({
+          title: "Erreur de téléchargement",
+          description: "Erreur lors du téléchargement de la convocation.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to download convocation", error);
+      toast({
+        title: "Erreur de téléchargement",
+        description: "Une erreur s'est produite lors du téléchargement de la convocation.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const applicationCard = (
     <Card>
       <CardHeader>
@@ -142,12 +180,39 @@ export default function ApplicationPage() {
       {((userData?.application && userData?.application?.status?.status !== 'DRAFT') || 
          !userData?.application || 
          (userData?.application?.status?.status === 'DRAFT' && isApplicationsOpen)) ? (
-        <CardFooter>
-          <Button
-            onClick={() => router.push(`/${userData?.locale || 'fr'}/application`)}
-          >
-            {content?.ctaLabel}
-          </Button>
+        <CardFooter className="flex gap-2 flex-wrap">
+          {/* Show update button for non-accepted candidates or when applications are open */}
+          {(content?.showUpdateButton !== false) && (
+            <Button
+              onClick={() => router.push(`/${userData?.locale || 'fr'}/application`)}
+            >
+              {content?.ctaLabel}
+            </Button>
+          )}
+          
+          {/* Show download convocation button for accepted candidates */}
+          {userData?.application?.status?.status === 'ACCEPTED' && (
+            <Button
+              variant="outline"
+              onClick={handleDownloadConvocation}
+              className="flex items-center gap-2"
+            >
+              <svg 
+                className="w-4 h-4" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                />
+              </svg>
+              Télécharger la convocation
+            </Button>
+          )}
         </CardFooter> 
       ) : null}
     </Card>
@@ -177,6 +242,25 @@ export default function ApplicationPage() {
 </div>
 
     {applicationCard}
+    
+    {/* Success message for accepted candidates */}
+    {userData?.application?.status?.status === 'ACCEPTED' && (
+      <div className="border border-green-400 bg-green-50 text-green-800 p-4 rounded-lg">
+        <div className="flex items-center">
+          <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+          <p className="font-semibold">🎉 Félicitations ! Votre candidature a été acceptée !</p>
+        </div>
+        <p className="mt-2">
+          Vous pouvez maintenant télécharger votre convocation personnalisée en cliquant sur le bouton ci-dessus. 
+          Cette convocation contient votre nom et votre numéro de candidature, et sera nécessaire pour votre participation à la formation.
+        </p>
+        <p className="mt-2 text-sm">
+          <strong>Prochaines étapes :</strong> Vous recevrez bientôt des informations détaillées par email concernant les modalités d&apos;inscription définitive et le programme de la formation.
+        </p>
+      </div>
+    )}
   </>
 )}
 
