@@ -82,7 +82,7 @@ export class ConvocationService {
         doc
           .fontSize(11)
           .fillColor(darkGray)
-          .text(`Rabat, le ${currentDate}`, doc.page.width - 200, 145, {
+          .text(`le ${currentDate}`, doc.page.width - 200, 145, {
             width: 150,
             align: 'right',
           });
@@ -214,24 +214,8 @@ export class ConvocationService {
           );
 
         y += 40;
+          
 
-        // Signature section
-        const sigWidth = 200;
-        const sigX = doc.page.width - sigWidth - 72;
-
-        doc
-          .fontSize(11)
-          .fillColor(darkGray)
-          .text('L\'Organisation', sigX, y, { align: 'center', width: sigWidth })
-          .text('Feynman Moroccan Adventure', sigX, y + 15, { align: 'center', width: sigWidth });
-
-        // Signature line
-        doc
-          .strokeColor(primaryBlue)
-          .lineWidth(1)
-          .moveTo(sigX + 20, y + 50)
-          .lineTo(sigX + sigWidth - 20, y + 50)
-          .stroke();
 
         doc.end();
       } catch (error) {
