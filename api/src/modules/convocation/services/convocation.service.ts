@@ -165,7 +165,7 @@ export class ConvocationService {
           .fillColor(darkGray)
           .text('Horaires :', 92, y, { continued: true })
           .fillColor(accentGreen)
-          .text(' 13h00 à 17h00');
+          .text(' 13h00 à 18h00');
 
         y += 20;
         doc
