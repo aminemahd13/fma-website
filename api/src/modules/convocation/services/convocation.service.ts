@@ -190,4 +190,21 @@ Document généré le ${currentDate}\\\\[0.2cm]
       }
     }
   }
+
+  async getUserForConvocation(userId: number): Promise<any> {
+    try {
+      const user = await this.userService.findOneById(userId);
+      if (
+        !user ||
+        !user.application ||
+        user.application.status?.status !== 'ACCEPTED'
+      ) {
+        return null;
+      }
+      return user;
+    } catch (error) {
+      console.error('Error fetching user for convocation:', error);
+      return null;
+    }
+  }
 }

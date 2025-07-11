@@ -19,6 +19,24 @@ import { USER_ROLE } from '../../../constants';
 export class ConvocationController {
   constructor(private readonly convocationService: ConvocationService) {}
 
+  @Get('health')
+  @HttpCode(HttpStatus.OK)
+  healthCheck(): { status: string; timestamp: string } {
+    return {
+      status: 'Convocation module is active',
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  @Get('test')
+  @HttpCode(HttpStatus.OK)
+  testEndpoint(): { message: string; timestamp: string } {
+    return {
+      message: 'Convocation module is working',
+      timestamp: new Date().toISOString(),
+    };
+  }
+
   @Get('download')
   @HttpCode(HttpStatus.OK)
   @Roles(USER_ROLE)
@@ -28,9 +46,14 @@ export class ConvocationController {
   ): Promise<void> {
     try {
       const userId = req['user'].id;
-      const pdfBuffer = await this.convocationService.generateConvocation(
-        userId,
-      );
+      
+      // First check if user is eligible
+      const user = await this.convocationService.getUserForConvocation(userId);
+      if (!user) {
+        throw new NotFoundException('User not found or not eligible for convocation');
+      }
+      
+      const pdfBuffer = await this.convocationService.generateConvocation(userId);
 
       res.set({
         'Content-Type': 'application/pdf',
@@ -40,7 +63,8 @@ export class ConvocationController {
 
       res.end(pdfBuffer);
     } catch (error) {
-      throw new NotFoundException(error.message);
+      console.error('Convocation download error:', error);
+      throw new NotFoundException(error.message || 'Failed to generate convocation');
     }
   }
 }
