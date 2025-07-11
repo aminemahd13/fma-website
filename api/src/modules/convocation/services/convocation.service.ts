@@ -49,309 +49,173 @@ export class ConvocationService {
         doc.on('end', () => resolve(Buffer.concat(chunks)));
         doc.on('error', reject);
 
-        // Colors
-        const primaryColor = '#1E40AF'; // Deep blue
-        const accentColor = '#10B981'; // Green
-        const grayColor = '#6B7280';
-        const lightGray = '#F3F4F6';
-        const darkGray = '#374151';
+        // Simple color scheme
+        const blueColor = '#0066CC';
+        const grayColor = '#666666';
 
-        // Background gradient effect
+        // Simple header
         doc
-          .rect(0, 0, doc.page.width, 200)
-          .fillColor('#F8FAFC')
-          .fill();
-
-        // Header section with enhanced styling
-        doc
-          .fontSize(28)
-          .fillColor(primaryColor)
-          .font('Helvetica-Bold')
+          .fontSize(24)
+          .fillColor(blueColor)
           .text('CONVOCATION OFFICIELLE', 72, 80, {
             align: 'center',
             width: doc.page.width - 144,
           });
 
-        // Subtitle with better spacing
         doc
-          .fontSize(18)
-          .fillColor(accentColor)
-          .font('Helvetica-Bold')
-          .text('Feynman Moroccan Adventure', 72, 120, {
-            align: 'center',
-            width: doc.page.width - 144,
-          });
-
-        doc
-          .fontSize(14)
+          .fontSize(16)
           .fillColor(grayColor)
-          .font('Helvetica')
-          .text('Une aventure scientifique immersive', 72, 145, {
+          .text('Feynman Moroccan Adventure', 72, 110, {
             align: 'center',
             width: doc.page.width - 144,
           });
 
-        // Decorative elements
+        // Simple line
         doc
-          .strokeColor(primaryColor)
-          .lineWidth(3)
-          .moveTo(72, 180)
-          .lineTo(doc.page.width - 72, 180)
+          .strokeColor(blueColor)
+          .lineWidth(2)
+          .moveTo(72, 140)
+          .lineTo(doc.page.width - 72, 140)
           .stroke();
 
-        // Add decorative dots
-        const dotSize = 4;
-        for (let i = 0; i < 5; i++) {
-          doc
-            .circle(doc.page.width / 2 - 40 + i * 20, 190, dotSize)
-            .fillColor(accentColor)
-            .fill();
-        }
-
-        // Date with elegant styling
+        // Date
         doc
           .fontSize(12)
-          .fillColor(grayColor)
-          .font('Helvetica')
-          .text(`Rabat, le ${currentDate}`, 72, 230, {
+          .fillColor('black')
+          .text(`Rabat, le ${currentDate}`, 72, 170, {
             align: 'right',
             width: doc.page.width - 144,
           });
 
-        // Main content area with better spacing
-        let yPosition = 290;
+        // Main content
+        let yPosition = 220;
 
-        // Elegant greeting with enhanced typography
+        // Greeting
         doc
-          .fontSize(16)
-          .fillColor(darkGray)
-          .font('Helvetica')
-          .text('Chère participante, Cher participant ', 72, yPosition, { 
-            continued: true 
-          })
-          .fillColor(primaryColor)
-          .font('Helvetica-Bold')
+          .fontSize(14)
+          .fillColor('black')
+          .text(`Chère participante, Cher participant `, 72, yPosition, { continued: true })
+          .fillColor(blueColor)
           .text(`${firstName} ${lastName}`, { continued: true })
-          .fillColor(darkGray)
-          .font('Helvetica')
+          .fillColor('black')
           .text(',');
 
-        yPosition += 50;
+        yPosition += 30;
 
-        // Enhanced body text with better typography
+        // Body text
         doc
-          .fontSize(13)
-          .fillColor(darkGray)
-          .font('Helvetica')
+          .fontSize(12)
+          .fillColor('black')
           .text(
             'Nous avons le plaisir de vous convoquer à la ',
             72,
             yPosition,
-            { continued: true, width: doc.page.width - 144 }
+            { continued: true }
           )
-          .fillColor(primaryColor)
-          .font('Helvetica-Bold')
+          .fillColor(blueColor)
           .text('Feynman Moroccan Adventure (FMA)', { continued: true })
-          .fillColor(darkGray)
-          .font('Helvetica')
-          .text(', une aventure scientifique immersive autour de la physique, qui se déroulera comme suit :');
+          .fillColor('black')
+          .text(', une aventure scientifique immersive autour de la physique.');
 
-        yPosition += 70;
+        yPosition += 40;
 
-        // Event details section with enhanced design
-        const detailsBoxY = yPosition;
-        const detailsBoxHeight = 140;
-        
-        // Create a beautiful gradient box for event details
-        doc
-          .rect(72, detailsBoxY, doc.page.width - 144, detailsBoxHeight)
-          .fillColor('#F0F9FF')
-          .fill()
-          .rect(72, detailsBoxY, doc.page.width - 144, detailsBoxHeight)
-          .strokeColor(primaryColor)
-          .lineWidth(2)
-          .stroke();
-
-        // Add a subtle accent line at the top
-        doc
-          .rect(72, detailsBoxY, doc.page.width - 144, 8)
-          .fillColor(accentColor)
-          .fill();
-
-        // Event details title
-        doc
-          .fontSize(14)
-          .fillColor(primaryColor)
-          .font('Helvetica-Bold')
-          .text('📅 DÉTAILS DE L\'ÉVÉNEMENT', 92, detailsBoxY + 25);
-
-        let detailY = detailsBoxY + 55;
-
-        // Date with icon
+        // Event details - compact version
         doc
           .fontSize(12)
-          .fillColor(darkGray)
-          .font('Helvetica-Bold')
-          .text('🗓️  Dates : ', 92, detailY, { continued: true })
-          .fillColor(primaryColor)
-          .font('Helvetica')
+          .fillColor('black')
+          .text('Dates : ', 72, yPosition, { continued: true })
+          .fillColor(blueColor)
           .text('du 14 juillet au 20 juillet 2025');
 
-        detailY += 25;
+        yPosition += 20;
 
-        // Time with icon
         doc
           .fontSize(12)
-          .fillColor(darkGray)
-          .font('Helvetica-Bold')
-          .text('🕐  Heure d\'accueil : ', 92, detailY, { continued: true })
-          .fillColor(primaryColor)
-          .font('Helvetica')
+          .fillColor('black')
+          .text('Heure d\'accueil : ', 72, yPosition, { continued: true })
+          .fillColor(blueColor)
           .text('13h00 à 17h00');
 
-        detailY += 25;
+        yPosition += 20;
 
-        // Location with icon
         doc
           .fontSize(12)
-          .fillColor(darkGray)
-          .font('Helvetica-Bold')
-          .text('📍  Lieu : ', 92, detailY, { continued: true })
-          .fillColor(primaryColor)
-          .font('Helvetica')
+          .fillColor('black')
+          .text('Lieu : ', 72, yPosition, { continued: true })
+          .fillColor(blueColor)
           .text('Campus du LM6E, Benguérir');
 
-        yPosition += detailsBoxHeight + 40;
+        yPosition += 40;
 
-        // Enhanced Information box with modern design
-        const infoBoxY = yPosition;
-        const infoBoxHeight = 120;
+        // Simple information box
+        const boxY = yPosition;
+        const boxHeight = 80;
         
-        // Create gradient background
         doc
-          .rect(72, infoBoxY, doc.page.width - 144, infoBoxHeight)
-          .fillColor('#FEF3C7')
+          .rect(72, boxY, doc.page.width - 144, boxHeight)
+          .fillColor('#f8f9fa')
           .fill()
-          .rect(72, infoBoxY, doc.page.width - 144, infoBoxHeight)
-          .strokeColor('#F59E0B')
-          .lineWidth(2)
+          .rect(72, boxY, doc.page.width - 144, boxHeight)
+          .strokeColor(blueColor)
           .stroke();
 
-        // Add accent border
         doc
-          .rect(72, infoBoxY, doc.page.width - 144, 6)
-          .fillColor('#F59E0B')
-          .fill();
+          .fontSize(12)
+          .fillColor('black')
+          .text('Informations importantes :', 92, boxY + 15);
 
-        // Title with icon
-        doc
-          .fontSize(13)
-          .fillColor('#92400E')
-          .font('Helvetica-Bold')
-          .text('ℹ️ INFORMATIONS IMPORTANTES', 92, infoBoxY + 20);
-
-        // Information items with better spacing
         doc
           .fontSize(11)
-          .fillColor('#78350F')
-          .font('Helvetica')
-          .text(`• Numéro de candidature : FMA-2025-${applicationId}`, 92, infoBoxY + 45)
-          .text('• Statut : ACCEPTÉ ✅', 92, infoBoxY + 62)
-          .text(`• Date de convocation : ${currentDate}`, 92, infoBoxY + 79)
-          .text('• Veuillez conserver cette convocation comme justificatif officiel', 92, infoBoxY + 96);
+          .text(`• Numéro de candidature : FMA-2025-${applicationId}`, 92, boxY + 35)
+          .text('• Statut : ACCEPTÉ', 92, boxY + 50)
+          .text('• Veuillez conserver cette convocation', 92, boxY + 65);
 
-        yPosition += infoBoxHeight + 50;
+        yPosition += boxHeight + 30;
 
-        // Continuation text
+        // Simple closing text
         doc
           .fontSize(12)
           .fillColor('black')
           .text(
-            'Nous vous prions de vous munir de cette convocation le jour de l\'événement.',
+            'Nous vous remercions et vous prions d\'agréer nos salutations distinguées.',
             72,
             yPosition,
-            { width: doc.page.width - 144, align: 'justify' }
+            { width: doc.page.width - 144 }
           );
 
         yPosition += 60;
 
-        doc
-          .fontSize(12)
-          .fillColor('black')
-          .text(
-            'En vous remerciant de votre engagement, nous vous prions d\'agréer l\'expression de nos salutations distinguées.',
-            72,
-            yPosition,
-            { width: doc.page.width - 144, align: 'justify' }
-          );
-
-        // Signature section
-        yPosition += 80;
-
+        // Simple signature
         doc
           .fontSize(12)
           .fillColor('black')
           .text(
             'L\'Organisation de la Feynman Moroccan Adventure',
-            doc.page.width - 300,
+            doc.page.width - 280,
             yPosition,
             { align: 'center', width: 200 }
           );
 
-        yPosition += 60;
+        yPosition += 40;
 
         // Signature line
         doc
           .strokeColor('black')
           .lineWidth(1)
-          .moveTo(doc.page.width - 300, yPosition)
-          .lineTo(doc.page.width - 100, yPosition)
+          .moveTo(doc.page.width - 280, yPosition)
+          .lineTo(doc.page.width - 80, yPosition)
           .stroke();
 
-        doc
-          .fontSize(10)
-          .fillColor('black')
-          .text('Direction Pédagogique', doc.page.width - 300, yPosition + 10, {
-            align: 'center',
-            width: 200,
-          });
-
-        // Enhanced footer with modern design
-        const footerY = doc.page.height - 80;
-        
-        // Footer background
-        doc
-          .rect(0, footerY - 20, doc.page.width, 100)
-          .fillColor('#F8FAFC')
-          .fill();
-
-        // Footer decorative line
-        doc
-          .strokeColor(primaryColor)
-          .lineWidth(2)
-          .moveTo(72, footerY - 10)
-          .lineTo(doc.page.width - 72, footerY - 10)
-          .stroke();
-
+        // Simple footer
         doc
           .fontSize(10)
           .fillColor(grayColor)
-          .font('Helvetica-Bold')
           .text(
-            `Feynman Moroccan Adventure - Document officiel généré le ${currentDate}`,
+            `Feynman Moroccan Adventure - ${currentDate}`,
             72,
-            footerY + 10,
+            doc.page.height - 50,
             { align: 'center', width: doc.page.width - 144 }
           );
-
-        // Add small decorative elements
-        doc
-          .fontSize(8)
-          .fillColor(accentColor)
-          .text('🔬 ⚛️ 🧪', 72, footerY + 25, {
-            align: 'center',
-            width: doc.page.width - 144,
-          });
 
         doc.end();
       } catch (error) {
