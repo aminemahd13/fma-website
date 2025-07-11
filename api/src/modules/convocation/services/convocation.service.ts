@@ -155,7 +155,7 @@ export class ConvocationService {
         doc
           .fontSize(11)
           .fillColor(darkGray)
-          .text('📅 Dates :', 92, y, { continued: true })
+          .text('Dates :', 92, y, { continued: true })
           .fillColor(accentGreen)
           .text(' du 14 juillet au 20 juillet 2025');
 
@@ -163,7 +163,7 @@ export class ConvocationService {
         doc
           .fontSize(11)
           .fillColor(darkGray)
-          .text('🕒 Horaires :', 92, y, { continued: true })
+          .text('Horaires :', 92, y, { continued: true })
           .fillColor(accentGreen)
           .text(' 13h00 à 17h00');
 
@@ -171,7 +171,7 @@ export class ConvocationService {
         doc
           .fontSize(11)
           .fillColor(darkGray)
-          .text('📍 Lieu :', 92, y, { continued: true })
+          .text('Lieu :', 92, y, { continued: true })
           .fillColor(accentGreen)
           .text(' Campus du LM6E, Benguérir');
 
@@ -192,7 +192,7 @@ export class ConvocationService {
         doc
           .fontSize(12)
           .fillColor('#92400E')
-          .text('✓ INFORMATIONS CANDIDAT', 92, y + 12);
+          .text('INFORMATIONS CANDIDAT', 92, y + 12);
 
         doc
           .fontSize(10)
