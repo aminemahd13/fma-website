@@ -193,12 +193,11 @@ export default function ApplicationPage() {
           {/* Show download convocation button for accepted candidates */}
           {userData?.application?.status?.status === 'ACCEPTED' && (
             <Button
-              variant="outline"
               onClick={handleDownloadConvocation}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-200 border-2 border-green-500 hover:border-green-600"
             >
               <svg 
-                className="w-4 h-4" 
+                className="w-5 h-5" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -255,9 +254,6 @@ export default function ApplicationPage() {
         <p className="mt-2">
           Vous pouvez maintenant télécharger votre convocation personnalisée en cliquant sur le bouton ci-dessus. 
           Cette convocation contient votre nom et votre numéro de candidature, et sera nécessaire pour votre participation à la formation.
-        </p>
-        <p className="mt-2 text-sm">
-          <strong>Prochaines étapes :</strong> Vous recevrez bientôt des informations détaillées par email concernant les modalités d&apos;inscription définitive et le programme de la formation.
         </p>
       </div>
     )}

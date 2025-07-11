@@ -65,7 +65,7 @@ export class ConvocationService {
         doc
           .fontSize(16)
           .fillColor(grayColor)
-          .text('Formation Marocaine d\'Astronomie', 72, 140, {
+          .text('Feynman Moroccan Adventure (FMA)', 72, 140, {
             align: 'center',
             width: doc.page.width - 144,
           });
@@ -94,7 +94,7 @@ export class ConvocationService {
         doc
           .fontSize(14)
           .fillColor('black')
-          .text(`Madame/Monsieur `, 72, yPosition, { continued: true })
+          .text(`Chère participante, Cher participant `, 72, yPosition, { continued: true })
           .fillColor(blueColor)
           .text(`${firstName} ${lastName}`, { continued: true })
           .fillColor('black')
@@ -107,15 +107,15 @@ export class ConvocationService {
           .fontSize(12)
           .fillColor('black')
           .text(
-            'Nous avons l\'honneur de vous informer que votre candidature à la ',
+            'Nous avons le plaisir de vous convoquer à la ',
             72,
             yPosition,
             { continued: true, width: doc.page.width - 144 }
           )
           .fillColor(blueColor)
-          .text('Formation Marocaine d\'Astronomie', { continued: true })
+          .text('Feynman Moroccan Adventure (FMA)', { continued: true })
           .fillColor('black')
-          .text(' a été retenue.');
+          .text(', une aventure scientifique immersive autour de la physique, qui se déroulera comme suit :');
 
         yPosition += 60;
 
@@ -123,11 +123,39 @@ export class ConvocationService {
           .fontSize(12)
           .fillColor('black')
           .text(
-            'Par la présente, nous vous convoquons officiellement à participer à cette formation exceptionnelle qui se déroulera prochainement. Votre engagement et votre passion pour l\'astronomie seront des atouts précieux pour le succès de cette formation.',
+            'Voici les détails de l\'événement :',
             72,
             yPosition,
             { width: doc.page.width - 144, align: 'justify' }
           );
+
+        yPosition += 40;
+
+        // Event details
+        doc
+          .fontSize(12)
+          .fillColor('black')
+          .text('Dates : ', 72, yPosition, { continued: true })
+          .fillColor(blueColor)
+          .text('du 14 juillet au 20 juillet 2025', { continued: false });
+
+        yPosition += 25;
+
+        doc
+          .fontSize(12)
+          .fillColor('black')
+          .text('Heure d\'accueil : ', 72, yPosition, { continued: true })
+          .fillColor(blueColor)
+          .text('13h00 à 17h00', { continued: false });
+
+        yPosition += 25;
+
+        doc
+          .fontSize(12)
+          .fillColor('black')
+          .text('Lieu : ', 72, yPosition, { continued: true })
+          .fillColor(blueColor)
+          .text('Campus du LM6E, Benguérir', { continued: false });
 
         yPosition += 80;
 
@@ -162,7 +190,7 @@ export class ConvocationService {
           .fontSize(12)
           .fillColor('black')
           .text(
-            'Nous vous prions de bien vouloir confirmer votre présence dans les plus brefs délais et de vous munir de cette convocation le jour de l\'événement.',
+            'Nous vous prions de vous munir de cette convocation le jour de l\'événement.',
             72,
             yPosition,
             { width: doc.page.width - 144, align: 'justify' }
@@ -174,7 +202,7 @@ export class ConvocationService {
           .fontSize(12)
           .fillColor('black')
           .text(
-            'En vous remerciant de votre engagement, nous vous prions d\'agréer, Madame/Monsieur, l\'expression de nos salutations distinguées.',
+            'En vous remerciant de votre engagement, nous vous prions d\'agréer l\'expression de nos salutations distinguées.',
             72,
             yPosition,
             { width: doc.page.width - 144, align: 'justify' }
@@ -187,7 +215,7 @@ export class ConvocationService {
           .fontSize(12)
           .fillColor('black')
           .text(
-            'L\'Organisation de la Formation Marocaine d\'Astronomie',
+            'L\'Organisation de la Feynman Moroccan Adventure',
             doc.page.width - 300,
             yPosition,
             { align: 'center', width: 200 }
@@ -216,7 +244,7 @@ export class ConvocationService {
           .fontSize(10)
           .fillColor(grayColor)
           .text(
-            `Formation Marocaine d'Astronomie - Document officiel généré le ${currentDate}`,
+            `Feynman Moroccan Adventure - Document officiel généré le ${currentDate}`,
             72,
             doc.page.height - 50,
             { align: 'center', width: doc.page.width - 144 }
