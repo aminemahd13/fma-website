@@ -59,7 +59,6 @@ import { ConvocationModule } from './modules/convocation/convocation.module';
     TeamMembersModule,
     CompetitionResultsModule,
     ConvocationModule,
-    ConvocationModule,
   ],
   controllers: [AppController],
   providers: [
