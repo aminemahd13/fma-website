@@ -24,6 +24,7 @@ import { SettingsModule } from './modules/settings/settings.module';
 import { FaqModule } from './modules/faq/faq.module';
 import { TeamMembersModule } from './modules/team-members/team-members.module';
 import { CompetitionResultsModule } from './modules/competition-results/competition-results.module';
+import { ConvocationModule } from './modules/convocation/convocation.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { CompetitionResultsModule } from './modules/competition-results/competit
     FaqModule,
     TeamMembersModule,
     CompetitionResultsModule,
+    ConvocationModule,
   ],
   controllers: [AppController],
   providers: [
